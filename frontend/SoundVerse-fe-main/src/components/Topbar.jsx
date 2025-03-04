@@ -25,7 +25,10 @@ const Topbar = () => {
             )}
             
             <SignedOut>
-                <SignInOAuthButtons/>
+                <Link to="/auth" className={cn(buttonVariants({ variant: "default" }))}>
+                    Sign In
+                </Link>
+                
             </SignedOut>
 
             <UserButton />

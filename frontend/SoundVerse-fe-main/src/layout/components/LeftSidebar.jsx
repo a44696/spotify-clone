@@ -32,14 +32,14 @@ const LeftSidebar = () => {
                 </Link>
                 
                 
-                <Link to={'/chat'}
+                <Link to={'/playlists'}
                 className={cn(
                   buttonVariants({
                     variant:'ghost', className:'w-full justify-start text-white hover:bg-zinc-800'
                   }))}
                 >
-                <MessageCircle className='mr-2 size-5'/>
-                <span className='hidden md:inline'>Messages</span>
+                <Library className='mr-2 size-5'/>
+                <span className='hidden md:inline'>Playlist of You</span>
                 </Link>
                 
                 

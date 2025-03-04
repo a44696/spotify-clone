@@ -18,3 +18,11 @@ export interface Album {
 	releaseYear: number;
 	songs: Song[];
 }
+export interface Playlist {
+	_id: string;          // ID của playlist
+	name: string;         // Tên playlist
+	userId: string;       // ID của người sở hữu playlist
+	songs: Song[];        // Danh sách bài hát trong playlist
+	createdAt: string;    // Ngày tạo playlist
+	updatedAt: string;    // Ngày cập nhật playlist
+}
