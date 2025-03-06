@@ -16,10 +16,16 @@ const SignInOAuthButton = () => {
 			redirectUrlComplete:"/auth-callback",
 		});
 	};
-  return( <Button onClick={SignInWithGoogle} variant = {"secondary "} className = "w-full text-white border-zinc-200 h-11" >
+  return( 
+	<Button 
+	onClick={SignInWithGoogle} 
+	variant="secondary" 
+	className="w-full text-white border-zinc-200 h-11 group"
+  >
 	<img src='/google.png' alt='Google' className='size-5' />
-	continue with google
-  </Button>)
+	<span className="group-hover:underline">continue with google</span>
+  </Button>
+  )
   
 };
 
