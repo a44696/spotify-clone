@@ -26,3 +26,15 @@ export interface Playlist {
 	createdAt: string;    // Ngày tạo playlist
 	updatedAt: string;    // Ngày cập nhật playlist
 }
+export interface Stats {
+	totalSongs: number;
+	totalAlbums: number;
+	totalUsers: number;
+	totalArtists: number;
+}
+export interface User {
+	_id: string;
+	clerkId: string;
+	fullName: string;
+	imageUrl: string;
+}

@@ -1,14 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Topbar from '@/components/Topbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
-import { Play, Trash } from 'lucide-react';
+import { Play, Pause, Trash } from 'lucide-react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { useAuth } from "@clerk/clerk-react";
+import { usePlayerStore } from '@/stores/usePlayerStore'; // Import store
 
 const PlaylistPage = () => {
   const [playlists, setPlaylists] = useState([]);
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [availableSongs, setAvailableSongs] = useState([]);
+  const { getToken } = useAuth();
+  const { currentSong, isPlaying, setCurrentSong, togglePlay, initializeQueue } = usePlayerStore(); // Use player store
+  const [playingSongId, setPlayingSongId] = useState(null); // Store song ID for playing state
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const token = await getToken();
+        if (!token) throw new Error("Không có token");
+        const response = await fetch("http://localhost:5000/api/songs", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Lỗi lấy danh sách bài hát");
+        }
+        const data = await response.json();
+        setAvailableSongs(data);
+      } catch (error) {
+        console.error("Lỗi khi tải bài hát:", error);
+      }
+    };
+    fetchSongs();
+  }, []);
 
   const handleCreatePlaylist = () => {
     if (newPlaylistName.trim()) {
@@ -18,13 +48,10 @@ const PlaylistPage = () => {
     }
   };
 
-  const handleAddSong = (playlistId) => {
+  const handleAddSong = (playlistId, song) => {
     const updatedPlaylists = playlists.map((playlist) => {
       if (playlist.id === playlistId) {
-        return {
-          ...playlist,
-          songs: [...playlist.songs, { id: Date.now(), title: `Song ${playlist.songs.length + 1}` }],
-        };
+        return { ...playlist, songs: [...playlist.songs, song] };
       }
       return playlist;
     });
@@ -34,7 +61,7 @@ const PlaylistPage = () => {
   const handleRemoveSong = (playlistId, songId) => {
     const updatedPlaylists = playlists.map((playlist) => {
       if (playlist.id === playlistId) {
-        return { ...playlist, songs: playlist.songs.filter((song) => song.id !== songId) };
+        return { ...playlist, songs: playlist.songs.filter((song) => song._id !== songId) };
       }
       return playlist;
     });
@@ -45,14 +72,20 @@ const PlaylistPage = () => {
     setPlaylists(playlists.filter((playlist) => playlist.id !== playlistId));
   };
 
+  const handlePlaySong = (song) => {
+    if (song._id === currentSong?._id) {
+      togglePlay(); // Toggle play/pause if it's the same song
+    } else {
+      setCurrentSong(song); // Set new song and play
+      setPlayingSongId(song._id); // Set playing song ID
+    }
+  };
+
   return (
     <div>
       <Topbar />
-      <div className='my-7 '>
-        <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto"
-          style={{scrollbarWidth: 'thin', /* Dùng cho Firefox */
-            scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */}}
-          >
+      <div className='my-7'>
+        <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto">
           <h1 className="text-2xl font-bold mb-4">Your Playlists</h1>
           <Button onClick={() => setShowForm(true)}>Create Playlist</Button>
           
@@ -77,15 +110,35 @@ const PlaylistPage = () => {
                     <Trash />
                   </Button>
                 </div>
-                <Button className="mt-2" onClick={() => handleAddSong(playlist.id)}>Add Song</Button>
-                
+
+                {/* Add songs to playlist */}
+                <div className="mt-2">
+                  <h3 className="text-lg">Add a song:</h3>
+                  {availableSongs.length > 0 ? (
+                    availableSongs.map((song) => (
+                      <Button key={song._id} onClick={() => handleAddSong(playlist.id, song)}>
+                        {song.title} - {song.artist}
+                      </Button>
+                    ))
+                  ) : (
+                    <p>No songs available</p>
+                  )}
+                </div>
+
+                {/* Song list with Play button */}
                 <div className="mt-4 space-y-2">
                   {playlist.songs.map((song) => (
-                    <div key={song.id} className="flex justify-between items-center bg-gray-700 p-2 rounded-md">
-                      <span>{song.title}</span>
+                    <div key={song._id} className="flex justify-between items-center bg-gray-700 p-2 rounded-md">
+                      <span>{song.title} - {song.artist}</span>
                       <div className="flex gap-2">
-                        <Button size="icon" variant="ghost"><Play /></Button>
-                        <Button size="icon" variant="destructive" onClick={() => handleRemoveSong(playlist.id, song.id)}>
+                        <Button size="icon" variant="ghost" onClick={() => handlePlaySong(song)}>
+                          {playingSongId === song._id && isPlaying ? (
+                            <Pause />
+                          ) : (
+                            <Play />
+                          )}
+                        </Button>
+                        <Button size="icon" variant="destructive" onClick={() => handleRemoveSong(playlist.id, song._id)}>
                           <Trash />
                         </Button>
                       </div>
