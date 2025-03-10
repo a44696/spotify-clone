@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/button';
 import SignInOAuthButton from '@/components/SignInOAuthButton';
+import { useAuth } from "@/providers/AuthContext";
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -13,6 +14,7 @@ const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useSignIn();
   const { signUp } = useSignUp();
+  const { getCurrentUser } = useAuth();
   const navigate = useNavigate();
 
   const toggleAuthMode = () => setIsSignUp(!isSignUp);
@@ -22,6 +24,7 @@ const AuthPage = () => {
     setIsLoading(true);
 
     try {
+
       if (isSignUp) {
         if (password !== confirmPassword) {
           alert("Passwords do not match!");
@@ -30,15 +33,29 @@ const AuthPage = () => {
         }
         
         // Đăng ký tài khoản mới
-        await signUp.create({ emailAddress: email, password });
-        await signUp.prepareEmailAddressVerification();
+        // await signUp.create({ emailAddress: email, password });
+        // await signUp.prepareEmailAddressVerification();
         alert('Check your email to verify your account!');
         navigate("/auth-callback");
       } else {
         // Đăng nhập
-        await signIn.create({ identifier: email, password });
-        alert('Sign in successful!');
-        navigate("/");
+        // await signIn.create({ identifier: email, password });
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: "include",
+        });
+        const data = await response.json();
+        if (data.status == 'success') {
+          alert(data.message);
+          await getCurrentUser();
+          navigate("/");
+        }else {
+          alert(data.message);
+        }
       }
     } catch (error) {
       alert('Error: ' + error.errors[0]?.message || 'Something went wrong');
