@@ -8,7 +8,7 @@ import SectionGrid from './components/SectionGrid'
 import { usePlayerStore } from '@/stores/usePlayerStore'
 
 const HomePage = () => {
-  const {
+	const {
 		fetchFeaturedSongs,
 		fetchMadeForYouSongs,
 		fetchTrendingSongs,
@@ -18,28 +18,30 @@ const HomePage = () => {
 		trendingSongs,
 	} = useMusicStore();
 
-	const {initializeQueue} = usePlayerStore();
+	const { initializeQueue } = usePlayerStore();
 
-  useEffect(() => {
+	useEffect(() => {
 		fetchFeaturedSongs();
 		fetchMadeForYouSongs();
 		fetchTrendingSongs();
 	}, [fetchFeaturedSongs, fetchMadeForYouSongs, fetchTrendingSongs]);
-  console.log([isLoading,madeForYouSongs,featuredSongs,trendingSongs]);
+	// console.log([isLoading, madeForYouSongs, featuredSongs, trendingSongs]);
 
-  useEffect(() => {
-	if (madeForYouSongs.length > 0 && featuredSongs.length > 0 && trendingSongs.length > 0) {
-		const allSongs = [...featuredSongs, ...madeForYouSongs, ...trendingSongs];
-		initializeQueue(allSongs);
-	}
-  },[initializeQueue, madeForYouSongs, featuredSongs, trendingSongs]);
-  return (
-    
-    <div className='rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900'>
-      <Topbar/>
-	  <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto' 
-  		style={{scrollbarWidth: 'thin', /* Dùng cho Firefox */
-			scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */}}>
+	useEffect(() => {
+		if (madeForYouSongs.length > 0 && featuredSongs.length > 0 && trendingSongs.length > 0) {
+			const allSongs = [...featuredSongs, ...madeForYouSongs, ...trendingSongs];
+			initializeQueue(allSongs);
+		}
+	}, [initializeQueue, madeForYouSongs, featuredSongs, trendingSongs]);
+	return (
+
+		<div className='rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900'>
+			<Topbar />
+			<ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
+				style={{
+					scrollbarWidth: 'thin', /* Dùng cho Firefox */
+					scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
+				}}>
 				<div className='p-4 sm:p-6'>
 					<h1 className='text-2xl sm:text-3xl font-bold mb-6'>Good afternoon</h1>
 					<FeaturedSection />
@@ -49,9 +51,9 @@ const HomePage = () => {
 						<SectionGrid title='Trending' songs={trendingSongs} isLoading={isLoading} />
 					</div>
 				</div>
-		</ScrollArea>
-    </div>
-  )
+			</ScrollArea>
+		</div>
+	)
 }
 
 export default HomePage
