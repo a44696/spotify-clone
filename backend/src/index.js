@@ -14,6 +14,7 @@ import authRoutes from "./routes/auth.route.js"
 import songRoutes from "./routes/song.route.js"
 import albumRoutes from "./routes/album.route.js"
 import statRoutes from "./routes/stat.route.js"
+import playlistRoutes from "./routes/playlist.route.js"
 dotenv.config();
 
 const __dirname = path.resolve();
@@ -46,6 +47,7 @@ app.use("/api/admin",adminRoutes);
 app.use("/api/songs",songRoutes);
 app.use("/api/albums",albumRoutes);
 app.use("/api/stats",statRoutes);   
+app.use('/api/playlists', playlistRoutes);  // Đảm bảo API endpoint đúng
 
 app.listen(PORT,()=>{
     console.log("server is running on Port "+ PORT);
