@@ -1,11 +1,12 @@
 import { axiosInstance } from "@/lib/axios";
-import { Album, Song, Stats } from "@/types";
+import { Album, Genre, Song, Stats } from "@/types";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
 interface MusicStore {
 	songs: Song[];
 	albums: Album[];
+	genres: Genre[];
 	isLoading: boolean;
 	error: string | null;
 	currentAlbum: Album | null;
@@ -14,20 +15,22 @@ interface MusicStore {
 	trendingSongs: Song[];
 	stats: Stats;
 
+	fetchGenres: () => Promise<void>;
 	fetchAlbums: () => Promise<void>;
-	fetchAlbumById: (id: string) => Promise<void>;
+	fetchAlbumById: (id: number) => Promise<void>;
 	fetchFeaturedSongs: () => Promise<void>;
 	fetchMadeForYouSongs: () => Promise<void>;
 	fetchTrendingSongs: () => Promise<void>;
 	fetchStats: () => Promise<void>;
 	fetchSongs: () => Promise<void>;
-	deleteSong: (id: string) => Promise<void>;
-	deleteAlbum: (id: string) => Promise<void>;
+	deleteSong: (id: number) => Promise<void>;
+	deleteAlbum: (id: number) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
 	albums: [],
 	songs: [],
+	genres: [],
 	isLoading: false,
 	error: null,
 	currentAlbum: null,
@@ -46,9 +49,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		try {
 			await axiosInstance.delete(`/admin/albums/${id}`);
 			set((state) => ({
-				albums: state.albums.filter((album) => album._id !== id),
+				albums: state.albums.filter((album) => album.id !== id),
 				songs: state.songs.map((song) =>
-					song.albumId === state.albums.find((a) => a._id === id)?.title ? { ...song, album: null } : song
+					song.albumId === state.albums.find((a) => a.id === id)?.title ? { ...song, album: null } : song
 				),
 			}));
 			toast.success("Album deleted successfully");
@@ -64,7 +67,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			await axiosInstance.delete(`/admin/songs/${id}`);
 
 			set((state) => ({
-				songs: state.songs.filter((song) => song._id !== id),
+				songs: state.songs.filter((song) => song.id !== id),
 			}));
 			toast.success("Song deleted successfully");
 		} catch (error: any) {
@@ -102,8 +105,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 
 		try {
-			const response = await axiosInstance.get("/albums");
-			set({ albums: response.data });
+			const response = await axiosInstance.get("/album/get-albums-by-userid");
+			set({ albums: response.data.data });
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {
@@ -158,4 +161,16 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
+
+	fetchGenres: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/genre");
+			set({ genres: response.data.data });
+		} catch (error: any) {
+			set({ error: error.response.data.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	}
 }));
