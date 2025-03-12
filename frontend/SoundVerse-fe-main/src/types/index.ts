@@ -7,7 +7,6 @@ export interface Song {
 	audioUrl: string;
 	duration: number;
 	createdAt: string;
-	updatedAt: string;
 }
 
 export interface Album {
