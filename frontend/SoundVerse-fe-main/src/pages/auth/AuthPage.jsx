@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/button';
 import SignInOAuthButton from '@/components/SignInOAuthButton';
 import { useAuth } from "@/providers/AuthContext";
+import { useAuthStore } from "@/stores/useAuthStore";
+import toast from "react-hot-toast";
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -15,6 +17,7 @@ const AuthPage = () => {
   const { signIn } = useSignIn();
   const { signUp } = useSignUp();
   const { getCurrentUser } = useAuth();
+  const { checkAdminStatus } = useAuthStore();
   const navigate = useNavigate();
 
   const toggleAuthMode = () => setIsSignUp(!isSignUp);
@@ -50,11 +53,12 @@ const AuthPage = () => {
         });
         const data = await response.json();
         if (data.status == 'success') {
-          alert(data.message);
+          toast.success(data.message);
           await getCurrentUser();
+          await checkAdminStatus();
           navigate("/");
         }else {
-          alert(data.message);
+          toast.error(data.message);
         }
       }
     } catch (error) {

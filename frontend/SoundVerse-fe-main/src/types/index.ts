@@ -1,5 +1,5 @@
 export interface Song {
-	_id: string;
+	id: number;
 	title: string;
 	artist: string;
 	albumId: string | null;
@@ -11,15 +11,17 @@ export interface Song {
 }
 
 export interface Album {
-	_id: string;
+	id: number;
 	title: string;
-	artist: string;
+	description: string;
 	imageUrl: string;
-	releaseYear: number;
+	listOfMusic: number;
+	artistId: number;
+	createdAt: string;
 	songs: Song[];
 }
 export interface Playlist {
-	_id: string;          // ID của playlist
+	id: number;          // ID của playlist
 	name: string;         // Tên playlist
 	userId: string;       // ID của người sở hữu playlist
 	songs: Song[];        // Danh sách bài hát trong playlist
@@ -37,4 +39,8 @@ export interface User {
 	clerkId: string;
 	fullName: string;
 	imageUrl: string;
+}
+export interface Genre {
+	id: string;
+	title: string;
 }
