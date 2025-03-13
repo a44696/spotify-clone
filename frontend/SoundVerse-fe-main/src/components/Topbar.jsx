@@ -7,13 +7,24 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from './ui/button';
 import { Input } from './ui/Input';
 import { useAuth } from "@/providers/AuthContext";
-import SignInOAuthButtons from './SignInOAuthButton';
+import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import { Switch } from './ui/switch';
 
 const Topbar = () => {
     const { user } = useAuth();  // Lấy thông tin người dùng
     const isAdmin = useAuthStore(); // Kiểm tra quyền admin
     const [searchQuery, setSearchQuery] = useState("");
+    const [darkMode, setDarkMode] = useState(false);
     const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+             // Nếu có API logout riêng
+            navigate("/auth"); // Điều hướng thủ công
+        } catch (error) {
+            console.error("Lỗi khi logout:", error);
+        }
+    };
 
     // Xử lý tìm kiếm
     const handleSearch = () => {
@@ -24,13 +35,12 @@ const Topbar = () => {
 
     return (
         <div className='flex justify-between items-center p-4 bg-zinc-900/75 backdrop-blur-md z-10'>
-            
             {/* Logo */}
             <div className='flex gap-2 items-center'>
                 <img src="/spotify.png" alt="spotify logo" className="size-8" />
                 <span className="text-white font-semibold text-lg">Spotify</span>
             </div>
-            
+
             {/* Search Bar */}
             <div className='flex items-center gap-4 flex-1 justify-center'>
                 <div className='flex items-center border border-zinc-700 rounded-lg overflow-hidden'>
@@ -69,18 +79,43 @@ const Topbar = () => {
                 )}
 
                 {user && (
-                    <>
-                        <Link to={"/profile"}>
+                    <Popover >
+                        <PopoverTrigger>
                             <img style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }} 
-                                 className="avatar" 
+                                 className="avatar cursor-pointer" 
                                  src="cover-images/12.jpg" 
                                  alt="User Avatar"
                             />
-                        </Link>
-                    </>
+                        </PopoverTrigger>
+                        <PopoverContent className="bg-white shadow-lg rounded-lg z-50 relative p-4 w-64">
+                            <div className="flex items-center gap-2">
+                                <img src="cover-images/12.jpg" className="w-10 h-10 rounded-full" alt="Avatar" />
+                                <div>
+                                    
+                                    <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
+                                </div>
+                            </div>
+                            <div className="mt-4 space-y-2">
+                                <Link to="/profile" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Public Profile</Link>
+                                <Link to="/settings" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">My Profile</Link>
+                                <Link to="/account" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">My Account</Link>
+                                <Link to="/forum" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Dev Forum</Link>
+                            </div>
+                            <div className="mt-4 border-t pt-2">
+                                <label className="flex justify-between items-center text-sm text-gray-700">
+                                    Dark Mode
+                                    <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+                                </label>
+                            </div>
+                            <button
+                                onClick={handleLogout}  // Thực hiện đăng xuất thủ công
+                                className="mt-4 w-full text-sm text-red-600 hover:bg-gray-200 p-2 rounded"
+                            >
+                                Log out
+                            </button>
+                        </PopoverContent>
+                    </Popover>
                 )}
-
-                <UserButton />
             </div>
         </div>
     );
