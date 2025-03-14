@@ -1,38 +1,57 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 
 const VerifyPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [email, setEmail] = useState(""); // Thêm state để lưu email
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Nhận dữ liệu từ trang đăng ký
 
-  
+  // Lấy email từ location hoặc localStorage
+  useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email);
+      localStorage.setItem("email", location.state.email); // Lưu email
+    } else {
+      setEmail(localStorage.getItem("email") || ""); // Nếu có, lấy từ localStorage
+    }
+  }, [location.state]);
+
   const handleChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return; 
+    if (!/^\d*$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    
     if (value && index < 5) {
       document.getElementById(`otp-${index + 1}`).focus();
     }
   };
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      document.getElementById(`otp-${index - 1}`).focus();
+    }
+  };
 
-  
   const handleVerify = async () => {
+    if (!email) {
+      alert("Không tìm thấy email! Vui lòng đăng ký lại.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const code = otp.join(""); 
+      const code = otp.join("");
       const response = await fetch("http://localhost:8080/api/auth/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ otp: code }),
+        body: JSON.stringify({ email, otp: code }), // Gửi cả email và OTP
         credentials: "include",
       });
 
@@ -40,7 +59,7 @@ const VerifyPage = () => {
 
       if (data.status === "success") {
         alert(data.message);
-        navigate("/"); // Chuyển về trang chủ
+        navigate("/");
       } else {
         alert("Mã OTP không hợp lệ. Vui lòng thử lại!");
       }
@@ -58,7 +77,7 @@ const VerifyPage = () => {
           Xác minh Email
         </h2>
         <p className="text-gray-400 text-center mb-4">
-          Nhập mã xác thực  đã gửi đến email của bạn.
+          Nhập mã xác thực đã gửi đến email: <b className="text-white">{email}</b>
         </p>
 
         <div className="flex justify-center gap-2 mb-4">
@@ -71,6 +90,7 @@ const VerifyPage = () => {
               maxLength={1}
               className="w-12 h-12 text-center text-2xl bg-zinc-800 text-white"
               onChange={(e) => handleChange(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
             />
           ))}
         </div>

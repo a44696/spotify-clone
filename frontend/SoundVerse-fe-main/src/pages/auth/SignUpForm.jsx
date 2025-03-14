@@ -27,6 +27,7 @@ const SignUpForm = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,19 +39,20 @@ const SignUpForm = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/auth/", {
+      const res = await axiosInstance.post("/auth/signup", {
         username: form.username,
         password: form.password,
         email: form.email,
         gender: form.gender,
         country: form.country,
         fullName: form.fullName,
-        dob: form.dob
+        //dob: form.dob
       });
 
       if (res.data.status == 'success') {
         toast.success("Đăng ký thành công! Chuyển hướng đến trang Xac thuc...");
-        navigate("/verify");
+        localStorage.setItem("email", form.email);
+        navigate("/verify", { state: { email: form.email } });
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Lỗi khi đăng ký!");
