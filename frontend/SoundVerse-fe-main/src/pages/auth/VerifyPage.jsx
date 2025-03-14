@@ -1,46 +1,51 @@
 import React, { useState } from "react";
-import { useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 
 const VerifyPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const { signUp } = useSignUp();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // Xử lý thay đổi từng ô OTP
+  
   const handleChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return; // Chỉ cho phép số
+    if (!/^\d*$/.test(value)) return; 
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Chuyển đến ô tiếp theo nếu nhập xong 1 số
+    
     if (value && index < 5) {
       document.getElementById(`otp-${index + 1}`).focus();
     }
   };
 
-  // Gửi mã OTP để xác thực
+  
   const handleVerify = async () => {
     setIsLoading(true);
     try {
-      const code = otp.join(""); // Nối 6 số lại thành mã OTP hoàn chỉnh
-      const result = await signUp.attemptEmailAddressVerification({
-        code,
+      const code = otp.join(""); 
+      const response = await fetch("http://localhost:8080/api/auth/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ otp: code }),
+        credentials: "include",
       });
 
-      if (result.status === "complete") {
-        alert("Xác minh thành công! Đang chuyển hướng...");
-        navigate("/"); // Chuyển về trang chính sau khi xác minh thành công
+      const data = await response.json();
+
+      if (data.status === "success") {
+        alert(data.message);
+        navigate("/"); // Chuyển về trang chủ
       } else {
         alert("Mã OTP không hợp lệ. Vui lòng thử lại!");
       }
     } catch (error) {
-      alert("Lỗi: " + (error.errors?.[0]?.message || "Có lỗi xảy ra!"));
+      alert("Lỗi khi xác minh: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +58,7 @@ const VerifyPage = () => {
           Xác minh Email
         </h2>
         <p className="text-gray-400 text-center mb-4">
-          Nhập mã xác thực 6 số đã gửi đến email của bạn.
+          Nhập mã xác thực  đã gửi đến email của bạn.
         </p>
 
         <div className="flex justify-center gap-2 mb-4">
