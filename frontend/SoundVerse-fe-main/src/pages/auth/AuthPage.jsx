@@ -39,7 +39,7 @@ const AuthPage = () => {
         // await signUp.create({ emailAddress: email, password });
         // await signUp.prepareEmailAddressVerification();
         alert('Check your email to verify your account!');
-        navigate("/auth-callback");
+        navigate("/verify");
       } else {
         // Đăng nhập
         // await signIn.create({ identifier: email, password });
