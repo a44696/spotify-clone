@@ -6,7 +6,7 @@ import React from "react";
 
 const PlayButton = ({ song }: { song: Song }) => {
 	const { currentSong, isPlaying, setCurrentSong, togglePlay } = usePlayerStore();
-	const isCurrentSong = currentSong?._id === song._id;
+	const isCurrentSong = currentSong?.id === song.id;
 
 	const handlePlay = () => {
 		if (isCurrentSong) togglePlay();

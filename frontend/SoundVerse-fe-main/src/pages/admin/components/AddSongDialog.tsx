@@ -56,6 +56,16 @@ const AddSongDialog = () => {
 	const audioInputRef = useRef<HTMLInputElement>(null);
 	const imageInputRef = useRef<HTMLInputElement>(null);
 
+	const handleAudioChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const temp = event.target.files?.[0];
+		if (temp) {
+			setFiles((prev) => ({ ...prev, audio: temp }))
+			const duration = await getAudioDuration(temp);
+			setDuration(duration);
+		}
+	};
+	
+
 	const handleSubmit = async () => {
 		setIsLoading(true);
 
@@ -65,7 +75,7 @@ const AddSongDialog = () => {
 			}
 
 			const uploadMusicName = generateFileName(files.audio.name);
-    	const uploadThumbnailName = generateFileName(files.image.name);
+    		const uploadThumbnailName = generateFileName(files.image.name);
 
 			await handleUploadThumbnail(uploadThumbnailName);
 			await handleUploadAudio(uploadMusicName);
@@ -73,14 +83,14 @@ const AddSongDialog = () => {
 			const data = {
 				title:newSong.title,
 				description: newSong.description,
-				thumbnail: newSong.thumbnail,
-				albumsId: newSong.albumsId ?? null,
+				thumbnail: uploadThumbnailName,
+				albumsId: newSong.albumsId ? newSong.albumsId : null,
 				genreId: newSong.genreId ? newSong.genreId : null,
-				length: newSong.duration,
-				filePath: newSong.filePath
+				length: duration,
+				filePath: uploadMusicName
 			}
 
-			const postCreateMusic = await axiosInstance.post("/api/music", data, {
+			const postCreateMusic = await axiosInstance.post("/music", data, {
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -101,6 +111,10 @@ const AddSongDialog = () => {
 				albumsId: null
 			});
 
+			setThumbnailPreview(null);
+			setDuration(null);
+			setSongDialogOpen(false);
+
 			setFiles({
 				audio: null,
 				image: null,
@@ -115,7 +129,7 @@ const AddSongDialog = () => {
 	const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // Định dạng mm:ss
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
   };
 
 	const getAudioDuration = (file) => {
@@ -156,7 +170,8 @@ const AddSongDialog = () => {
       const presignedUrl = result.data;
 
       if (!presignedUrl) {
-        throw new Error("Không lấy được URL pre-signed.");
+		toast.error("Không lấy được URL pre-signed.");
+		return;
       }
 
       const uploadResponse = await fetch(presignedUrl, {
@@ -170,7 +185,7 @@ const AddSongDialog = () => {
       if (uploadResponse.ok) {
 
       } else {
-				toast.error("Fail to upload thumbnail");
+		toast.error("Fail to upload thumbnail");
       }
     } catch (error) {
       console.error("Lỗi:", error);
@@ -192,7 +207,8 @@ const AddSongDialog = () => {
       const presignedUrl = result.data;
 
       if (!presignedUrl) {
-        throw new Error("Không lấy được URL pre-signed.");
+		toast.error("Không lấy được URL pre-signed.");
+		return;
       }
 
       const uploadResponse = await fetch(presignedUrl, {
@@ -234,7 +250,7 @@ const AddSongDialog = () => {
 						accept='audio/*'
 						ref={audioInputRef}
 						hidden
-						onChange={(e) => setFiles((prev) => ({ ...prev, audio: e.target.files![0] }))}
+						onChange={handleAudioChange}
 					/>
 
 					<input
@@ -263,9 +279,8 @@ const AddSongDialog = () => {
 					>
 						<div className='text-center'>
 							{files.image ? (
-								<div className='space-y-2'>
-									<div className='text-sm text-emerald-500'>Image selected:</div>
-									{/* <div className='text-xs text-zinc-400'>{files.image.name.slice(0, 20)}</div> */}
+								<div className='space-y-2' style={{ textAlign: "-webkit-center" }}>
+									<div className='text-sm text-emerald-500'>Image selected: <span className="text-xs text-zinc-400">{files.image.name.slice(0, 20)}</span></div>
 									<img style={{ width: "50px" }} alt="thumbnail-preview" src={thumbnailPreview} />
 								</div>
 							) : (
@@ -286,11 +301,7 @@ const AddSongDialog = () => {
 					<div className='space-y-2'>
 						<label className='text-sm font-medium'>Audio File</label>
 						<div className='flex items-center gap-2'>
-							<Button variant='outline' onClick={async () => {
-								const duration = await getAudioDuration(files.audio);
-									setDuration(duration);
-									return audioInputRef.current?.click()
-								}} className='w-full'>
+							<Button variant='outline' onClick={() => audioInputRef.current?.click()} className='w-full'>
 								{files.audio ? files.audio.name.slice(0, 20) : "Choose Audio File"}
 							</Button>
 						</div>
@@ -325,7 +336,7 @@ const AddSongDialog = () => {
 								<SelectValue placeholder='Select album' />
 							</SelectTrigger>
 							<SelectContent className='bg-zinc-800 border-zinc-700'>
-								<SelectItem value='none'>No Album (Single)</SelectItem>
+								<SelectItem value={null}>No Genre</SelectItem>
 								{genres.map((genre) => (
 									<SelectItem key={genre.id} value={genre.id}>
 										{genre.title}
@@ -345,7 +356,7 @@ const AddSongDialog = () => {
 								<SelectValue placeholder='Select album' />
 							</SelectTrigger>
 							<SelectContent className='bg-zinc-800 border-zinc-700'>
-								<SelectItem value='none'>No Album (Single)</SelectItem>
+								<SelectItem value={null}>No Album (Single)</SelectItem>
 								{albums.map((album) => (
 									<SelectItem key={album.id} value={album.id}>
 										{album.title}
