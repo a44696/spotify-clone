@@ -1,17 +1,28 @@
 import React, { useState } from "react";
-import { Input } from "@/components/ui/Input"; // Đảm bảo file Input đã tồn tại
+import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "@/lib/axios"; // Để gọi API lưu tài khoản
+import { Link, useNavigate } from "react-router-dom";
+import { axiosInstance } from "@/lib/axios";
+import toast from "react-hot-toast";
 
 const SignUpForm = () => {
   const [form, setForm] = useState({
     username: "",
     password: "",
     confirmPassword: "",
+    email: "",
+    gender: "",
+    country: "",
+    fullName: "",
+    dob: "",
   });
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const countries = [
+    { code: "vn", name: "Việt Nam" },
+    { code: "us", name: "" },
+    { code: "uk", name: "Anh" },
+    { code: "fr", name: "Pháp" },
+  ];
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,54 +38,121 @@ const SignUpForm = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/auth/signup", {
+      const res = await axiosInstance.post("/auth/", {
         username: form.username,
         password: form.password,
+        email: form.email,
+        gender: form.gender,
+        country: form.country,
+        fullName: form.fullName,
+        dob: form.dob
       });
 
-      if (res.data.success) {
-        alert("Đăng ký thành công! Chuyển hướng đến trang đăng nhập...");
-        navigate("/login"); // Chuyển hướng đến trang đăng nhập
+      if (res.data.status == 'success') {
+        toast.success("Đăng ký thành công! Chuyển hướng đến trang Xac thuc...");
+        navigate("/verify");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Lỗi khi đăng ký!");
+      toast.error(err.response?.data?.message || "Lỗi khi đăng ký!");
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-black">
-      <div className="bg-zinc-900 p-6 rounded-lg shadow-md w-96">
+      <div className="bg-zinc-900 p-6 rounded-lg shadow-md w-[80%] max-w-lg text-center">
         <h2 className="text-white text-2xl font-bold mb-4">Đăng Ký</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="text"
-            name="username"
-            placeholder="Tên tài khoản"
-            value={form.username}
+            name="email"
+            placeholder="Email"
+            value={form.email}
             onChange={handleChange}
             required
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={form.username}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              type="text"
+              name="fullName"
+              placeholder="Full Name"
+              value={form.fullName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <select
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+              className="p-2 rounded bg-zinc-800 text-white w-full"
+              required
+            >
+              <option value="">Chọn giới tính</option>
+              <option value="male">Nam</option>
+              <option value="female">Nữ</option>
+              <option value="other">Khác</option>
+            </select>
+            <select
+              name="country"
+              value={form.country}
+              onChange={handleChange}
+              className="p-2 rounded bg-zinc-800 text-white w-full"
+              required
+            >
+              <option value="">Chọn quốc gia</option>
+              {countries.map((country) => (
+                <option key={country.code} value={country.name}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              type="password"
+              name="password"
+              placeholder="Mật khẩu"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              type="password"
+              name="confirmPassword"
+              placeholder="Nhập lại mật khẩu"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <Input
-            type="password"
-            name="password"
-            placeholder="Mật khẩu"
-            value={form.password}
+            type="date"
+            name="dob"
+            value={form.dob}
             onChange={handleChange}
-            required
           />
-          <Input
-            type="password"
-            name="confirmPassword"
-            placeholder="Nhập lại mật khẩu"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-          <Button type="submit" className="w-full bg-emerald-500">
+          <Button type="submit" className="w-full bg-emerald-500" style={{ width: "112px" }}>
             Đăng Ký
           </Button>
         </form>
+        <p className="text-zinc-400 text-center mt-4">
+          Already have an account?
+          <Link
+            to="/auth"
+            className="text-emerald-400 hover:underline"
+          >
+            Sign In
+          </Link>
+        </p>
       </div>
     </div>
   );
