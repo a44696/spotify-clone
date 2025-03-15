@@ -19,8 +19,8 @@ const AlbumsTable = () => {
 					<TableHead className='w-[50px]'></TableHead>
 					<TableHead className={undefined}>Title</TableHead>
 					<TableHead className={undefined}>Artist</TableHead>
-					<TableHead className={undefined}>Release Year</TableHead>
 					<TableHead className={undefined}>Songs</TableHead>
+					<TableHead className={undefined}>Created At</TableHead>
 					<TableHead className='text-right'>Actions</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -34,14 +34,14 @@ const AlbumsTable = () => {
 						<TableCell className={undefined}>{album.artistId}</TableCell>
 						<TableCell className={undefined}>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
-								<Calendar className='h-4 w-4' />
-								{album.createdAt}
+								<Music className='h-4 w-4' />
+								{album.songs.length} songs
 							</span>
 						</TableCell>
 						<TableCell className={undefined}>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
-								<Music className='h-4 w-4' />
-								{album.songs.length} songs
+								<Calendar className='h-4 w-4' />
+								{album.createdAt}
 							</span>
 						</TableCell>
 						<TableCell className='text-right'>

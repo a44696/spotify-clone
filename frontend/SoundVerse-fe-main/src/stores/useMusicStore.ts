@@ -42,6 +42,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		totalAlbums: 0,
 		totalUsers: 0,
 		totalArtists: 0,
+		totalSongsMonthly: 0,
+		totalUsersMonthly: 0
 	},
 
 	deleteAlbum: async (id) => {

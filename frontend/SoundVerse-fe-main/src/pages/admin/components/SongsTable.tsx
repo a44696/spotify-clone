@@ -7,6 +7,12 @@ import React from "react";
 const SongsTable = () => {
 	const { songs, isLoading, error, deleteSong } = useMusicStore();
 
+	const formatTime = (seconds) => {
+		const minutes = Math.floor(seconds / 60);
+		const secs = Math.floor(seconds % 60);
+		return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
+	};
+
 	if (isLoading) {
 		return (
 			<div className='flex items-center justify-center py-8'>
@@ -15,13 +21,13 @@ const SongsTable = () => {
 		);
 	}
 
-	if (error) {
-		return (
-			<div className='flex items-center justify-center py-8'>
-				<div className='text-red-400'>{error}</div>
-			</div>
-		);
-	}
+	// if (error) {
+	// 	return (
+	// 		<div className='flex items-center justify-center py-8'>
+	// 			<div className='text-red-400'>{error}</div>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<Table className={undefined}>
@@ -30,6 +36,8 @@ const SongsTable = () => {
 					<TableHead className='w-[50px]'></TableHead>
 					<TableHead className={undefined}>Title</TableHead>
 					<TableHead className={undefined}>Artist</TableHead>
+					<TableHead className={undefined}>Genre</TableHead>
+					<TableHead className={undefined}>Duration</TableHead>
 					<TableHead className={undefined}>Release Date</TableHead>
 					<TableHead className='text-right'>Actions</TableHead>
 				</TableRow>
@@ -43,6 +51,8 @@ const SongsTable = () => {
 						</TableCell>
 						<TableCell className='font-medium'>{song.title}</TableCell>
 						<TableCell className={undefined}>{song.artist}</TableCell>
+						<TableCell className={undefined}>{song.genre}</TableCell>
+						<TableCell className={undefined}>{formatTime(song.length)}</TableCell>
 						<TableCell className={undefined}>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
 								<Calendar className='h-4 w-4' />
