@@ -142,18 +142,18 @@ const AddSongDialog = () => {
   };
 
 	const generateFileName = (name) => {
-    name = name.replace(/\s+/g, "_").trim();
-  
-    const match = name.match(/(\.[^.]+)$/);
-    const extension = match ? match[1] : "";
-  
-    const baseName = extension ? name.replace(extension, "") : name;
-  
-    const timeStamp = Date.now();
-    const uniqueID = crypto.randomUUID();
-  
-    return `${baseName}-${timeStamp}-${uniqueID}${extension}`;
-  };
+		name = name.replace(/\s+/g, "_").trim();
+	
+		const match = name.match(/(\.[^.]+)$/);
+		const extension = match ? match[1] : "";
+	
+		const baseName = extension ? name.replace(extension, "") : name;
+	
+		const timeStamp = Date.now();
+		const uniqueID = crypto.randomUUID();
+	
+		return `${baseName}-${timeStamp}-${uniqueID}${extension}`;
+  	};
 
 	const handleUploadThumbnail = async (uploadThumbnailName) => {
     try {

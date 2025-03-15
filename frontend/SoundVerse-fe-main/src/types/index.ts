@@ -1,7 +1,8 @@
 export interface Song {
 	id: number;
 	title: string;
-	artist: User;
+	artistId: number;
+	artist: string;
 	genre: string;
 	description: string;
 	albumId: string | null;
@@ -16,7 +17,8 @@ export interface Album {
 	title: string;
 	description: string;
 	thumbnail: string;
-	artist: User;
+	artistId: number;
+	artist: string;
 	listOfMusic: number;
 	createdAt: string;
 	songs: Song[];

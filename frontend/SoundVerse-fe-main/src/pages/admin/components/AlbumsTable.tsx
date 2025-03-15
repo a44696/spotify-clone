@@ -26,7 +26,7 @@ const AlbumsTable = () => {
 			</TableHeader>
 			<TableBody className={undefined}>
 				{albums.map((album) => (
-					<TableRow key={album._id} className='hover:bg-zinc-800/50'>
+					<TableRow key={album.id} className='hover:bg-zinc-800/50'>
 						<TableCell className={undefined}>
 							<img src={album.thumbnail} alt={album.title} className='w-10 h-10 rounded object-cover' />
 						</TableCell>

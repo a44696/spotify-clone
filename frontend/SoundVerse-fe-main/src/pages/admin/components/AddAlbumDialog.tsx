@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";
 import { axiosInstance } from "@/lib/axios";
 import { Plus, Upload } from "lucide-react";
 import React from "react";
@@ -22,8 +22,7 @@ const AddAlbumDialog = () => {
 
 	const [newAlbum, setNewAlbum] = useState({
 		title: "",
-		artist: "",
-		releaseYear: new Date().getFullYear(),
+		description: ""
 	});
 
 	const [imageFile, setImageFile] = useState<File | null>(null);
@@ -43,22 +42,30 @@ const AddAlbumDialog = () => {
 				return toast.error("Please upload an image");
 			}
 
-			const formData = new FormData();
-			formData.append("title", newAlbum.title);
-			formData.append("artist", newAlbum.artist);
-			formData.append("releaseYear", newAlbum.releaseYear.toString());
-			formData.append("imageFile", imageFile);
+			const uploadThumbnailName = generateFileName(imageFile.name);
 
-			await axiosInstance.post("/admin/albums", formData, {
+			await handleUploadThumbnail(uploadThumbnailName);
+
+			const data = {
+				title: newAlbum.title,
+				description: newAlbum.description,
+				thumbnail: uploadThumbnailName
+			}
+
+			const postCreateAlbum = await axiosInstance.post("/album", data, {
 				headers: {
-					"Content-Type": "multipart/form-data",
+					"Content-Type": "application/json",
 				},
 			});
+			if (postCreateAlbum.data.status === "success") {
+				toast.success(postCreateAlbum.data.message);
+			} else {
+				toast.error(postCreateAlbum.data.message);
+			}
 
 			setNewAlbum({
 				title: "",
-				artist: "",
-				releaseYear: new Date().getFullYear(),
+				description: ""
 			});
 			setImageFile(null);
 			setAlbumDialogOpen(false);
@@ -67,6 +74,57 @@ const AddAlbumDialog = () => {
 			toast.error("Failed to create album: " + error.message);
 		} finally {
 			setIsLoading(false);
+		}
+	};
+
+	const generateFileName = (name) => {
+		name = name.replace(/\s+/g, "_").trim();
+
+		const match = name.match(/(\.[^.]+)$/);
+		const extension = match ? match[1] : "";
+
+		const baseName = extension ? name.replace(extension, "") : name;
+
+		const timeStamp = Date.now();
+		const uniqueID = crypto.randomUUID();
+
+		return `${baseName}-${timeStamp}-${uniqueID}${extension}`;
+	};
+
+	const handleUploadThumbnail = async (uploadThumbnailName) => {
+		try {
+			const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ fileName: uploadThumbnailName }),
+			});
+
+			const result = await response.json();
+			const presignedUrl = result.data;
+
+			if (!presignedUrl) {
+				toast.error("Không lấy được URL pre-signed.");
+				return;
+			}
+
+			const uploadResponse = await fetch(presignedUrl, {
+				method: "PUT",
+				body: imageFile,
+				headers: {
+					"Content-Type": imageFile.type,
+				},
+			});
+
+			if (uploadResponse.ok) {
+
+			} else {
+				toast.error("Fail to upload thumbnail");
+			}
+		} catch (error) {
+			console.error("Lỗi:", error);
 		}
 	};
 
@@ -79,9 +137,9 @@ const AddAlbumDialog = () => {
 				</Button>
 			</DialogTrigger>
 			<DialogContent className='bg-zinc-900 border-zinc-700'>
-				<DialogHeader>
-					<DialogTitle>Add New Album</DialogTitle>
-					<DialogDescription>Add a new album to your collection</DialogDescription>
+				<DialogHeader className={undefined}>
+					<DialogTitle className={undefined}>Add New Album</DialogTitle>
+					<DialogDescription className={undefined}>Add a new album to your collection</DialogDescription>
 				</DialogHeader>
 				<div className='space-y-4 py-4'>
 					<input
@@ -113,39 +171,25 @@ const AddAlbumDialog = () => {
 							value={newAlbum.title}
 							onChange={(e) => setNewAlbum({ ...newAlbum, title: e.target.value })}
 							className='bg-zinc-800 border-zinc-700'
-							placeholder='Enter album title'
-						/>
+							placeholder='Enter album title' type={undefined} />
 					</div>
 					<div className='space-y-2'>
-						<label className='text-sm font-medium'>Artist</label>
+						<label className='text-sm font-medium'>Album Description</label>
 						<Input
-							value={newAlbum.artist}
-							onChange={(e) => setNewAlbum({ ...newAlbum, artist: e.target.value })}
+							value={newAlbum.description}
+							onChange={(e) => setNewAlbum({ ...newAlbum, description: e.target.value })}
 							className='bg-zinc-800 border-zinc-700'
-							placeholder='Enter artist name'
-						/>
-					</div>
-					<div className='space-y-2'>
-						<label className='text-sm font-medium'>Release Year</label>
-						<Input
-							type='number'
-							value={newAlbum.releaseYear}
-							onChange={(e) => setNewAlbum({ ...newAlbum, releaseYear: parseInt(e.target.value) })}
-							className='bg-zinc-800 border-zinc-700'
-							placeholder='Enter release year'
-							min={1900}
-							max={new Date().getFullYear()}
-						/>
+							placeholder='Enter album Description' type={undefined} />
 					</div>
 				</div>
-				<DialogFooter>
+				<DialogFooter className={undefined}>
 					<Button variant='outline' onClick={() => setAlbumDialogOpen(false)} disabled={isLoading}>
 						Cancel
 					</Button>
 					<Button
 						onClick={handleSubmit}
 						className='bg-violet-500 hover:bg-violet-600'
-						disabled={isLoading || !imageFile || !newAlbum.title || !newAlbum.artist}
+						disabled={isLoading || !imageFile || !newAlbum.title || !newAlbum.description}
 					>
 						{isLoading ? "Creating..." : "Add Album"}
 					</Button>
