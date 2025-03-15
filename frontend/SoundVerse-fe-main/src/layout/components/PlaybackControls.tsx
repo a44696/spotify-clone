@@ -107,7 +107,7 @@ export const PlaybackControls = () => {
         <div className="hidden sm:flex items-center gap-4 min-w-[180px] w-[30%]">
           {currentSong && (
             <>
-              <img src={currentSong.imageUrl} alt={currentSong.title} className="w-14 h-14 object-cover rounded-md" />
+              <img src={currentSong.thumbnail} alt={currentSong.title} className="w-14 h-14 object-cover rounded-md" />
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate hover:underline cursor-pointer">{currentSong.title}</div>
                 <div className="text-sm text-zinc-400 truncate hover:underline cursor-pointer">{currentSong.artist}</div>

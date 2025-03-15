@@ -19,7 +19,7 @@ const FeaturedSection = () => {
                      hover:bg-zinc-700/50 transition-colors group cursor-pointer relative'
 				>
 					<img
-						src={song.imageUrl}
+						src={song.thumbnail}
 						alt={song.title}
 						className='w-16 sm:w-20 h-16 sm:h-20 object-cover flex-shrink-0'
 					/>

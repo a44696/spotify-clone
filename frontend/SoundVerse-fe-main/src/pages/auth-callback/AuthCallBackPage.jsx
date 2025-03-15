@@ -21,7 +21,7 @@ export const AuthCallBackPage = () => {
 					id: user.id,
 					firstName: user.firstName,
 					lastName: user.lastName,
-					imageUrl: user.imageUrl,
+					thumbnail: user.thumbnail,
 				});
 			} catch (error) {
 				console.log("Error in auth callback", error);

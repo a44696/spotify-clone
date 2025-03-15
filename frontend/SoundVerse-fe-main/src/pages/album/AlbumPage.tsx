@@ -52,7 +52,7 @@ const AlbumPage = () => {
           <div className='relative z-10'>
             <div className='flex p-6 gap-6 pb-8'>
               <img
-                  src={currentAlbum?.imageUrl}
+                  src={currentAlbum?.thumbnail}
                   alt={currentAlbum?.title}
                   className='w-[240px] h-[240px] shadow-xl rounded'
               />
@@ -118,7 +118,7 @@ const AlbumPage = () => {
                       </div>
 
                       <div className='flex items-center gap-3'>
-                        <img src={song.imageUrl} alt={song.title} className='size-10' />
+                        <img src={song.thumbnail} alt={song.title} className='size-10' />
                         <div>
                           <div className='font-medium text-white'>{song.title}</div>
                           <div>{song.artist}</div>

@@ -64,7 +64,7 @@ const LeftSidebar = () => {
                         key={album.id}
                         className='p-2 hover:bg-zinc-800 rounded-md flex items-center gap-3 group cursor-pointer'
                         >
-                          <img src={album.imageUrl}
+                          <img src={album.thumbnail}
 										        alt='Playlist img'
 										        className='size-12 rounded-md flex-shrink-0 object-cover' />
                             <div className='flex-1 min-w-0 hidden md:block'>
