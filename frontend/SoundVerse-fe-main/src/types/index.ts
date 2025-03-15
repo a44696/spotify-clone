@@ -25,15 +25,16 @@ export interface Album {
 }
 export interface Playlist {
 	id: number;      
-	name: string;     
-	userId: number;   
+	name: string;
 	songs: Song[];    
 	createdAt: string;
 }
 export interface Stats {
 	totalSongs: number;
+	totalSongsMonthly: number;
 	totalAlbums: number;
 	totalUsers: number;
+	totalUsersMonthly: number;
 	totalArtists: number;
 }
 export interface User {

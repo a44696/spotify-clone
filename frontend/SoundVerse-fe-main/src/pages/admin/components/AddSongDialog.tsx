@@ -42,7 +42,7 @@ const AddSongDialog = () => {
 		title: "",
 		thumbnail: "",
 		description: "",
-		genreId: 0 ||null,
+		genreId: 0 || null,
 		filePath: "",
 		duration: 0,
 		albumsId: null
@@ -64,7 +64,7 @@ const AddSongDialog = () => {
 			setDuration(duration);
 		}
 	};
-	
+
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
@@ -75,13 +75,13 @@ const AddSongDialog = () => {
 			}
 
 			const uploadMusicName = generateFileName(files.audio.name);
-    		const uploadThumbnailName = generateFileName(files.image.name);
+			const uploadThumbnailName = generateFileName(files.image.name);
 
 			await handleUploadThumbnail(uploadThumbnailName);
 			await handleUploadAudio(uploadMusicName);
 
 			const data = {
-				title:newSong.title,
+				title: newSong.title,
 				description: newSong.description,
 				thumbnail: uploadThumbnailName,
 				albumsId: newSong.albumsId ? newSong.albumsId : null,
@@ -127,107 +127,107 @@ const AddSongDialog = () => {
 	};
 
 	const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
-  };
+		const minutes = Math.floor(seconds / 60);
+		const secs = Math.floor(seconds % 60);
+		return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
+	};
 
 	const getAudioDuration = (file) => {
-    return new Promise((resolve) => {
-      const audio = new Audio(URL.createObjectURL(file));
-      audio.addEventListener("loadedmetadata", () => {
-        resolve(audio.duration);
-      });
-    });
-  };
+		return new Promise((resolve) => {
+			const audio = new Audio(URL.createObjectURL(file));
+			audio.addEventListener("loadedmetadata", () => {
+				resolve(audio.duration);
+			});
+		});
+	};
 
 	const generateFileName = (name) => {
 		name = name.replace(/\s+/g, "_").trim();
-	
+
 		const match = name.match(/(\.[^.]+)$/);
 		const extension = match ? match[1] : "";
-	
+
 		const baseName = extension ? name.replace(extension, "") : name;
-	
+
 		const timeStamp = Date.now();
 		const uniqueID = crypto.randomUUID();
-	
+
 		return `${baseName}-${timeStamp}-${uniqueID}${extension}`;
-  	};
+	};
 
 	const handleUploadThumbnail = async (uploadThumbnailName) => {
-    try {
-      const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ fileName: uploadThumbnailName }),
-      });
+		try {
+			const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ fileName: uploadThumbnailName }),
+			});
 
-      const result = await response.json();
-      const presignedUrl = result.data;
+			const result = await response.json();
+			const presignedUrl = result.data;
 
-      if (!presignedUrl) {
-		toast.error("Không lấy được URL pre-signed.");
-		return;
-      }
+			if (!presignedUrl) {
+				toast.error("Không lấy được URL pre-signed.");
+				return;
+			}
 
-      const uploadResponse = await fetch(presignedUrl, {
-        method: "PUT",
-        body: files.image,
-        headers: {
-          "Content-Type": files.image.type,
-        },
-      });
+			const uploadResponse = await fetch(presignedUrl, {
+				method: "PUT",
+				body: files.image,
+				headers: {
+					"Content-Type": files.image.type,
+				},
+			});
 
-      if (uploadResponse.ok) {
+			if (uploadResponse.ok) {
 
-      } else {
-		toast.error("Fail to upload thumbnail");
-      }
-    } catch (error) {
-      console.error("Lỗi:", error);
-    }
-  };
+			} else {
+				toast.error("Fail to upload thumbnail");
+			}
+		} catch (error) {
+			console.error("Lỗi:", error);
+		}
+	};
 
 	const handleUploadAudio = async (uploadMusicName) => {
-    try {
-      const response = await fetch("http://localhost:8080/api/generate-single-presigned-url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ fileName: uploadMusicName }),
-      });
+		try {
+			const response = await fetch("http://localhost:8080/api/generate-single-presigned-url", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({ fileName: uploadMusicName }),
+			});
 
-      const result = await response.json();
-      const presignedUrl = result.data;
+			const result = await response.json();
+			const presignedUrl = result.data;
 
-      if (!presignedUrl) {
-		toast.error("Không lấy được URL pre-signed.");
-		return;
-      }
+			if (!presignedUrl) {
+				toast.error("Không lấy được URL pre-signed.");
+				return;
+			}
 
-      const uploadResponse = await fetch(presignedUrl, {
-        method: "PUT",
-        body: files.audio,
-        headers: {
-          "Content-Type": "audio/mpeg",
-        },
-      });
+			const uploadResponse = await fetch(presignedUrl, {
+				method: "PUT",
+				body: files.audio,
+				headers: {
+					"Content-Type": "audio/mpeg",
+				},
+			});
 
-      if (uploadResponse.ok) {
+			if (uploadResponse.ok) {
 
-      } else {
+			} else {
 				toast.error("Fail to upload audio");
-      }
-    } catch (error) {
-      console.error("Lỗi:", error);
-    }
-  };
+			}
+		} catch (error) {
+			console.error("Lỗi:", error);
+		}
+	};
 
 	return (
 		<Dialog open={songDialogOpen} onOpenChange={setSongDialogOpen}>
@@ -261,13 +261,13 @@ const AddSongDialog = () => {
 						onChange={(e) => {
 							const temp = e.target.files?.[0];
 							if (!temp) return;
-					
+
 							if (thumbnailPreview) {
 								URL.revokeObjectURL(thumbnailPreview);
 							}
 							const previewUrl = URL.createObjectURL(temp);
 							setThumbnailPreview(previewUrl);
-							
+
 							setFiles((prev) => ({ ...prev, image: temp }));
 						}}
 					/>
@@ -314,7 +314,7 @@ const AddSongDialog = () => {
 						<Input
 							value={newSong.title}
 							onChange={(e) => setNewSong({ ...newSong, title: e.target.value })}
-							className='bg-zinc-800 border-zinc-700' type={undefined}						/>
+							className='bg-zinc-800 border-zinc-700' type={undefined} />
 					</div>
 
 					<div className='space-y-2'>
