@@ -69,7 +69,7 @@ const SearchResultsPage = () => {
                                         )}
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <img src={song.imageUrl} alt={song.title} className="size-10" />
+                                        <img src={song.thumbnail} alt={song.title} className="size-10" />
                                         <div>
                                             <div className="font-medium text-white">{song.title}</div>
                                             <div>{song.artist}</div>

@@ -1,11 +1,13 @@
 export interface Song {
 	id: number;
 	title: string;
-	artist: string;
+	artist: User;
+	genre: string;
+	description: string;
 	albumId: string | null;
-	imageUrl: string;
-	audioUrl: string;
-	duration: number;
+	thumbnail: string;
+	filePath: string;
+	length: number;
 	createdAt: string;
 }
 
@@ -13,19 +15,18 @@ export interface Album {
 	id: number;
 	title: string;
 	description: string;
-	imageUrl: string;
+	thumbnail: string;
+	artist: User;
 	listOfMusic: number;
-	artistId: number;
 	createdAt: string;
 	songs: Song[];
 }
 export interface Playlist {
-	id: number;          // ID của playlist
-	name: string;         // Tên playlist
-	userId: string;       // ID của người sở hữu playlist
-	songs: Song[];        // Danh sách bài hát trong playlist
-	createdAt: string;    // Ngày tạo playlist
-	updatedAt: string;    // Ngày cập nhật playlist
+	id: number;      
+	name: string;     
+	userId: number;   
+	songs: Song[];    
+	createdAt: string;
 }
 export interface Stats {
 	totalSongs: number;
@@ -34,10 +35,15 @@ export interface Stats {
 	totalArtists: number;
 }
 export interface User {
-	_id: string;
-	clerkId: string;
+	id: number;
+	username: string;
+	email: string;
+	gender: string;
+	country: string;
+	profilePicImage: string | null;
 	fullName: string;
-	imageUrl: string;
+	dob: string;
+	createdAt: string
 }
 export interface Genre {
 	id: string;
