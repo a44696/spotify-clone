@@ -52,3 +52,8 @@ export interface Genre {
 	id: string;
 	title: string;
 }
+export interface Artist {
+	id: number;
+	name: string;
+	thumbnail: string;
+  }
