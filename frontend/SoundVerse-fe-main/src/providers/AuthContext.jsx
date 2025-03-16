@@ -4,6 +4,7 @@ const AuthContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isArtist, setIsArtist] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const getCurrentUser = async () => {
@@ -15,6 +16,9 @@ export const UserProvider = ({ children }) => {
             if (response.ok) {
                 const data = await response.json();
                 setUser(data);
+                if (data.role === "ARTIST") {
+                    setIsArtist(true);
+                }
             } else {
                 setUser(null);  
             }
@@ -31,7 +35,7 @@ export const UserProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser }}>
+        <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser, isArtist }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useAuth } from "@/providers/AuthContext";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Trash2 } from "lucide-react";
 import React from "react";
 
 const SongsTable = () => {
-	const { songs, isLoading, error, deleteSong } = useMusicStore();
+	const { songs, isLoading, mySongs, deleteSong } = useMusicStore();
+	const { isArtist } = useAuth();
+	const songsToDisplay = isArtist ? mySongs ?? [] : songs ?? [];
 
 	const formatTime = (seconds) => {
 		const minutes = Math.floor(seconds / 60);
@@ -20,14 +23,6 @@ const SongsTable = () => {
 			</div>
 		);
 	}
-
-	// if (error) {
-	// 	return (
-	// 		<div className='flex items-center justify-center py-8'>
-	// 			<div className='text-red-400'>{error}</div>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<Table className={undefined}>
@@ -44,7 +39,7 @@ const SongsTable = () => {
 			</TableHeader>
 
 			<TableBody className={undefined}>
-				{songs.map((song) => (
+				{songsToDisplay.map((song) => (
 					<TableRow key={song.id} className='hover:bg-zinc-800/50'>
 						<TableCell className={undefined}>
 							<img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />

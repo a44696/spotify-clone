@@ -5,6 +5,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Laptop2, ListMusic, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1, Plus, XCircle, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import axios from 'axios'; // Import axios for making API requests
+import { Playlist } from "@/types";
 
 const formatTime = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
@@ -17,7 +18,7 @@ export const PlaybackControls = () => {
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [playlists, setPlaylists] = useState<any[]>([]); // Playlist data
+  const [playlists, setPlaylists] = useState<Playlist[]>([]); // Playlist data
   const [newPlaylistName, setNewPlaylistName] = useState(""); // For creating new playlist
   const [isDialogOpen, setIsDialogOpen] = useState(false); // To control dialog visibility
   const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; playlistId: number | null }>({ open: false, playlistId: null });
@@ -27,7 +28,7 @@ export const PlaybackControls = () => {
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/playlists");
+        const response = await axios.get("http://localhost:8080/api/playlist");
         setPlaylists(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Error fetching playlists:", error);
@@ -74,7 +75,7 @@ export const PlaybackControls = () => {
   const confirmAddToPlaylist = async () => {
     if (!confirmDialog.playlistId || !currentSong) return;
     try {
-      await axios.post(`http://localhost:5000/api/playlists/${confirmDialog.playlistId}/add`, {
+      await axios.post(`http://localhost:8080/api/playlist/${confirmDialog.playlistId}/add`, {
         song: currentSong,
       });
 
@@ -89,7 +90,7 @@ export const PlaybackControls = () => {
   const handleCreatePlaylist = async () => {
     if (newPlaylistName.trim()) {
       try {
-        const response = await axios.post("http://localhost:5000/api/playlists", { name: newPlaylistName, songs: [] });
+        const response = await axios.post("http://localhost:8080/api/playlist", { name: newPlaylistName, songs: [] });
 
         setPlaylists([...playlists, response.data]);
         setNewPlaylistName("");

@@ -1,15 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useAuth } from "@/providers/AuthContext";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Music, Trash2 } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
 
-const AlbumsTable = () => {
+const UsersTable = () => {
 	const { albums, deleteAlbum, fetchAlbums, myAlbums, fetchMyAlbums } = useMusicStore();
-	const { isArtist } = useAuth();
-	const albumssToDisplay = isArtist ? myAlbums ?? [] : albums ?? [];
 
 	useEffect(() => {
 		fetchAlbums();
@@ -21,19 +18,18 @@ const AlbumsTable = () => {
 			<TableHeader className={undefined}>
 				<TableRow className='hover:bg-zinc-800/50'>
 					<TableHead className='w-[50px]'></TableHead>
-					<TableHead className={undefined}>Title</TableHead>
-					<TableHead className={undefined}>Artist</TableHead>
-					<TableHead className={undefined}>Songs</TableHead>
+					<TableHead className={undefined}>Username</TableHead>
+					<TableHead className={undefined}>Email</TableHead>
+					<TableHead className={undefined}>Gender</TableHead>
+					<TableHead className={undefined}>Role</TableHead>
+					<TableHead className={undefined}>Status</TableHead>
 					<TableHead className={undefined}>Created At</TableHead>
 					<TableHead className='text-right'>Actions</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody className={undefined}>
-				{albumssToDisplay.map((album) => (
+				{albums.map((album) => (
 					<TableRow key={album.id} className='hover:bg-zinc-800/50'>
-						<TableCell className={undefined}>
-							<img src={album.thumbnail} alt={album.title} className='w-10 h-10 rounded object-cover' />
-						</TableCell>
 						<TableCell className='font-medium'>{album.title}</TableCell>
 						<TableCell className={undefined}>{album.artistId}</TableCell>
 						<TableCell className={undefined}>
@@ -66,4 +62,4 @@ const AlbumsTable = () => {
 		</Table>
 	);
 };
-export default AlbumsTable;
+export default UsersTable;

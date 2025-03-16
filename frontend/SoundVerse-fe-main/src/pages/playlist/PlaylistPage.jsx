@@ -5,10 +5,11 @@ import { Input } from '@/components/ui/Input';
 import { Trash, Plus, Play, Pause } from 'lucide-react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useAuth } from '@clerk/clerk-react';
+import { useMusicStore } from '@/stores/useMusicStore'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const PlaylistPage = () => {
-  const [playlists, setPlaylists] = useState([]);
+  const { playlists, addMusicToPlaylist, deleteMusicFromPlaylist } = useMusicStore();
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [currentSong, setCurrentSong] = useState(null);
@@ -22,7 +23,7 @@ const PlaylistPage = () => {
         const token = await getToken();
         if (!token) throw new Error('Không có token');
 
-        const response = await fetch('http://localhost:5000/api/playlists', {
+        const response = await fetch('http://localhost:8080/api/playlist', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,11 +49,9 @@ const PlaylistPage = () => {
   const handleCreatePlaylist = async () => {
     if (newPlaylistName.trim()) {
       try {
-        const token = await getToken();
-        const response = await fetch('http://localhost:5000/api/playlists', {
+        const response = await fetch('http://localhost:8080/api/playlist', {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ name: newPlaylistName, description: newDescription }),

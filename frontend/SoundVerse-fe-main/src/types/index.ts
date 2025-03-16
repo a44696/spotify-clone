@@ -26,6 +26,8 @@ export interface Album {
 export interface Playlist {
 	id: number;      
 	name: string;
+	thumbnail: string;
+	description: string;
 	songs: Song[];    
 	createdAt: string;
 }
@@ -37,6 +39,11 @@ export interface Stats {
 	totalUsersMonthly: number;
 	totalArtists: number;
 }
+export interface MyStats {
+	totalSongs: number;
+	totalAlbums: number;
+	totalFollowers: number;
+}
 export interface User {
 	id: number;
 	username: string;
@@ -45,8 +52,14 @@ export interface User {
 	country: string;
 	profilePicImage: string | null;
 	fullName: string;
+	role: string;
+	status: string;
 	dob: string;
 	createdAt: string
+}
+export interface Artist extends User {
+	songs: Song[];
+	albums: Album[];
 }
 export interface Genre {
 	id: string;
