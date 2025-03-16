@@ -5,7 +5,7 @@ import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import MainLayout from "./layout/MainLayout";
 import AuthPage from "./pages/auth/AuthPage";
 import AlbumPage from "./pages/album/AlbumPage";
-import PlaylistPage from "./pages/chat/PlaylistPage";
+import PlaylistPage from "./pages/playlist/PlaylistPage";
 import AdminPage from "./pages/admin/AdminPage";
 import { Toaster } from "react-hot-toast";
 import SearchResultsPage from "./pages/search/SearchResultsPage";
