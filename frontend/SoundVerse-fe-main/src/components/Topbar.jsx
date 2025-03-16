@@ -91,8 +91,7 @@ const Topbar = () => {
                             <div className="flex items-center gap-2">
                                 <img src="cover-images/12.jpg" className="w-10 h-10 rounded-full" alt="Avatar" />
                                 <div>
-                                    
-                                    <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
+                                    <p className="text-sm text-gray-500">{user?.username || user?.email || "User"}</p>
                                 </div>
                             </div>
                             <div className="mt-4 space-y-2">

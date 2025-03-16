@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import SearchResultsPage from "./pages/search/SearchResultsPage";
 import VerifyPage from "./pages/auth/VerifyPage";
 import SignUpForm from "./pages/auth/SignUpForm";
+import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
 function App() {
   return (
     <>
@@ -26,6 +27,7 @@ function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/verify" element={<VerifyPage />} />
+        <Route path="/my-musics" element= {<MyMusicsPage/>}/>
         <Route element={<MainLayout />}>
           <Route path="/" element= {<HomePage/>}/>
           <Route path="/playlists" element= {<PlaylistPage/>}/>
