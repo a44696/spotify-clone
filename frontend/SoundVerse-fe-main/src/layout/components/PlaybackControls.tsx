@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Laptop2, ListMusic, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1, Plus, XCircle, CheckCircle } from "lucide-react";
+import { ListMusic, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1, Plus, XCircle, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import axios from 'axios'; // Import axios for making API requests
-import { Playlist } from "@/types";
+import { useMusicStore } from "@/stores/useMusicStore";
+import AddPlaylistDialog from "@/pages/playlist/AddPlaylistDialog";
 
 const formatTime = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
@@ -15,27 +15,16 @@ const formatTime = (seconds: number) => {
 
 export const PlaybackControls = () => {
   const { currentSong, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
+  const { playlists, fetchPlaylists, addMusicToPlaylist } = useMusicStore();
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [playlists, setPlaylists] = useState<Playlist[]>([]); // Playlist data
   const [newPlaylistName, setNewPlaylistName] = useState(""); // For creating new playlist
   const [isDialogOpen, setIsDialogOpen] = useState(false); // To control dialog visibility
   const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; playlistId: number | null }>({ open: false, playlistId: null });
-  
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const fetchPlaylists = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/playlist");
-        setPlaylists(Array.isArray(response.data) ? response.data : []);
-      } catch (error) {
-        console.error("Error fetching playlists:", error);
-        setPlaylists([]);
-      }
-    };
-
     fetchPlaylists();
 
     audioRef.current = document.querySelector("audio");
@@ -61,7 +50,7 @@ export const PlaybackControls = () => {
     };
   }, [currentSong]);
 
-  
+
   const handleSeek = (value: number[]) => {
     if (audioRef.current) {
       audioRef.current.currentTime = value[0];
@@ -75,9 +64,10 @@ export const PlaybackControls = () => {
   const confirmAddToPlaylist = async () => {
     if (!confirmDialog.playlistId || !currentSong) return;
     try {
-      await axios.post(`http://localhost:8080/api/playlist/${confirmDialog.playlistId}/add`, {
-        song: currentSong,
-      });
+      addMusicToPlaylist(confirmDialog.playlistId, currentSong.id);
+      // await axiosInstance.post(`http://localhost:8080/api/playlist/${confirmDialog.playlistId}/add`, {
+      //   song: currentSong,
+      // });
 
       setConfirmDialog({ open: false, playlistId: null });
       alert("Đã thêm bài hát vào playlist thành công!");
@@ -87,19 +77,19 @@ export const PlaybackControls = () => {
     }
   };
 
-  const handleCreatePlaylist = async () => {
-    if (newPlaylistName.trim()) {
-      try {
-        const response = await axios.post("http://localhost:8080/api/playlist", { name: newPlaylistName, songs: [] });
+  // const handleCreatePlaylist = async () => {
+  //   if (newPlaylistName.trim()) {
+  //     try {
+  //       const response = await axiosInstance.post("http://localhost:8080/api/playlist", { name: newPlaylistName, songs: [] });
 
-        setPlaylists([...playlists, response.data]);
-        setNewPlaylistName("");
-        setIsDialogOpen(false);
-      } catch (error) {
-        console.error("Error creating playlist:", error);
-      }
-    }
-  };
+  //       setPlaylists([...playlists, response.data]);
+  //       setNewPlaylistName("");
+  //       setIsDialogOpen(false);
+  //     } catch (error) {
+  //       console.error("Error creating playlist:", error);
+  //     }
+  //   }
+  // };
 
   return (
     <footer className="h-20 sm:h-24 bg-zinc-900 border-t border-zinc-800 px-4">
@@ -182,8 +172,8 @@ export const PlaybackControls = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-zinc-900 border-zinc-700">
-              <DialogHeader>
-                <DialogTitle>Add to Playlist</DialogTitle>
+              <DialogHeader className={undefined}>
+                <DialogTitle className={undefined}>Add to Playlist</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 {Array.isArray(playlists) && playlists.length > 0 ? (
@@ -201,19 +191,10 @@ export const PlaybackControls = () => {
                   <div>No playlists available</div>
                 )}
                 <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="Create new playlist"
-                    value={newPlaylistName}
-                    onChange={(e) => setNewPlaylistName(e.target.value)}
-                    className="w-full p-2 bg-zinc-800 text-white rounded-md"
-                  />
-                  <Button onClick={handleCreatePlaylist} className="bg-emerald-500">
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  <AddPlaylistDialog />
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className={undefined}>
                 <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Close
                 </Button>
@@ -222,25 +203,25 @@ export const PlaybackControls = () => {
           </Dialog>
 
           {/* Xác nhận thêm bài hát vào Playlist */}
-        {confirmDialog.open && (
-          <Dialog open={confirmDialog.open} onOpenChange={() => setConfirmDialog({ open: false, playlistId: null })}>
-            <DialogContent className="bg-zinc-900 border-zinc-700">
-              <DialogHeader>
-                <DialogTitle>Xác nhận thêm bài hát</DialogTitle>
-              </DialogHeader>
-              <p>Bạn có chắc chắn muốn thêm <b>{currentSong?.title}</b> vào playlist này?</p>
-              <DialogFooter className="flex gap-2">
-                <Button onClick={confirmAddToPlaylist} className="bg-emerald-500">
-                  <CheckCircle className="h-4 w-4 mr-2" /> Xác nhận
-                </Button>
-                <Button variant="destructive" onClick={() => setConfirmDialog({ open: false, playlistId: null })}>
-                  <XCircle className="h-4 w-4 mr-2" /> Hủy
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          {confirmDialog.open && (
+            <Dialog open={confirmDialog.open} onOpenChange={() => setConfirmDialog({ open: false, playlistId: null })}>
+              <DialogContent className="bg-zinc-900 border-zinc-700">
+                <DialogHeader className={undefined}>
+                  <DialogTitle className={undefined}>Xác nhận thêm bài hát</DialogTitle>
+                </DialogHeader>
+                <p>Bạn có chắc chắn muốn thêm <b>{currentSong?.title}</b> vào playlist này?</p>
+                <DialogFooter className="flex gap-2">
+                  <Button onClick={confirmAddToPlaylist} className="bg-emerald-500">
+                    <CheckCircle className="h-4 w-4 mr-2" /> Xác nhận
+                  </Button>
+                  <Button variant="destructive" onClick={() => setConfirmDialog({ open: false, playlistId: null })}>
+                    <XCircle className="h-4 w-4 mr-2" /> Hủy
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
-        )}
+          )}
           <div className="flex items-center gap-2">
             <Button size="icon" variant="ghost" className="hover:text-white text-zinc-400">
               <Volume1 className="h-4 w-4" />

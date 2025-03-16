@@ -9,7 +9,7 @@ import { useEffect } from "react";
 const AlbumsTable = () => {
 	const { albums, deleteAlbum, fetchAlbums, myAlbums, fetchMyAlbums } = useMusicStore();
 	const { isArtist } = useAuth();
-	const albumssToDisplay = isArtist ? myAlbums ?? [] : albums ?? [];
+	const albumsToDisplay = isArtist ? myAlbums ?? [] : albums ?? [];
 
 	useEffect(() => {
 		fetchAlbums();
@@ -29,7 +29,7 @@ const AlbumsTable = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody className={undefined}>
-				{albumssToDisplay.map((album) => (
+				{albumsToDisplay.map((album) => (
 					<TableRow key={album.id} className='hover:bg-zinc-800/50'>
 						<TableCell className={undefined}>
 							<img src={album.thumbnail} alt={album.title} className='w-10 h-10 rounded object-cover' />
