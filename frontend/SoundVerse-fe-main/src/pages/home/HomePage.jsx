@@ -6,6 +6,7 @@ import { ScrollArea } from '@radix-ui/react-scroll-area'
 import FeaturedSection from './components/FeaturedSection'
 import SectionGrid from './components/SectionGrid'
 import { usePlayerStore } from '@/stores/usePlayerStore'
+import SectionGridArtists from './components/SectionGridArtists'
 
 const HomePage = () => {
 	const {
@@ -43,12 +44,13 @@ const HomePage = () => {
 					scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
 				}}>
 				<div className='p-4 sm:p-6'>
-					<h1 className='text-2xl sm:text-3xl font-bold mb-6'>Good afternoon</h1>
+					<h1 className='text-2xl sm:text-3xl font-bold mb-6'>Have a nice day</h1>
 					<FeaturedSection />
 
 					<div className='space-y-8'>
-						<SectionGrid title='Made For You' songs={madeForYouSongs} isLoading={isLoading} />
 						<SectionGrid title='Trending' songs={trendingSongs} isLoading={isLoading} />
+						<SectionGridArtists title='Popular Artists'  isLoading={isLoading} />
+						
 					</div>
 				</div>
 			</ScrollArea>

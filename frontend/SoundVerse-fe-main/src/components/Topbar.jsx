@@ -38,7 +38,7 @@ const Topbar = () => {
             {/* Logo */}
             <div className='flex gap-2 items-center'>
                 <img src="/spotify.png" alt="spotify logo" className="size-8" />
-                <span className="text-white font-semibold text-lg">Spotify</span>
+                <span className="text-white font-semibold text-lg">Sound Verse</span>
             </div>
 
             {/* Search Bar */}
@@ -95,17 +95,12 @@ const Topbar = () => {
                                 </div>
                             </div>
                             <div className="mt-4 space-y-2">
-                                <Link to="/profile" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Public Profile</Link>
-                                <Link to="/settings" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">My Profile</Link>
-                                <Link to="/account" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">My Account</Link>
-                                <Link to="/forum" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Dev Forum</Link>
+                                <Link to="/profile" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Profile</Link>
+                                <Link to="/settings" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Playlist</Link>
+                                <Link to="/account" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">My Musics</Link>
+                                
                             </div>
-                            <div className="mt-4 border-t pt-2">
-                                <label className="flex justify-between items-center text-sm text-gray-700">
-                                    Dark Mode
-                                    <Switch checked={darkMode} onCheckedChange={setDarkMode} />
-                                </label>
-                            </div>
+                            
                             <button
                                 onClick={handleLogout}  // Thực hiện đăng xuất thủ công
                                 className="mt-4 w-full text-sm text-red-600 hover:bg-gray-200 p-2 rounded"

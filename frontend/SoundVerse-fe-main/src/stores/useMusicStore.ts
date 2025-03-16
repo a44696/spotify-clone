@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
-import { Album, Genre, MyStats, Playlist, Song, Stats } from "@/types";
+import { Album, Genre, MyStats, Playlist, Song, Stats, Artist } from "@/types";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
@@ -18,6 +18,7 @@ interface MusicStore {
 	trendingSongs: Song[];
 	stats: Stats;
 	myStats: MyStats;
+	artists: Artist[];
 
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
@@ -62,6 +63,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		totalAlbums: 0,
 		totalFollowers: 0
 	},
+	artists: [],
 
 	deleteAlbum: async (id) => {
 		set({ isLoading: true, error: null });
@@ -255,6 +257,17 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
+	fetchArtists: async () => {
+		set({ isLoading: true, error: null });
+		try {
+		  const response = await axiosInstance.get("/artists"); // Giả sử bạn có API để lấy danh sách nghệ sĩ
+		  set({ artists: response.data.data }); // Lưu dữ liệu nghệ sĩ vào state
+		} catch (error: any) {
+		  set({ error: error.message });
+		} finally {
+		  set({ isLoading: false });
+		}
+	  },
 
 	fetchGenres: async () => {
 		set({ isLoading: true, error: null });
