@@ -31,14 +31,15 @@ const PlaylistsTable = () => {
                     {playlists.map((playlist) => (
                         <TableRow key={playlist.id} className="hover:bg-zinc-800/50">
                             <TableCell className={undefined}>
-                                <img src={playlist.thumbnail} alt={playlist.name} className="size-10 rounded object-cover" />
+                                <img src={playlist.thumbnail} alt={playlist.title} className="size-10 rounded object-cover" />
                             </TableCell>
-                            <TableCell className="font-medium">{playlist.name}</TableCell>
+                            <TableCell className="font-medium">{playlist.id}</TableCell>
+                            <TableCell className="font-medium">{playlist.title}</TableCell>
                             <TableCell className={undefined}>{playlist.description}</TableCell>
                             <TableCell className={undefined}>
                                 <span className='inline-flex items-center gap-1 text-zinc-400'>
                                     <Music className='h-4 w-4' />
-                                    {playlist.songs.length} songs
+                                    {playlist.songs.length ?? 0} songs
                                 </span>
                             </TableCell>
                             <TableCell className={undefined}>

@@ -28,7 +28,7 @@ interface NewSong {
 }
 
 const AddSongDialog = () => {
-	const { albums, fetchGenres, genres } = useMusicStore();
+	const { albums, fetchGenres, genres, mySongs } = useMusicStore();
 	const [songDialogOpen, setSongDialogOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [duration, setDuration] = useState(null);
@@ -96,6 +96,7 @@ const AddSongDialog = () => {
 				},
 			});
 			if (postCreateMusic.data.status === "success") {
+				mySongs.push(postCreateMusic.data.data);
 				toast.success(postCreateMusic.data.message);
 			} else {
 				toast.error(postCreateMusic.data.message);

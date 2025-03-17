@@ -16,7 +16,6 @@ function App() {
   return (
     <>
       <Routes>
-        
         <Route 
           path="/sso-callback" 
           element={<AuthenticateWithRedirectCallback

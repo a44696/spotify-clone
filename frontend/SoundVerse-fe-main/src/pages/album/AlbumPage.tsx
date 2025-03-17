@@ -6,12 +6,6 @@ import { Clock, Pause, Play } from 'lucide-react';
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 
-
-export const formatDuration = (seconds: number) => {
-	const minutes = Math.floor(seconds / 60);
-	const remainingSeconds = seconds % 60;
-	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-};
 const AlbumPage = () => {
   const { albumId } = useParams();
   const { fetchAlbumById, currentAlbum, isLoading } = useMusicStore();
@@ -37,6 +31,13 @@ const AlbumPage = () => {
 
 		playAlbum(currentAlbum?.songs, index);
 	};
+
+  const formatDuration = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
+  };
+  
   return (
     <div className='h-full'>
       <ScrollArea className='h-full rounded-md'>

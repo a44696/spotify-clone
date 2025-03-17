@@ -37,7 +37,7 @@ const LeftSidebar = () => {
               }))}
           >
             <Library className='mr-2 size-5' />
-            <span className='hidden md:inline'>Playlist of You</span>
+            <span className='hidden md:inline'>My playlists</span>
           </Link>
 
           <Link to={'/my-musics'}
@@ -74,8 +74,8 @@ const LeftSidebar = () => {
                     alt='Playlist img'
                     className='size-12 rounded-md flex-shrink-0 object-cover' />
                   <div className='flex-1 min-w-0 hidden md:block'>
-                    <p className='font-medium truncate'>{playlist.name}</p>
-                    <p className='text-sm text-zinc-400 truncate'>{playlist.songs.length} songs</p>
+                    <p className='font-medium truncate'>{playlist.title}</p>
+                    <p className='text-sm text-zinc-400 truncate'>{playlist.songs.length ?? 0} songs</p>
                   </div>
                 </Link>
               ))

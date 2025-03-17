@@ -1,17 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useMusicStore } from "@/stores/useMusicStore";
-import { Calendar, Music, Trash2 } from "lucide-react";
+import { useUserStore } from "@/stores/useUserStore";
+import { Calendar, Trash2 } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
 
 const UsersTable = () => {
-	const { albums, deleteAlbum, fetchAlbums, myAlbums, fetchMyAlbums } = useMusicStore();
+	const { users, fetchedUsers } = useUserStore();
 
 	useEffect(() => {
-		fetchAlbums();
-		fetchMyAlbums();
-	}, [fetchAlbums, fetchMyAlbums]);
+		fetchedUsers();
+	}, [fetchedUsers]);
 
 	return (
 		<Table className={undefined}>
@@ -28,20 +27,20 @@ const UsersTable = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody className={undefined}>
-				{albums.map((album) => (
-					<TableRow key={album.id} className='hover:bg-zinc-800/50'>
-						<TableCell className='font-medium'>{album.title}</TableCell>
-						<TableCell className={undefined}>{album.artistId}</TableCell>
+				{users.map((user) => (
+					<TableRow key={user.id} className='hover:bg-zinc-800/50'>
 						<TableCell className={undefined}>
-							<span className='inline-flex items-center gap-1 text-zinc-400'>
-								<Music className='h-4 w-4' />
-								{album.songs.length} songs
-							</span>
+							<img src={user.profilePicImage != null ? user.profilePicImage : "cover-images/12.jpg" } alt={user.username} className='size-10 rounded object-cover' />
 						</TableCell>
+						<TableCell className='font-medium'>{user.username}</TableCell>
+						<TableCell className={undefined}>{user.email}</TableCell>
+						<TableCell className={undefined}>{user.gender}</TableCell>
+						<TableCell className={undefined}>{user.role}</TableCell>
+						<TableCell className={undefined}>{user.status}</TableCell>
 						<TableCell className={undefined}>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
 								<Calendar className='h-4 w-4' />
-								{album.createdAt}
+								{user.createdAt}
 							</span>
 						</TableCell>
 						<TableCell className='text-right'>
@@ -49,7 +48,7 @@ const UsersTable = () => {
 								<Button
 									variant='ghost'
 									size='sm'
-									onClick={() => deleteAlbum(album.id)}
+									// onClick={() => deleteuser(user.id)}
 									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
 								>
 									<Trash2 className='h-4 w-4' />
