@@ -30,7 +30,7 @@ const UsersTable = () => {
 				{users.map((user) => (
 					<TableRow key={user.id} className='hover:bg-zinc-800/50'>
 						<TableCell className={undefined}>
-							<img src={user.profilePicImage} alt={user.username} className='size-10 rounded object-cover' />
+							<img src={user.profilePicImage != null ? user.profilePicImage : "cover-images/12.jpg" } alt={user.username} className='size-10 rounded object-cover' />
 						</TableCell>
 						<TableCell className='font-medium'>{user.username}</TableCell>
 						<TableCell className={undefined}>{user.email}</TableCell>

@@ -25,7 +25,7 @@ export interface Album {
 }
 export interface Playlist {
 	id: number;      
-	name: string;
+	title: string;
 	thumbnail: string;
 	description: string;
 	songs: Song[];    

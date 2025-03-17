@@ -16,37 +16,54 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 const AddPlaylistDialog = () => {
-    const { fetchPlaylists } = useMusicStore();
+    const { fetchPlaylists, playlists } = useMusicStore();
     const [newPlaylistName, setNewPlaylistName] = useState('');
     const [newDescription, setNewDescription] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState(null);
 
     const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setImageFile(file);
         }
+        if (thumbnailPreview) {
+            URL.revokeObjectURL(thumbnailPreview);
+        }
+        const previewUrl = URL.createObjectURL(file);
+        setThumbnailPreview(previewUrl);
     };
 
     const handleCreatePlaylist = async () => {
         if (newPlaylistName.trim()) {
             try {
+
+                const uploadThumbnailName = generateFileName(imageFile.name);
+
+                // await handleUploadThumbnail(uploadThumbnailName);
+
                 const response = await fetch('http://localhost:8080/api/playlist', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name: newPlaylistName, description: newDescription }),
+                    body: JSON.stringify({
+                        title: newPlaylistName,
+                        description: newDescription,
+                        thumbnail: "17-1742229324225-58f7b758-24f4-47b3-b1fc-75c0ff58369e.jpg"
+                    }),
+                    credentials: "include"
                 });
 
                 if (!response.ok) {
-                    throw new Error('Lỗi khi tạo playlist');
+                    toast.error('Lỗi khi tạo playlist');
                 }
 
                 const newPlaylist = await response.json();
-                console.log(newPlaylist)
+                playlists.push(newPlaylist);
+                toast.success('Tạo playlist thành công');
                 fetchPlaylists();
                 setNewPlaylistName('');
                 setNewDescription('');
@@ -134,11 +151,20 @@ const AddPlaylistDialog = () => {
                     onClick={() => fileInputRef.current?.click()}
                 >
                     <div className='text-center'>
-                        <div className='p-3 bg-zinc-800 rounded-full inline-block mb-2'>
-                            <Upload className='h-6 w-6 text-zinc-400' />
-                        </div>
                         <div className='text-sm text-zinc-400 mb-2'>
-                            {imageFile ? imageFile.name : "Upload album artwork"}
+                            {imageFile ? (
+                                <div className='text-center' style={{ textAlign: "-webkit-center" }}>
+                                    <div className='text-sm text-emerald-500'>Image selected: <span className="text-xs text-zinc-400">{imageFile.name.slice(0, 20)}</span></div>
+                                    <img style={{ width: "50px" }} alt="thumbnail-preview" src={thumbnailPreview} />
+                                </div>
+                            ) : (
+                                <div className="d-flex">
+                                    <div className='p-3 bg-zinc-800 rounded-full inline-block mb-2'>
+                                        <Upload className='h-6 w-6 text-zinc-400' />
+                                    </div>
+                                    <p>Upload album artwork</p>
+                                </div>
+                            )}
                         </div>
                         <Button variant='outline' size='sm' className='text-xs'>
                             Choose File
@@ -163,7 +189,13 @@ const AddPlaylistDialog = () => {
                 />
 
                 <DialogFooter className={undefined}>
-                    <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                    <Button variant="outline" onClick={() => {
+                        setNewPlaylistName('');
+                        setNewDescription('');
+                        setImageFile(null);
+                        setThumbnailPreview(null);
+                        return setDialogOpen(false)
+                    }}>
                         Cancel
                     </Button>
                     <Button onClick={handleCreatePlaylist}>Save</Button>

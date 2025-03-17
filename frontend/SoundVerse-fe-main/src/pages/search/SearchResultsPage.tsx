@@ -9,12 +9,6 @@ import { axiosInstance } from "@/lib/axios";
 import PlayButton from "../home/components/PlayButton";
 import toast from "react-hot-toast";
 
-export const formatDuration = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-};
-
 const SearchResultsPage = () => {
     const { query } = useParams();
     const [song, setSong] = useState(null);

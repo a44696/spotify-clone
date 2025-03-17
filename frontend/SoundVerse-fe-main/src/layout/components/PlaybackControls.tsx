@@ -184,7 +184,7 @@ export const PlaybackControls = () => {
                       className="w-full text-left"
                       onClick={() => handleAddToPlaylist(playlist.id)}
                     >
-                      {playlist.name}
+                      {playlist.title}
                     </Button>
                   ))
                 ) : (
