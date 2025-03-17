@@ -12,8 +12,11 @@ const AlbumsTable = () => {
 	const albumsToDisplay = isArtist ? myAlbums ?? [] : albums ?? [];
 
 	useEffect(() => {
-		fetchAlbums();
-		fetchMyAlbums();
+		if (isArtist) {
+			fetchMyAlbums();
+		} else {
+			fetchAlbums();
+		}
 	}, [fetchAlbums, fetchMyAlbums]);
 
 	return (
