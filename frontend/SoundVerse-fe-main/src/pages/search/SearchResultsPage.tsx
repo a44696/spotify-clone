@@ -36,7 +36,7 @@ const SearchResultsPage = () => {
 
     return (
         <div>
-            <Topbar />
+            
             <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto' 
   		        style={{scrollbarWidth: 'thin', /* Dùng cho Firefox */
 			    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */}}>

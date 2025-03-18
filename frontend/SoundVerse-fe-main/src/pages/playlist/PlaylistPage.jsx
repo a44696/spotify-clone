@@ -42,10 +42,10 @@ const PlaylistPage = () => {
 
   return (
     <div>
-      <Topbar />
+      
       <div className="my-7">
         <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto">
-          <TableRow className="bg-zinc-900 text-white flex justify-between items-center">
+          <TableRow className=" text-white flex justify-between items-center">
             <TableHead className="text-left text-xl font-bold py-3">
               Your Playlists
             </TableHead>

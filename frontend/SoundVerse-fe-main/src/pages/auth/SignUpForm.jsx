@@ -51,7 +51,11 @@ const SignUpForm = () => {
 
       if (res.data.status == 'success') {
         toast.success("Đăng ký thành công! Chuyển hướng đến trang Xac thuc...");
-        localStorage.setItem("email", form.email);
+        localStorage.setItem("user", JSON.stringify({
+          fullName: form.fullName,
+          username: form.username,
+          email: form.email
+        }));
         navigate("/verify", { state: { email: form.email } });
       }
     } catch (err) {

@@ -1,32 +1,39 @@
-import { SignedOut, SignOutButton, UserButton } from '@clerk/clerk-react';
 import { LayoutDashboardIcon, Search } from 'lucide-react';
-import React, { useState } from 'react';
+import { SignedOut } from '@clerk/clerk-react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from './ui/button';
 import { Input } from './ui/Input';
 import { useAuth } from "@/providers/AuthContext";
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
-import { Switch } from './ui/switch';
 
 const Topbar = () => {
-    const { user } = useAuth();  // Lấy thông tin người dùng
-    const isAdmin = useAuthStore(); // Kiểm tra quyền admin
+    const { user } = useAuth();
+    const isAdmin = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
-    const [darkMode, setDarkMode] = useState(false);
     const navigate = useNavigate();
+    
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
-    const handleLogout = async () => {
-        try {
-             // Nếu có API logout riêng
-            navigate("/auth"); // Điều hướng thủ công
-        } catch (error) {
-            console.error("Lỗi khi logout:", error);
+    // Đóng dropdown khi click ra ngoài
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
         }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleLogout = () => {
+        navigate("/auth"); // Điều hướng về trang login
     };
 
-    // Xử lý tìm kiếm
     const handleSearch = () => {
         if (searchQuery.trim()) {
             navigate(`/search/${searchQuery}`);
@@ -62,7 +69,7 @@ const Topbar = () => {
             </div>
 
             {/* Admin Dashboard & User Controls */}
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-4 relative'>
                 {isAdmin.isAdmin && (
                     <Link to='/admin' className={cn(buttonVariants({ variant: 'outline' }))}>
                         <LayoutDashboardIcon className='size-4 mr-2' />
@@ -79,37 +86,73 @@ const Topbar = () => {
                 )}
 
                 {user && (
-                    <Popover >
-                        <PopoverTrigger>
-                            <img style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }} 
-                                 className="avatar cursor-pointer" 
-                                 src="cover-images/12.jpg" 
-                                 alt="User Avatar"
+                    <div className="relative" ref={dropdownRef}>
+                        {/* Avatar Button */}
+                        <button 
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                            className="focus:outline-none"
+                        >
+                            <img 
+                                style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }} 
+                                className="avatar cursor-pointer" 
+                                src="cover-images/12.jpg" 
+                                alt="User Avatar"
                             />
-                        </PopoverTrigger>
-                        <PopoverContent className="bg-white shadow-lg rounded-lg z-50 relative p-4 w-64">
-                            <div className="flex items-center gap-2">
-                                <img src="cover-images/12.jpg" className="w-10 h-10 rounded-full" alt="Avatar" />
-                                <div>
-                                    
-                                    <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {isDropdownOpen && (
+                            <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg z-50 p-4">
+                                <div className="flex items-center gap-2">
+                                    <img src="cover-images/12.jpg" className="w-10 h-10 rounded-full" alt="Avatar" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
+                                    </div>
                                 </div>
+                                <div className="mt-4 space-y-2">
+                                    <Link
+                                        to="/profile"
+                                        className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
+                                            navigate("/profile");
+                                        }}
+                                    >
+                                        Profile
+                                    </Link>
+                                    <Link 
+                                        to="/" 
+                                        className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                        onClick={() => { 
+                                            setIsDropdownOpen(false); 
+                                            navigate("/settings");
+                                        }}
+                                    >
+                                        Playlist
+                                    </Link>
+                                    <Link 
+                                        to="/" 
+                                        className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                        onClick={() => { 
+                                            setIsDropdownOpen(false); 
+                                            navigate("/account");
+                                        }}
+                                    >
+                                        My Musics
+                                    </Link>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setIsDropdownOpen(false);
+                                        handleLogout();
+                                    }}
+                                    className="mt-4 w-full text-sm text-red-600 hover:bg-gray-200 p-2 rounded"
+                                >
+                                    Log out
+                                </button>
                             </div>
-                            <div className="mt-4 space-y-2">
-                                <Link to="/profile" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Profile</Link>
-                                <Link to="/settings" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">Playlist</Link>
-                                <Link to="/account" className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded">My Musics</Link>
-                                
-                            </div>
-                            
-                            <button
-                                onClick={handleLogout}  // Thực hiện đăng xuất thủ công
-                                className="mt-4 w-full text-sm text-red-600 hover:bg-gray-200 p-2 rounded"
-                            >
-                                Log out
-                            </button>
-                        </PopoverContent>
-                    </Popover>
+                        )}
+                    </div>
                 )}
             </div>
         </div>
