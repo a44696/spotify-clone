@@ -7,6 +7,7 @@ import FeaturedSection from './components/FeaturedSection'
 import SectionGrid from './components/SectionGrid'
 import { usePlayerStore } from '@/stores/usePlayerStore'
 import SectionGridArtists from './components/SectionGridArtists'
+import SectionGridAlbums from './components/SectionGridAlbums'
 
 const HomePage = () => {
 	const {
@@ -34,7 +35,7 @@ const HomePage = () => {
 	return (
 
 		<div className='rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900'>
-			<Topbar />
+			
 			<ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
 				style={{
 					scrollbarWidth: 'thin', /* Dùng cho Firefox */
@@ -47,6 +48,8 @@ const HomePage = () => {
 					<div className='space-y-8'>
 						<SectionGrid title='Trending' songs={trendingSongs} isLoading={isLoading} />
 						<SectionGridArtists title='Popular Artists'  isLoading={isLoading} />
+
+						<SectionGridAlbums title='Albums'  isLoading={isLoading} />
 
 					</div>
 				</div>

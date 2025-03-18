@@ -9,9 +9,10 @@ import { Library } from 'lucide-react';
 const PlaylistPage = () => {
   return (
     <div>
-      <Topbar />
+      
       <div className="my-7">
         <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto">
+
           <Card className='bg-zinc-800/50 border-zinc-700/50'>
             <CardHeader>
               <div className='flex items-center justify-between'>
@@ -25,6 +26,7 @@ const PlaylistPage = () => {
                 <AddPlaylistDialog />
               </div>
             </CardHeader>
+
 
             <CardContent>
               <PlaylistsTable />

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Play, Pause, Clock } from "lucide-react";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import React from "react";
-import Topbar from "@/components/Topbar";
+
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { axiosInstance } from "@/lib/axios";
 import PlayButton from "../home/components/PlayButton";
@@ -53,12 +53,12 @@ const SearchResultsPage = () => {
 
     return (
         <div>
-            <Topbar />
-            <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
-                style={{
-                    scrollbarWidth: 'thin', /* Dùng cho Firefox */
-                    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
-                }}>
+
+            
+            <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto' 
+  		        style={{scrollbarWidth: 'thin', /* Dùng cho Firefox */
+			    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */}}>
+
                 <h1 className="text-2xl font-bold mb-4 my-5">Search Results for "{query}"</h1>
                 <div className="bg-black/20 backdrop-blur-sm p-4 rounded-md">
                     {/* Table Header */}
