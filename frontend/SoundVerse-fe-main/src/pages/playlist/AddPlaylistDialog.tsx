@@ -42,7 +42,7 @@ const AddPlaylistDialog = () => {
 
                 const uploadThumbnailName = generateFileName(imageFile.name);
 
-                // await handleUploadThumbnail(uploadThumbnailName);
+                await handleUploadThumbnail(uploadThumbnailName);
 
                 const response = await fetch('http://localhost:8080/api/playlist', {
                     method: 'POST',
@@ -52,7 +52,7 @@ const AddPlaylistDialog = () => {
                     body: JSON.stringify({
                         title: newPlaylistName,
                         description: newDescription,
-                        thumbnail: "17-1742229324225-58f7b758-24f4-47b3-b1fc-75c0ff58369e.jpg"
+                        thumbnail: uploadThumbnailName
                     }),
                     credentials: "include"
                 });
@@ -61,10 +61,13 @@ const AddPlaylistDialog = () => {
                     toast.error('Lỗi khi tạo playlist');
                 }
 
-                const newPlaylist = await response.json();
-                playlists.push(newPlaylist);
-                toast.success('Tạo playlist thành công');
-                fetchPlaylists();
+                const data = await response.json();
+                if (data.status == 'success') {
+                    fetchPlaylists();
+                    toast.success('Tạo playlist thành công');
+                } else {
+                    toast.success(data.message);
+                }
                 setNewPlaylistName('');
                 setNewDescription('');
                 setDialogOpen(false);

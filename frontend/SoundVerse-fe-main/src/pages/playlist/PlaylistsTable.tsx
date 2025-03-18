@@ -6,7 +6,7 @@ import React from "react";
 import { useEffect } from "react";
 
 const PlaylistsTable = () => {
-    const { playlists, fetchPlaylists } = useMusicStore();
+    const { playlists, fetchPlaylists, deletePlaylist } = useMusicStore();
 
     useEffect(() => {
         fetchPlaylists();
@@ -54,7 +54,7 @@ const PlaylistsTable = () => {
                                     variant="ghost"
                                     size="sm"
                                     className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                                // onClick={() => deletePlaylist(playlist.id)}
+                                    onClick={() => deletePlaylist(playlist.id)}
                                 >
                                     <Trash className="size-4" />
                                 </Button>
