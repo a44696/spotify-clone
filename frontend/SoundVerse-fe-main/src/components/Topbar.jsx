@@ -98,6 +98,7 @@ const Topbar = () => {
                                 src="cover-images/12.jpg" 
                                 alt="User Avatar"
                             />
+
                         </button>
 
                         {/* Dropdown Menu */}
@@ -108,6 +109,7 @@ const Topbar = () => {
                                     <div>
                                         <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
                                     </div>
+
                                 </div>
                                 <div className="mt-4 space-y-2">
                                     <Link
@@ -158,5 +160,6 @@ const Topbar = () => {
         </div>
     );
 };
+
 
 export default Topbar;

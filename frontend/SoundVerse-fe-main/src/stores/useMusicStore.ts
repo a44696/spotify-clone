@@ -1,13 +1,13 @@
 import { axiosInstance } from "@/lib/axios";
-
-import { Album, Artist, Genre, Playlist, Song, Stats } from "@/types";
-
+import { Album, Genre, MyStats, Playlist, Song, Stats, Artist } from "@/types";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
 interface MusicStore {
 	songs: Song[];
 	albums: Album[];
+	mySongs: Song[];
+	myAlbums: Album[];
 	genres: Genre[];
 	playlists: Playlist[];
 	isLoading: boolean;
@@ -17,6 +17,7 @@ interface MusicStore {
 	madeForYouSongs: Song[];
 	trendingSongs: Song[];
 	stats: Stats;
+	myStats: MyStats;
 	artists: Artist[];
 
 	fetchGenres: () => Promise<void>;
@@ -30,11 +31,12 @@ interface MusicStore {
 	fetchSongs: () => Promise<void>;
 	deleteSong: (id: number) => Promise<void>;
 	deleteAlbum: (id: number) => Promise<void>;
-
-	fetchArtists: () => Promise<void>;
-
 	deletePlaylist: (id: number) => Promise<void>;
-
+	fetchMyStats: () => Promise<void>;
+	fetchMyAlbums: () => Promise<void>;
+	fetchMySongs: () => Promise<void>;
+	addMusicToPlaylist: (playlist_id: number, music_id: number) => Promise<void>;
+	deleteMusicFromPlaylist: (playlist_id: number, music_id: number) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -55,6 +57,13 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		totalArtists: 0,
 		totalSongsMonthly: 0,
 		totalUsersMonthly: 0
+	},
+	mySongs: [],
+	myAlbums: [],
+	myStats: {
+		totalSongs: 0,
+		totalAlbums: 0,
+		totalFollowers: 0
 	},
 	artists: [],
 
@@ -140,7 +149,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	deleteSong: async (id) => {
 		set({ isLoading: true, error: null });
 		try {
-			await axiosInstance.delete(`/song/${id}`);
+			await axiosInstance.delete(`/music/${id}`);
 
 			set((state) => ({
 				songs: state.songs.filter((song) => song.id !== id),
@@ -156,7 +165,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchSongs: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/music");
+			const response = await axiosInstance.get("/admin/musics");
 			set({ songs: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
@@ -168,7 +177,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchStats: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/stats");
+			const response = await axiosInstance.get("/admin/stats");
 			set({ stats: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
@@ -181,8 +190,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 
 		try {
-			const response = await axiosInstance.get("/album");
-			
+
+			const response = await axiosInstance.get("/admin/albums");
+
 			set({ albums: response.data.data });
 		} catch (error: any) {
 			
@@ -220,7 +230,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchFeaturedSongs: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/song/featured");
+			const response = await axiosInstance.get("/have-a-nice-day");
 			set({ featuredSongs: response.data.data });
 		} catch (error: any) {
 			set({ error: error.response.data.message });
@@ -244,19 +254,20 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchTrendingSongs: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/songs/trending");
-			set({ trendingSongs: response.data });
+			const response = await axiosInstance.get("/trending");
+			set({ trendingSongs: response.data.data });
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {
 			set({ isLoading: false });
 		}
 	},
+
 	fetchArtists: async () => {
 		set({ isLoading: true, error: null });
 		try {
-		  const response = await axiosInstance.get("/artists"); // Giả sử bạn có API để lấy danh sách nghệ sĩ
-		  set({ artists: response.data.data }); // Lưu dữ liệu nghệ sĩ vào state
+		  const response = await axiosInstance.get("/popular-artists");
+		  set({ artists: response.data.data });
 		} catch (error: any) {
 		  set({ error: error.message });
 		} finally {
@@ -274,5 +285,41 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		} finally {
 			set({ isLoading: false });
 		}
-	}
+	},
+
+	fetchMySongs: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/music");
+			set({ mySongs: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchMyAlbums: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/album");
+			set({ myAlbums: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchMyStats: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/my-stats");
+			set({ myStats: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
 }));

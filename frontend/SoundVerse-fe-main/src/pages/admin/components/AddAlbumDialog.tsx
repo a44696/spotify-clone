@@ -10,16 +10,18 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/Input";
 import { axiosInstance } from "@/lib/axios";
+import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
 import React from "react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 const AddAlbumDialog = () => {
+	const { albums } = useMusicStore();
 	const [albumDialogOpen, setAlbumDialogOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-
+	const [thumbnailPreview, setThumbnailPreview] = useState(null);
 	const [newAlbum, setNewAlbum] = useState({
 		title: "",
 		description: ""
@@ -32,6 +34,11 @@ const AddAlbumDialog = () => {
 		if (file) {
 			setImageFile(file);
 		}
+		if (thumbnailPreview) {
+			URL.revokeObjectURL(thumbnailPreview);
+		}
+		const previewUrl = URL.createObjectURL(file);
+		setThumbnailPreview(previewUrl);
 	};
 
 	const handleSubmit = async () => {
@@ -59,6 +66,7 @@ const AddAlbumDialog = () => {
 			});
 			if (postCreateAlbum.data.status === "success") {
 				toast.success(postCreateAlbum.data.message);
+				albums.push(postCreateAlbum.data.data);
 			} else {
 				toast.error(postCreateAlbum.data.message);
 			}
@@ -68,8 +76,8 @@ const AddAlbumDialog = () => {
 				description: ""
 			});
 			setImageFile(null);
+			setThumbnailPreview(null);
 			setAlbumDialogOpen(false);
-			toast.success("Album created successfully");
 		} catch (error: any) {
 			toast.error("Failed to create album: " + error.message);
 		} finally {
@@ -154,11 +162,20 @@ const AddAlbumDialog = () => {
 						onClick={() => fileInputRef.current?.click()}
 					>
 						<div className='text-center'>
-							<div className='p-3 bg-zinc-800 rounded-full inline-block mb-2'>
-								<Upload className='h-6 w-6 text-zinc-400' />
-							</div>
 							<div className='text-sm text-zinc-400 mb-2'>
-								{imageFile ? imageFile.name : "Upload album artwork"}
+								{imageFile ? (
+									<div className='text-center' style={{ textAlign: "-webkit-center" }}>
+										<div className='text-sm text-emerald-500'>Image selected: <span className="text-xs text-zinc-400">{imageFile.name.slice(0, 20)}</span></div>
+										<img style={{ width: "50px" }} alt="thumbnail-preview" src={thumbnailPreview} />
+									</div>
+								) : (
+									<div className="d-flex">
+										<div className='p-3 bg-zinc-800 rounded-full inline-block mb-2'>
+											<Upload className='h-6 w-6 text-zinc-400' />
+										</div>
+										<p>Upload album artwork</p>
+									</div>
+								)}
 							</div>
 							<Button variant='outline' size='sm' className='text-xs'>
 								Choose File
@@ -183,7 +200,11 @@ const AddAlbumDialog = () => {
 					</div>
 				</div>
 				<DialogFooter className={undefined}>
-					<Button variant='outline' onClick={() => setAlbumDialogOpen(false)} disabled={isLoading}>
+					<Button variant='outline' onClick={() => {
+						setNewAlbum({ title: "", description: "" });
+						setImageFile(null);
+						return setAlbumDialogOpen(false)
+					}} disabled={isLoading}>
 						Cancel
 					</Button>
 					<Button

@@ -12,10 +12,8 @@ import SectionGridAlbums from './components/SectionGridAlbums'
 const HomePage = () => {
 	const {
 		fetchFeaturedSongs,
-		fetchMadeForYouSongs,
 		fetchTrendingSongs,
 		isLoading,
-		madeForYouSongs,
 		featuredSongs,
 		trendingSongs,
 	} = useMusicStore();
@@ -24,17 +22,16 @@ const HomePage = () => {
 
 	useEffect(() => {
 		fetchFeaturedSongs();
-		fetchMadeForYouSongs();
 		fetchTrendingSongs();
-	}, [fetchFeaturedSongs, fetchMadeForYouSongs, fetchTrendingSongs]);
-	// console.log([isLoading, madeForYouSongs, featuredSongs, trendingSongs]);
+	}, [fetchFeaturedSongs, fetchTrendingSongs]);
+	// console.log([isLoading, featuredSongs, trendingSongs]);
 
 	useEffect(() => {
-		if (madeForYouSongs.length > 0 && featuredSongs.length > 0 && trendingSongs.length > 0) {
-			const allSongs = [...featuredSongs, ...madeForYouSongs, ...trendingSongs];
+		if (featuredSongs.length > 0 && trendingSongs.length > 0) {
+			const allSongs = [...featuredSongs, ...trendingSongs];
 			initializeQueue(allSongs);
 		}
-	}, [initializeQueue, madeForYouSongs, featuredSongs, trendingSongs]);
+	}, [initializeQueue, featuredSongs, trendingSongs]);
 	return (
 
 		<div className='rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900'>
@@ -51,7 +48,9 @@ const HomePage = () => {
 					<div className='space-y-8'>
 						<SectionGrid title='Trending' songs={trendingSongs} isLoading={isLoading} />
 						<SectionGridArtists title='Popular Artists'  isLoading={isLoading} />
+
 						<SectionGridAlbums title='Albums'  isLoading={isLoading} />
+
 					</div>
 				</div>
 			</ScrollArea>

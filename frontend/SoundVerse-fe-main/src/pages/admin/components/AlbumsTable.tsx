@@ -1,16 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useAuth } from "@/providers/AuthContext";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Music, Trash2 } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const AlbumsTable = () => {
-	const { albums, deleteAlbum, fetchAlbums } = useMusicStore();
+	const { albums, deleteAlbum, fetchAlbums, myAlbums, fetchMyAlbums } = useMusicStore();
+	const { isArtist } = useAuth();
+	const albumsToDisplay = isArtist ? myAlbums ?? [] : albums ?? [];
 
 	useEffect(() => {
-		fetchAlbums();
-	}, [fetchAlbums]);
+		if (isArtist) {
+			fetchMyAlbums();
+		} else {
+			fetchAlbums();
+		}
+	}, [fetchAlbums, fetchMyAlbums]);
 
 	return (
 		<Table className={undefined}>
@@ -25,13 +33,17 @@ const AlbumsTable = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody className={undefined}>
-				{albums.map((album) => (
+				{albumsToDisplay.map((album) => (
 					<TableRow key={album.id} className='hover:bg-zinc-800/50'>
 						<TableCell className={undefined}>
 							<img src={album.thumbnail} alt={album.title} className='w-10 h-10 rounded object-cover' />
 						</TableCell>
-						<TableCell className='font-medium'>{album.title}</TableCell>
-						<TableCell className={undefined}>{album.artistId}</TableCell>
+						<TableCell className='font-medium'>
+							<Link to={`/albums/${album.id}`}>
+								{album.title}
+							</Link>
+						</TableCell>
+						<TableCell className={undefined}>{album.artist}</TableCell>
 						<TableCell className={undefined}>
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
 								<Music className='h-4 w-4' />

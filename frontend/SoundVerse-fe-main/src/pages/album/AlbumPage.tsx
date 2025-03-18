@@ -6,26 +6,20 @@ import { Clock, Pause, Play } from 'lucide-react';
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 
-
-export const formatDuration = (seconds: number) => {
-	const minutes = Math.floor(seconds / 60);
-	const remainingSeconds = seconds % 60;
-	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-};
 const AlbumPage = () => {
   const { albumId } = useParams();
   const { fetchAlbumById, currentAlbum, isLoading } = useMusicStore();
   const {currentSong, isPlaying, playAlbum,togglePlay} = usePlayerStore();
 
   useEffect(() => {
-		if (albumId) fetchAlbumById(albumId);
+		if (albumId) fetchAlbumById(Number(albumId));
 	}, [fetchAlbumById, albumId]);
 
   if (isLoading) return null;
   const handlePlayAlbum = () => {
 		if (!currentAlbum) return;
 
-		const isCurrentAlbumPlaying = currentAlbum?.songs.some((song) => song._id === currentSong?._id);
+		const isCurrentAlbumPlaying = currentAlbum?.songs.some((song) => song.id === currentSong?.id);
 		if (isCurrentAlbumPlaying) togglePlay();
 		else {
 			// start playing the album from the beginning
@@ -37,6 +31,13 @@ const AlbumPage = () => {
 
 		playAlbum(currentAlbum?.songs, index);
 	};
+
+  const formatDuration = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
+  };
+  
   return (
     <div className='h-full'>
       <ScrollArea className='h-full rounded-md'>
@@ -62,7 +63,7 @@ const AlbumPage = () => {
 								<div className='flex items-center gap-2 text-sm text-zinc-100'>
 									<span className='font-medium text-white'>{currentAlbum?.artist}</span>
 									<span>• {currentAlbum?.songs.length} songs</span>
-									<span>• {currentAlbum?.releaseYear}</span>
+									<span>• {currentAlbum?.createdAt}</span>
 								</div>
 							</div>
             </div>
@@ -74,7 +75,7 @@ const AlbumPage = () => {
 								className="w-14 h-14 flex items-center justify-center rounded-full bg-green-500
                  hover:bg-green-400 hover:scale-105 transition-all"
               >
-                {isPlaying && currentAlbum?.songs.some((song) => song._id === currentSong?._id) ? (
+                {isPlaying && currentAlbum?.songs.some((song) => song.id === currentSong?.id) ? (
 									<Pause className='h-7 w-7 text-black' />
 								) : (
 									<Play className='h-7 w-7 text-black' />
@@ -99,9 +100,9 @@ const AlbumPage = () => {
               <div className='px-6'>
                 <div className='space-y-2 py-4'>
                   {currentAlbum?.songs.map((song, index) =>   {
-                    const isCurrentSong = currentSong?._id === song._id;
+                    const isCurrentSong = currentSong?.id === song.id;
                     return (
-                    <div key={song._id}
+                    <div key={song.id}
                     onClick={()=>handlePlaySong(index)}
                     className={`grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-4 py-2 text-sm 
                       text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer`}
@@ -129,7 +130,7 @@ const AlbumPage = () => {
 
                       <div className='flex items-center '> {song.createdAt.split("T")}</div>
                         
-                      <div className='flex items-center'>{formatDuration(song.duration)}</div>
+                      <div className='flex items-center'>{formatDuration(song.length)}</div>
                     </div>
                   )
                   }

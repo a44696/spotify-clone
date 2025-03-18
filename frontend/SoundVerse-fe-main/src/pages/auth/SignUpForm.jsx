@@ -15,6 +15,7 @@ const SignUpForm = () => {
     country: "",
     fullName: "",
     dob: "",
+    isArtist: false
   });
   const navigate = useNavigate();
   const countries = [
@@ -29,6 +30,11 @@ const SignUpForm = () => {
   };
   const [error, setError] = useState(null);
 
+  const formatDate = (inputDate) => {
+    const [year, month, day] = inputDate.split("-");
+    return `${day}/${month}/${year}`;
+}
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -39,14 +45,15 @@ const SignUpForm = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/auth/signup", {
+      const res = await axiosInstance.post("/auth/signupkhanh", {
         username: form.username,
         password: form.password,
         email: form.email,
         gender: form.gender,
         country: form.country,
         fullName: form.fullName,
-        //dob: form.dob
+        dob: formatDate(form.dob),
+        isArtist: form.isArtist
       });
 
       if (res.data.status == 'success') {
@@ -146,6 +153,32 @@ const SignUpForm = () => {
             value={form.dob}
             onChange={handleChange}
           />
+          <div className="flex items-center space-x-4">
+            <p>Are you an artist?</p>
+            <label className="flex items-center space-x-1 cursor-pointer">
+              <input
+                type="radio"
+                name="isArtist"
+                value="true"
+                checked={form.isArtist === true}
+                onChange={() => setForm({ ...form, isArtist: true })}
+                className="w-4 h-4 cursor-pointer"
+              />
+              <span>Yes</span>
+            </label>
+
+            <label className="flex items-center space-x-1 cursor-pointer">
+              <input
+                type="radio"
+                name="isArtist"
+                value="false"
+                checked={form.isArtist === false}
+                onChange={() => setForm({ ...form, isArtist: false })}
+                className="w-4 h-4 cursor-pointer"
+              />
+              <span>No</span>
+            </label>
+          </div>
           <Button type="submit" className="w-full bg-emerald-500" style={{ width: "112px" }}>
             Đăng Ký
           </Button>

@@ -1,29 +1,27 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Library } from "lucide-react";
-import AddSongDialog from "./AddSongDialog";
-import SongsTable from "./SongsTable";
+import { Library, User2 } from "lucide-react";
+import UsersTable from "./UsersTable";
 
-
-const SongsTabContent = () => {
+const UsersTabContent = () => {
 	return (
 		<Card className='bg-zinc-800/50 border-zinc-700/50'>
 			<CardHeader>
 				<div className='flex items-center justify-between'>
 					<div>
 						<CardTitle className='flex items-center gap-2'>
-							<Library className='h-5 w-5 text-violet-500' />
-							Songs Library
+							<User2 className='h-5 w-5 text-violet-500' />
+							Users
 						</CardTitle>
-						<CardDescription>Manage your songs collection</CardDescription>
+						<CardDescription>Manage users in system</CardDescription>
 					</div>
-					<AddSongDialog />
+					{/* <AddAlbumDialog /> */}
 				</div>
 			</CardHeader>
 
 			<CardContent>
-				<SongsTable />
+				<UsersTable />
 			</CardContent>
 		</Card>
 	);
 };
-export default SongsTabContent;
+export default UsersTabContent;
