@@ -42,7 +42,6 @@ const SectionGridArtists = () => {
               </div>
               <h3 className="font-medium mb-2 text-center">{artist.username}</h3>
             </div>
-
           </Link>
         ))}
       </div>
