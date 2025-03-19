@@ -92,7 +92,7 @@ const Topbar = () => {
                             <img
                                 style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }}
                                 className="avatar cursor-pointer"
-                                src="cover-images/12.jpg"
+                                src='/default_avatar_user.jpg'
                                 alt="User Avatar"
                             />
 
@@ -102,7 +102,7 @@ const Topbar = () => {
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg z-50 p-4">
                                 <div className="flex items-center gap-2">
-                                    <img src="cover-images/12.jpg" className="w-10 h-10 rounded-full" alt="Avatar" />
+                                    <img src='/default_avatar_user.jpg' className="w-10 h-10 rounded-full" alt="Avatar" />
                                     <div>
                                         <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
                                     </div>

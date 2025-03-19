@@ -15,6 +15,7 @@ import ArtistDetailPage from "./pages/artist/ArtistDetailPage";
 import Profile from "./pages/avata/Profile";
 
 import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
+import PlaylistDetailPage from "./pages/playlist/PlaylistDetailPage";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/playlists" element= {<PlaylistPage/>}/>
           <Route path="/search/:query" element={<SearchResultsPage />} />
           <Route path="/albums/:albumId" element= {<AlbumPage/>}/>
+          <Route path="/playlists/:playlistId" element= {<PlaylistDetailPage/>}/>
           <Route path="/profile" element={<Profile/>} />
           <Route path="/artist/:artistId" element={<ArtistDetailPage />} />
         </Route>
