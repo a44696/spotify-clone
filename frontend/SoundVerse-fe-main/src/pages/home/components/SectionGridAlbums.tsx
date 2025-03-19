@@ -1,4 +1,3 @@
-import { Album } from '@/types'; // Đảm bảo có kiểu dữ liệu Album
 import { Button } from '@/components/ui/button';
 import SectionGridSkeleton from './SectionGridSkeleton';
 import React, { useEffect } from 'react';

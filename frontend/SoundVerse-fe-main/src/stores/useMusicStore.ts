@@ -13,6 +13,7 @@ interface MusicStore {
 	isLoading: boolean;
 	error: string | null;
 	currentAlbum: Album | null;
+	currentPlaylist: Playlist | null;
 	featuredSongs: Song[];
 	madeForYouSongs: Song[];
 	trendingSongs: Song[];
@@ -22,6 +23,7 @@ interface MusicStore {
 
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
+	fetchPlaylistById: (id: number) => Promise<void>;
 	fetchAlbums: () => Promise<void>;
 	fetchAlbumById: (id: number) => Promise<void>;
 	fetchFeaturedSongs: () => Promise<void>;
@@ -47,6 +49,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	isLoading: false,
 	error: null,
 	currentAlbum: null,
+	currentPlaylist: null,
 	madeForYouSongs: [],
 	featuredSongs: [],
 	trendingSongs: [],
@@ -188,14 +191,10 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
 	fetchAlbums: async () => {
 		set({ isLoading: true, error: null });
-
 		try {
-
 			const response = await axiosInstance.get("/admin/albums");
-
 			set({ albums: response.data.data });
 		} catch (error: any) {
-			
 			set({ error: error.response.data.message });
 		} finally {
 			set({ isLoading: false });
@@ -208,6 +207,18 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		try {
 			const response = await axiosInstance.get("/playlist");
 			set({ playlists: response.data.data });
+		} catch (error: any) {
+			set({ error: error.response.data.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchPlaylistById: async (id) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get(`/playlist/${id}`);
+			set({ currentPlaylist: response.data.data });
 		} catch (error: any) {
 			set({ error: error.response.data.message });
 		} finally {

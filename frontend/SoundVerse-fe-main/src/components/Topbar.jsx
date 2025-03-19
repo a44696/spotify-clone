@@ -9,15 +9,14 @@ import { Input } from './ui/Input';
 import { useAuth } from "@/providers/AuthContext";
 
 const Topbar = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const isAdmin = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
-    
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    // Đóng dropdown khi click ra ngoài
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -29,10 +28,6 @@ const Topbar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-    const handleLogout = () => {
-        navigate("/auth"); // Điều hướng về trang login
-    };
 
     const handleSearch = () => {
         if (searchQuery.trim()) {
@@ -88,14 +83,14 @@ const Topbar = () => {
                 {user && (
                     <div className="relative" ref={dropdownRef}>
                         {/* Avatar Button */}
-                        <button 
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                        <button
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             className="focus:outline-none"
                         >
-                            <img 
-                                style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }} 
-                                className="avatar cursor-pointer" 
-                                src="cover-images/12.jpg" 
+                            <img
+                                style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }}
+                                className="avatar cursor-pointer"
+                                src="cover-images/12.jpg"
                                 alt="User Avatar"
                             />
 
@@ -122,22 +117,20 @@ const Topbar = () => {
                                     >
                                         Profile
                                     </Link>
-                                    <Link 
-                                        to="/" 
+                                    <Link
+                                        to="/playlists"
                                         className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
-                                        onClick={() => { 
-                                            setIsDropdownOpen(false); 
-                                            navigate("/settings");
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
                                         }}
                                     >
                                         Playlist
                                     </Link>
-                                    <Link 
-                                        to="/" 
+                                    <Link
+                                        to="/my-musics"
                                         className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
-                                        onClick={() => { 
-                                            setIsDropdownOpen(false); 
-                                            navigate("/account");
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
                                         }}
                                     >
                                         My Musics
@@ -146,7 +139,7 @@ const Topbar = () => {
                                 <button
                                     onClick={() => {
                                         setIsDropdownOpen(false);
-                                        handleLogout();
+                                        logout();
                                     }}
                                     className="mt-4 w-full text-sm text-red-600 hover:bg-gray-200 p-2 rounded"
                                 >

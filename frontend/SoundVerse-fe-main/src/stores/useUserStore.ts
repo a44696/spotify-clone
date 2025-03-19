@@ -5,7 +5,7 @@ import { axiosInstance } from "@/lib/axios";
 interface UserStore {
     users: User[];
     isLoading: boolean;
-	error: string | null;
+		error: string | null;
 
     fetchedUsers: () => Promise<void>;
 }
@@ -13,7 +13,7 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set, get) => ({
     users: [],
     isLoading: false,
-	error: null,
+		error: null,
 
 	fetchedUsers: async () => {
 		set({ isLoading: true, error: null });
