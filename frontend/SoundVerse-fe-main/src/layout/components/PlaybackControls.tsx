@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { ListMusic, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1, Plus, XCircle, CheckCircle } from "lucide-react";
+import { ListMusic, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1, Plus, XCircle, CheckCircle, Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useMusicStore } from "@/stores/useMusicStore";
 import AddPlaylistDialog from "@/pages/playlist/AddPlaylistDialog";
@@ -19,9 +19,9 @@ export const PlaybackControls = () => {
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [newPlaylistName, setNewPlaylistName] = useState(""); // For creating new playlist
   const [isDialogOpen, setIsDialogOpen] = useState(false); // To control dialog visibility
   const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; playlistId: number | null }>({ open: false, playlistId: null });
+  const [isFavorite, setIsFavorite] = useState(false); // For storing the favorite status
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -50,7 +50,6 @@ export const PlaybackControls = () => {
     };
   }, [currentSong]);
 
-
   const handleSeek = (value: number[]) => {
     if (audioRef.current) {
       audioRef.current.currentTime = value[0];
@@ -65,10 +64,6 @@ export const PlaybackControls = () => {
     if (!confirmDialog.playlistId || !currentSong) return;
     try {
       addMusicToPlaylist(confirmDialog.playlistId, currentSong.id);
-      // await axiosInstance.post(`http://localhost:8080/api/playlist/${confirmDialog.playlistId}/add`, {
-      //   song: currentSong,
-      // });
-
       setConfirmDialog({ open: false, playlistId: null });
       alert("Đã thêm bài hát vào playlist thành công!");
     } catch (error) {
@@ -77,19 +72,9 @@ export const PlaybackControls = () => {
     }
   };
 
-  // const handleCreatePlaylist = async () => {
-  //   if (newPlaylistName.trim()) {
-  //     try {
-  //       const response = await axiosInstance.post("http://localhost:8080/api/playlist", { name: newPlaylistName, songs: [] });
-
-  //       setPlaylists([...playlists, response.data]);
-  //       setNewPlaylistName("");
-  //       setIsDialogOpen(false);
-  //     } catch (error) {
-  //       console.error("Error creating playlist:", error);
-  //     }
-  //   }
-  // };
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite); // Toggle the favorite status
+  };
 
   return (
     <footer className="h-20 sm:h-24 bg-zinc-900 border-t border-zinc-800 px-4">
@@ -202,6 +187,16 @@ export const PlaybackControls = () => {
             </DialogContent>
           </Dialog>
 
+          {/* Favorite Button */}
+          <Button
+            size="icon"
+            variant="ghost"
+            className={`hover:text-white text-zinc-400 ${isFavorite ? "text-red-500" : ""}`}
+            onClick={toggleFavorite}
+          >
+            <Heart className="h-4 w-4" fill={isFavorite ? "red" : "none"} />
+          </Button>
+
           {/* Xác nhận thêm bài hát vào Playlist */}
           {confirmDialog.open && (
             <Dialog open={confirmDialog.open} onOpenChange={() => setConfirmDialog({ open: false, playlistId: null })}>
@@ -220,8 +215,8 @@ export const PlaybackControls = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-
           )}
+
           <div className="flex items-center gap-2">
             <Button size="icon" variant="ghost" className="hover:text-white text-zinc-400">
               <Volume1 className="h-4 w-4" />

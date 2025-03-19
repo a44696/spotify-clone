@@ -52,9 +52,12 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         if (!loading && user === null) {
-            navigate("/auth");
+            const currentPath = window.location.pathname;
+            if (currentPath == "/auth" || currentPath == "/auth/signup") {
+                navigate("/auth");
+            }
         }
-    }, [user, loading, navigate]);
+    }, [user, loading, navigate]);    
 
     return (
         <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser, isArtist, logout }}>
