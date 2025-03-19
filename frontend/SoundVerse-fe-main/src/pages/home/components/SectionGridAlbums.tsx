@@ -25,10 +25,8 @@ const SectionGridAlbums = () => {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4">
         {popularAlbums.map((album) => (
-          <Link to={`/albums/${album.id}`}>
-
+          <Link key={album.id} to={`/albums/${album.id}`}>
             <div
-              key={album.id}
               className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer"
             >
               <div className="relative mb-4">

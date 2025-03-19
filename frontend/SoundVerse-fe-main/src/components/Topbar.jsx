@@ -43,10 +43,12 @@ const Topbar = () => {
     return (
         <div className='flex justify-between items-center p-4 bg-zinc-900/75 backdrop-blur-md z-10'>
             {/* Logo */}
-            <div className='flex gap-2 items-center'>
-                <img src="/spotify.png" alt="spotify logo" className="size-8" />
-                <span className="text-white font-semibold text-lg">Sound Verse</span>
-            </div>
+            <Link to={'/'}>
+                <div className='flex gap-2 items-center'>
+                    <img src="/spotify.png" alt="spotify logo" className="size-8" />
+                    <span className="text-white font-semibold text-lg">Sound Verse</span>
+                </div>
+            </Link>
 
             {/* Search Bar */}
             <div className='flex items-center gap-4 flex-1 justify-center'>

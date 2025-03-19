@@ -26,9 +26,8 @@ const SectionGridArtists = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {popularArtists.map((artist) => (
-          <Link to={`/artist/${artist.id}`}>
+          <Link key={artist.id} to={`/artist/${artist.id}`}>
             <div
-              key={artist.id}
               className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer"
             >
               <div className="relative mb-4">
