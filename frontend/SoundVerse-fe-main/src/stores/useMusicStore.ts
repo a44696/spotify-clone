@@ -14,6 +14,7 @@ interface MusicStore {
 	isLoading: boolean;
 	error: string | null;
 	currentAlbum: Album | null;
+	currentPlaylist: Playlist | null;
 	featuredSongs: Song[];
 	madeForYouSongs: Song[];
 	trendingSongs: Song[];
@@ -26,6 +27,7 @@ interface MusicStore {
 
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
+	fetchPlaylistById: (id: number) => Promise<void>;
 	fetchAlbums: () => Promise<void>;
 	fetchAlbumById: (id: number) => Promise<void>;
 	fetchFeaturedSongs: () => Promise<void>;
@@ -54,6 +56,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	isLoading: false,
 	error: null,
 	currentAlbum: null,
+	currentPlaylist: null,
 	madeForYouSongs: [],
 	featuredSongs: [],
 	trendingSongs: [],
@@ -198,14 +201,10 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
 	fetchAlbums: async () => {
 		set({ isLoading: true, error: null });
-
 		try {
-
 			const response = await axiosInstance.get("/admin/albums");
-
 			set({ albums: response.data.data });
 		} catch (error: any) {
-			
 			set({ error: error.response.data.message });
 		} finally {
 			set({ isLoading: false });
@@ -224,13 +223,30 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
-	fetchArtistDetails: async (id: number) => {
-		set({ isLoading: true });
-		// Gọi API để lấy chi tiết nghệ sĩ theo id
-		const response = await fetch(`/api/artist/${id}`);
-		const data = await response.json();
-		set({ artistDetails: data, isLoading: false });
-	  },
+
+	fetchArtistDetails: async (id) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get(`/artist/${id}`);
+			set({ artistDetails: response.data.data });
+		} catch (error: any) {
+			set({ error: error.response.data.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchPlaylistById: async (id) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get(`/playlist/${id}`);
+			set({ currentPlaylist: response.data.data });
+		} catch (error: any) {
+			set({ error: error.response.data.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
 
 	fetchAlbumById: async (id) => {
 		set({ isLoading: true, error: null });

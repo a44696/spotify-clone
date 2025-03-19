@@ -28,7 +28,6 @@ const SearchResultsPage = () => {
         const fetchSongs = async () => {
             try {
                 const getSearch = await axiosInstance.get(`/search?keyword=${query}`);
-                console.log(getSearch.data.data.music);
                 if (getSearch.data.status === "success") {
                     setSongs(getSearch.data.data.music);
                     setAlbums(getSearch.data.data.album);
@@ -53,8 +52,6 @@ const SearchResultsPage = () => {
 
     return (
         <div>
-
-            
             <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto' 
   		        style={{scrollbarWidth: 'thin', /* Dùng cho Firefox */
 			    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */}}>
@@ -93,7 +90,7 @@ const SearchResultsPage = () => {
                                         </div>
                                     </div>
                                     <div>{song.genre}</div>
-                                    <div><Clock className="h-4 w-4" /> {formatTime(song.length)}</div>
+                                    <div>{formatTime(song.length)}</div>
                                 </div>
                             );
                         })}

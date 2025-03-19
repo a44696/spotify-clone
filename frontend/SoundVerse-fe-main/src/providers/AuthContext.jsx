@@ -30,6 +30,22 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    const logout = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/auth/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+            if (response.ok) {
+                setUser(null);
+                navigate("/auth");
+            }
+        } catch (error) {
+            console.error("Error logout:", error);
+            setUser(null);
+        }
+    };
+
     useEffect(() => {
         getCurrentUser();
     }, []);
@@ -44,7 +60,7 @@ export const UserProvider = ({ children }) => {
     }, [user, loading, navigate]);    
 
     return (
-        <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser, isArtist }}>
+        <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser, isArtist, logout }}>
             {children}
         </AuthContext.Provider>
     );

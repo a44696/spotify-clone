@@ -51,7 +51,7 @@ const VerifyPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, otp: code }), // Gửi cả email và OTP
+        body: JSON.stringify({ email, verificationCode: code }),
         credentials: "include",
       });
 
@@ -59,7 +59,7 @@ const VerifyPage = () => {
 
       if (data.status === "success") {
         alert(data.message);
-        navigate("/");
+        navigate("/auth");
       } else {
         alert("Mã OTP không hợp lệ. Vui lòng thử lại!");
       }

@@ -31,7 +31,7 @@ const ArtistDetailPage = () => {
     <div className="artist-detail-container">
       <div className="artist-header">
         <img
-          src={artist.profilePicImage}
+          src='/default_avatar_user.jpg'
           alt={artist.username}
           className="rounded-full w-48 h-48 object-cover mx-auto"
         />

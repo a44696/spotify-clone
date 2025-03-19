@@ -9,16 +9,14 @@ import { Input } from './ui/Input';
 import { useAuth } from "@/providers/AuthContext";
 
 const Topbar = () => {
-    const { user } = useAuth();
-    console.log(user);
+    const { user, logout } = useAuth();
     const isAdmin = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
-    
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    // Đóng dropdown khi click ra ngoài
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -31,10 +29,6 @@ const Topbar = () => {
         };
     }, []);
 
-    const handleLogout = () => {
-        navigate("/auth"); // Điều hướng về trang login
-    };
-
     const handleSearch = () => {
         if (searchQuery.trim()) {
             navigate(`/search/${searchQuery}`);
@@ -44,10 +38,12 @@ const Topbar = () => {
     return (
         <div className='flex justify-between items-center p-4 bg-zinc-900/75 backdrop-blur-md z-10'>
             {/* Logo */}
-            <div className='flex gap-2 items-center'>
-                <img src="/spotify.png" alt="spotify logo" className="size-8" />
-                <span className="text-white font-semibold text-lg">Sound Verse</span>
-            </div>
+            <Link to={'/'}>
+                <div className='flex gap-2 items-center'>
+                    <img src="/spotify.png" alt="spotify logo" className="size-8" />
+                    <span className="text-white font-semibold text-lg">Sound Verse</span>
+                </div>
+            </Link>
 
             {/* Search Bar */}
             <div className='flex items-center gap-4 flex-1 justify-center'>
@@ -89,14 +85,14 @@ const Topbar = () => {
                 {user && (
                     <div className="relative" ref={dropdownRef}>
                         {/* Avatar Button */}
-                        <button 
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                        <button
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             className="focus:outline-none"
                         >
-                            <img 
-                                style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }} 
-                                className="avatar cursor-pointer" 
-                                src="default_avatar_user.jpg" 
+                            <img
+                                style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }}
+                                className="avatar cursor-pointer"
+                                src='/default_avatar_user.jpg'
                                 alt="User Avatar"
                             />
 
@@ -106,7 +102,7 @@ const Topbar = () => {
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg z-50 p-4">
                                 <div className="flex items-center gap-2">
-                                    <img src="cover-images/12.jpg" className="w-10 h-10 rounded-full" alt="Avatar" />
+                                    <img src='/default_avatar_user.jpg' className="w-10 h-10 rounded-full" alt="Avatar" />
                                     <div>
                                         <p className="text-sm text-gray-500">{user?.email || "No Email"}</p>
                                     </div>
@@ -123,22 +119,20 @@ const Topbar = () => {
                                     >
                                         Profile
                                     </Link>
-                                    <Link 
-                                        to="/" 
+                                    <Link
+                                        to="/playlists"
                                         className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
-                                        onClick={() => { 
-                                            setIsDropdownOpen(false); 
-                                            navigate("/settings");
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
                                         }}
                                     >
                                         Playlist
                                     </Link>
-                                    <Link 
-                                        to="/" 
+                                    <Link
+                                        to="/my-musics"
                                         className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
-                                        onClick={() => { 
-                                            setIsDropdownOpen(false); 
-                                            navigate("/account");
+                                        onClick={() => {
+                                            setIsDropdownOpen(false);
                                         }}
                                     >
                                         My Musics
@@ -147,7 +141,7 @@ const Topbar = () => {
                                 <button
                                     onClick={() => {
                                         setIsDropdownOpen(false);
-                                        handleLogout();
+                                        logout();
                                     }}
                                     className="mt-4 w-full text-sm text-red-600 hover:bg-gray-200 p-2 rounded"
                                 >
