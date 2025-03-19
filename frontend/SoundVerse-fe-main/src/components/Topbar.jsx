@@ -10,6 +10,7 @@ import { useAuth } from "@/providers/AuthContext";
 
 const Topbar = () => {
     const { user } = useAuth();
+    console.log(user);
     const isAdmin = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();

@@ -62,7 +62,7 @@ const AddPlaylistDialog = () => {
                 }
 
                 const newPlaylist = await response.json();
-                playlists.push(newPlaylist);
+                
                 toast.success('Tạo playlist thành công');
                 fetchPlaylists();
                 setNewPlaylistName('');
