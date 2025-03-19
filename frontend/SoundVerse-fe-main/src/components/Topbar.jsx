@@ -95,7 +95,7 @@ const Topbar = () => {
                             <img 
                                 style={{ width: "50px", height: "50px", borderRadius: "40px", margin: "10px" }} 
                                 className="avatar cursor-pointer" 
-                                src="cover-images/12.jpg" 
+                                src="default_avatar_user.jpg" 
                                 alt="User Avatar"
                             />
 
