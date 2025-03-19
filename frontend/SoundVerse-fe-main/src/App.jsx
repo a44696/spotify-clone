@@ -11,7 +11,7 @@ import { Toaster } from "react-hot-toast";
 import SearchResultsPage from "./pages/search/SearchResultsPage";
 import VerifyPage from "./pages/auth/VerifyPage";
 import SignUpForm from "./pages/auth/SignUpForm";
-
+import ArtistDetailPage from "./pages/artist/ArtistDetailPage";
 import Profile from "./pages/avata/Profile";
 
 import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
@@ -39,6 +39,7 @@ function App() {
           <Route path="/search/:query" element={<SearchResultsPage />} />
           <Route path="/albums/:albumId" element= {<AlbumPage/>}/>
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/artist/:artistId" element={<ArtistDetailPage />} />
         </Route>
       </Routes>
       <Toaster />

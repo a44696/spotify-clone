@@ -3,6 +3,7 @@ import { Album, Genre, MyStats, Playlist, Song, Stats, Artist } from "@/types";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
+
 interface MusicStore {
 	songs: Song[];
 	albums: Album[];
@@ -21,6 +22,7 @@ interface MusicStore {
 	artists: Artist[];
 	popularArtists: Artist[];
 	popularAlbums: Album[];
+	artistDetails: Artist | null;
 
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
@@ -41,6 +43,7 @@ interface MusicStore {
 	fetchPopularArtists: () => Promise<void>;
 	addMusicToPlaylist: (playlist_id: number, music_id: number) => Promise<void>;
 	deleteMusicFromPlaylist: (playlist_id: number, music_id: number) => Promise<void>;
+	fetchArtistDetails: (id: number) => void;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -64,6 +67,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		totalSongsMonthly: 0,
 		totalUsersMonthly: 0
 	},
+	artistDetails: null,
 	mySongs: [],
 	myAlbums: [],
 	myStats: {
@@ -220,6 +224,13 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
+	fetchArtistDetails: async (id: number) => {
+		set({ isLoading: true });
+		// Gọi API để lấy chi tiết nghệ sĩ theo id
+		const response = await fetch(`/api/artist/${id}`);
+		const data = await response.json();
+		set({ artistDetails: data, isLoading: false });
+	  },
 
 	fetchAlbumById: async (id) => {
 		set({ isLoading: true, error: null });

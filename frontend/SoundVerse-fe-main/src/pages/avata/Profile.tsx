@@ -1,49 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Input } from '@/components/ui/Input';
-import axios from "axios";
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { useAuth } from "@/providers/AuthContext";
 
 const Profile = () => {
-    const [fullName, setFullName] = useState("");
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [bio, setBio] = useState("My Bio");
-    const [dob, setDob] = useState("");
-    const [role, setRole] = useState("");
-    const [createdAt, setCreatedAt] = useState("");
+    const { user, loading } = useAuth();
+    console.log("User data from useAuth:", user);
 
-    useEffect(() => {
-        const userInfo = JSON.parse(localStorage.getItem("user"));
-
-        if (userInfo) {
-            setEmail(userInfo.email);
-            setFullName(userInfo.fullName);
-            setUsername(userInfo.username);
-            setDob(userInfo.dob || "");
-            setRole(userInfo.role || "User");
-            setCreatedAt(userInfo.createdAt || "");
-        } else {
-            // Gọi API chỉ khi không có dữ liệu trong localStorage
-            axios.get(`/api/auth/me`)
-                .then(response => {
-                    const userData = response.data;
-                    setFullName(userData.fullName);
-                    setUsername(userData.username);
-                    setEmail(userData.email);
-                    setDob(userData.dob || "");
-                    setRole(userData.role || "User");
-                    setCreatedAt(userData.createdAt || "");
-
-                    // Lưu vào localStorage để sử dụng sau
-                    localStorage.setItem("user", JSON.stringify(userData));
-                })
-                .catch(error => {
-                    console.error("Error fetching user data:", error);
-                });
-        }
-    }, []); // Chỉ chạy một lần khi component mount
+    if (loading) {
+        return <p className="text-white text-center">Loading...</p>;
+    }
 
     return (
         <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
@@ -55,16 +22,18 @@ const Profile = () => {
                 {/* Ảnh đại diện + Thông tin */}
                 <div className="flex items-center gap-4">
                     <img src="/cover-images/12.jpg" alt="Avatar" className="w-24 h-24 rounded-full border" />
-                    <div className=''>
+                    <div className='w-full'>
                         <div className="flex w-full justify-between items-center">
                             <div>
-                                <h2 className="text-2xl font-semibold">{fullName || "Loading..."}</h2>
-                                <p className="text-gray-500">@{username || "Loading..."}</p>
+                                <h2 className="text-2xl font-semibold">{user?.fullName || "Loading..."}</h2>
+                                <p className="text-gray-500">@{user?.username || "Loading..."}</p>
                             </div>
                             
                             <div className="ml-auto text-right">
-                                <span className={`px-2 py-1 text-sm text-white rounded-md ${role === 'Admin' ? 'bg-red-500' : role === 'Artist' ? 'bg-blue-500' : 'bg-gray-500'}`}>{role}</span>
-                                <p className="text-gray-400">Joined: {createdAt ? new Date(createdAt).toLocaleDateString() : "Loading..."}</p>
+                                <span className={`px-2 py-1 text-sm text-white rounded-md ${user?.role === 'Admin' ? 'bg-red-500' : user?.role === 'Artist' ? 'bg-blue-500' : 'bg-gray-500'}`}>
+                                    {user?.role}
+                                </span>
+                                <p className="text-gray-400">Joined: {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Loading..."}</p>
                             </div>
                         </div>
                         {/* Nút đổi ảnh */}
@@ -77,11 +46,11 @@ const Profile = () => {
                 {/* Cài đặt thông tin */}
                 <div className="mt-6">
                     <div className="space-y-4">
-                        <Input placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                        <Input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        <Input placeholder="Email" value={email} disabled />
-                        <Input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} />
-                        <textarea className="w-full border p-2 rounded-md" placeholder="About" value={bio} onChange={(e) => setBio(e.target.value)} />
+                        <Input placeholder="Full Name" value={user?.fullName || ""} disabled />
+                        <Input placeholder="Username" value={user?.username || ""} disabled />
+                        <Input placeholder="Email" value={user?.email || ""} disabled />
+                        <Input type="date" placeholder="Date of Birth" value={user?.dob || ""} disabled />
+                        <Input placeholder="Gender" value={user?.gender || ""} disabled />
                     </div>
                 </div>
 

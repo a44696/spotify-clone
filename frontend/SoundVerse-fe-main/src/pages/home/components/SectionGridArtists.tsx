@@ -26,11 +26,8 @@ const SectionGridArtists = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {popularArtists.map((artist) => (
-          <Link to={`/artist/${artist.id}`}>
-            <div
-              key={artist.id}
-              className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer"
-            >
+          <Link to={`/artist/${artist.id}`} key={artist.id}>
+            <div className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer">
               <div className="relative mb-4">
                 {/* Hiển thị ảnh nghệ sĩ với khung hình tròn */}
                 <div className="aspect-square rounded-full overflow-hidden w-32 h-32 mx-auto">
@@ -43,7 +40,6 @@ const SectionGridArtists = () => {
               </div>
               <h3 className="font-medium mb-2 text-center">{artist.username}</h3>
             </div>
-
           </Link>
         ))}
       </div>
