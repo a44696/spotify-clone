@@ -15,17 +15,17 @@ const formatTime = (seconds: number) => {
 
 export const PlaybackControls = () => {
   const { currentSong, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
-  const { playlists, fetchPlaylists, addMusicToPlaylist } = useMusicStore();
+  const { playlists, fetchPlaylists, addMusicToPlaylist, isFavorite, likeSong, unlikeSong, checkLikeSong } = useMusicStore();
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // To control dialog visibility
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; playlistId: number | null }>({ open: false, playlistId: null });
-  const [isFavorite, setIsFavorite] = useState(false); // For storing the favorite status
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     fetchPlaylists();
+    checkLikeSong(currentSong.id);
 
     audioRef.current = document.querySelector("audio");
     const audio = audioRef.current;
@@ -73,7 +73,11 @@ export const PlaybackControls = () => {
   };
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // Toggle the favorite status
+    if (isFavorite) {
+      unlikeSong(currentSong.id);
+    } else {
+      likeSong(currentSong.id);
+    }
   };
 
   return (

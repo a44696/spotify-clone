@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMusicStore } from "@/stores/useMusicStore";// Hook để lấy dữ liệu âm nhạc
+import { useUserStore } from "@/stores/useUserStore";
 
 const ArtistDetailPage = () => {
   const { artistId } = useParams(); // Lấy ID nghệ sĩ từ URL
   const { fetchArtistDetails, artistDetails, isLoading } = useMusicStore();
+  const { isFollow, followArtist, unfollowArtist, checkFollowArtist } = useUserStore();
   const [artist, setArtist] = useState(null);
 
   useEffect(() => {
     if (artistId) {
-      fetchArtistDetails(Number(artistId)); // Fetch thông tin nghệ sĩ khi có artistId
+      fetchArtistDetails(Number(artistId));
+      checkFollowArtist(Number(artistId));
     }
-  }, [artistId, fetchArtistDetails]);
+  }, [artistId]);
 
   useEffect(() => {
     if (artistDetails) {
       setArtist(artistDetails); // Cập nhật thông tin nghệ sĩ khi đã có dữ liệu
     }
   }, [artistDetails]);
+
+  const toggleFollow = () => {
+    if (artistId) {
+      if (isFollow) {
+        unfollowArtist(Number(artistId));
+      } else {
+        followArtist(Number(artistId));
+      }
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
