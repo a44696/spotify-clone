@@ -25,7 +25,9 @@ export const PlaybackControls = () => {
 
   useEffect(() => {
     fetchPlaylists();
-    checkLikeSong(currentSong.id);
+    if (currentSong) {
+      checkLikeSong(currentSong.id);
+    }
 
     audioRef.current = document.querySelector("audio");
     const audio = audioRef.current;
@@ -65,6 +67,7 @@ export const PlaybackControls = () => {
     try {
       addMusicToPlaylist(confirmDialog.playlistId, currentSong.id);
       setConfirmDialog({ open: false, playlistId: null });
+      fetchPlaylists();
       alert("Đã thêm bài hát vào playlist thành công!");
     } catch (error) {
       console.error("Lỗi khi thêm bài hát vào playlist:", error);

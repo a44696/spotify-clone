@@ -21,10 +21,12 @@ export const UserProvider = ({ children }) => {
                 setIsArtist(data.role === "ARTIST");
             } else {
                 setUser(null);
+                navigate("/auth");
             }
         } catch (error) {
             console.error("Error fetching user:", error);
             setUser(null);
+            navigate("/auth");
         } finally {
             setLoading(false);
         }
