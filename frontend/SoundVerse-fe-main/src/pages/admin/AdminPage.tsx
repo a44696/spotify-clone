@@ -30,19 +30,19 @@ const AdminPage = () => {
 
 			<Tabs defaultValue='songs' className='space-y-6'>
 				<TabsList className='p-1 bg-zinc-800/50 '>
-					<TabsTrigger value='songs' className='data-[state=active]:bg-zinc-700 mx-3'>
+					<TabsTrigger value='songs' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
 						<Music className='mr-2 size-4 rounded-md ' />
 						Songs
 					</TabsTrigger>
-					<TabsTrigger value='albums' className='data-[state=active]:bg-zinc-700 mx-3'>
+					<TabsTrigger value='albums' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
 						<Album className='mr-2 size-4' />
 						Albums
 					</TabsTrigger>
-					<TabsTrigger value='users' className='data-[state=active]:bg-zinc-700 mx-3'>
+					<TabsTrigger value='users' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
 						<User2 className='mr-2 size-4 rounded-md ' />
 						Users
 					</TabsTrigger>
-					<TabsTrigger value='queuing' className='data-[state=active]:bg-zinc-700 mx-3'>
+					<TabsTrigger value='queuing' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
 						<ListTodo className='mr-2 size-4 rounded-md ' />
 						Queuing
 					</TabsTrigger>
