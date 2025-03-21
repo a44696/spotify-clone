@@ -26,13 +26,14 @@ function App() {
           element={<AuthenticateWithRedirectCallback
           signUpForceRedirectUrl="/auth-callback"
         />}/>
+        
         <Route path="/auth-callback" element= {<AuthCallBackPage/>}/>
         <Route path="/admin" element= {<AdminPage/>}/>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/verify" element={<VerifyPage />} />
-
         <Route path="/my-musics" element= {<MyMusicsPage/>}/>
+        <Route path='*' element={<NotFoundPage />} />
 
         <Route element={<MainLayout />}>
           <Route path="/" element= {<HomePage/>}/>
@@ -42,7 +43,6 @@ function App() {
           <Route path="/playlists/:playlistId" element= {<PlaylistDetailPage/>}/>
           <Route path="/profile" element={<Profile/>} />
           <Route path="/artist/:artistId" element={<ArtistDetailPage />} />
-          <Route path='*' element={<NotFoundPage />} />
         </Route>
       </Routes>
       <Toaster />
