@@ -6,22 +6,40 @@ import { useAuth } from "@/providers/AuthContext";
 
 const Profile = () => {
     const { user, loading } = useAuth();
+    const [image, setImage] = useState<string | null>(null); // Lưu trữ ảnh tải lên
+
     console.log("User data from useAuth:", user);
 
     if (loading) {
         return <p className="text-white text-center">Loading...</p>;
     }
 
+    // Hàm xử lý khi người dùng chọn ảnh
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result as string); // Cập nhật ảnh
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
-                        style={{
-                            scrollbarWidth: 'thin', /* Dùng cho Firefox */
-                            scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
-                        }}>
+                    style={{
+                        scrollbarWidth: 'thin', /* Dùng cho Firefox */
+                        scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
+                    }}>
             <div className="max-w-2xl mx-auto p-6 bg-black shadow-md rounded-md">
                 {/* Ảnh đại diện + Thông tin */}
                 <div className="flex items-center gap-4">
-                    <img src="/cover-images/12.jpg" alt="Avatar" className="w-24 h-24 rounded-full border" />
+                    <img
+                        src={image || "/cover-images/12.jpg"} // Hiển thị ảnh tải lên nếu có, nếu không hiển thị ảnh mặc định
+                        alt="Avatar"
+                        className="w-24 h-24 rounded-full border"
+                    />
                     <div className='w-full'>
                         <div className="flex w-full justify-between items-center">
                             <div>
@@ -38,7 +56,16 @@ const Profile = () => {
                         </div>
                         {/* Nút đổi ảnh */}
                         <div className="mt-4">
-                            <Button variant="outline">Change Photo</Button>
+                            <Button variant="outline">
+                                <label htmlFor="file-upload" className="cursor-pointer">Change Photo</label>
+                            </Button>
+                            <input
+                                id="file-upload"
+                                type="file"
+                                accept="image/*"
+                                className="hidden" // Ẩn input file
+                                onChange={handleImageChange} // Xử lý thay đổi ảnh
+                            />
                         </div>
                     </div>
                 </div>

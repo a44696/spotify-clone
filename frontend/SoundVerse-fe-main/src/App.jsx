@@ -13,7 +13,7 @@ import VerifyPage from "./pages/auth/VerifyPage";
 import SignUpForm from "./pages/auth/SignUpForm";
 import ArtistDetailPage from "./pages/artist/ArtistDetailPage";
 import Profile from "./pages/avata/Profile";
-
+import NotFoundPage from "./pages/404/NotFoundPage";
 import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
 import PlaylistDetailPage from "./pages/playlist/PlaylistDetailPage";
 import ContractPage from "./pages/contract/ContractPage";
@@ -43,6 +43,7 @@ function App() {
           <Route path="/playlists/:playlistId" element= {<PlaylistDetailPage/>}/>
           <Route path="/profile" element={<Profile/>} />
           <Route path="/artist/:artistId" element={<ArtistDetailPage />} />
+          <Route path='*' element={<NotFoundPage />} />
         </Route>
       </Routes>
       <Toaster />

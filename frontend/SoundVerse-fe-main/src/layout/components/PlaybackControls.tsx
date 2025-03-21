@@ -24,10 +24,19 @@ export const PlaybackControls = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    fetchPlaylists();
+    const likedSongs = JSON.parse(localStorage.getItem("likedSongs") || "[]");
     if (currentSong) {
-      checkLikeSong(currentSong.id);
+      // Kiểm tra xem bài hát hiện tại có trong danh sách yêu thích không
+      if (likedSongs.includes(currentSong.id)) {
+        likeSong(currentSong.id);
+      }
     }
+  }, [currentSong]);
+  useEffect(() => {
+    fetchPlaylists();
+    // if (currentSong) {
+    //   checkLikeSong(currentSong.id);
+    // }
 
     audioRef.current = document.querySelector("audio");
     const audio = audioRef.current;
@@ -78,8 +87,18 @@ export const PlaybackControls = () => {
   const toggleFavorite = () => {
     if (isFavorite) {
       unlikeSong(currentSong.id);
+
+      // Cập nhật lại localStorage để bỏ yêu thích bài hát
+      const likedSongs = JSON.parse(localStorage.getItem("likedSongs") || "[]");
+      const updatedLikedSongs = likedSongs.filter((id: number) => id !== currentSong.id);
+      localStorage.setItem("likedSongs", JSON.stringify(updatedLikedSongs));
     } else {
       likeSong(currentSong.id);
+
+      // Cập nhật lại localStorage để thêm bài hát vào danh sách yêu thích
+      const likedSongs = JSON.parse(localStorage.getItem("likedSongs") || "[]");
+      likedSongs.push(currentSong.id);
+      localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
     }
   };
 
