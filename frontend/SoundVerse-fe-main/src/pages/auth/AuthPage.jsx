@@ -11,7 +11,7 @@ const AuthPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { getCurrentUser } = useAuth();
+  const { getCurrentUser, checkIsSigned } = useAuth();
   const { checkAdminStatus } = useAuthStore();
   const navigate = useNavigate();
 
@@ -33,6 +33,7 @@ const AuthPage = () => {
         toast.success(data.message);
         await getCurrentUser();
         await checkAdminStatus();
+        await checkIsSigned();
         navigate("/");
       } else {
         toast.error(data.message);

@@ -18,6 +18,7 @@ interface MusicStore {
 	featuredSongs: Song[];
 	madeForYouSongs: Song[];
 	trendingSongs: Song[];
+	queuingSongs: Song[];
 	stats: Stats;
 	myStats: MyStats;
 	artists: Artist[];
@@ -50,6 +51,9 @@ interface MusicStore {
 	likeSong: (id: number) => void;
 	unlikeSong: (id: number) => void;
 	checkLikeSong: (id: number) => void;
+	fetchQueuingSongs: () => Promise<void>;
+	acceptMusic: (id: number) => void;
+	refuseMusic: (id: number) => void;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -65,6 +69,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	featuredSongs: [],
 	trendingSongs: [],
 	popularArtists: [],
+	queuingSongs: [],
 	popularAlbums: [],
 	isFavorite: false,
 	stats: {
@@ -392,6 +397,40 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		try {
 			const response = await axiosInstance.get(`/like/${id}`);
 			set({ isFavorite: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchQueuingSongs: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/admin/queuingSongs");
+			set({ queuingSongs: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	acceptMusic: async (id: number) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.post(`/music/${id}`);
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	refuseMusic: async (id: number) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.post(`/music/${id}`);
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

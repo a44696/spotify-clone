@@ -48,6 +48,24 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    const checkIsSigned = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/artist/check-signed", {
+                method: "GET",
+                credentials: "include",
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (!data) {
+                    navigate("/contract");
+                }
+            }
+        } catch (error) {
+            console.error("Error logout:", error);
+            setUser(null);
+        }
+    };
+
     useEffect(() => {
         getCurrentUser();
     }, []);
@@ -62,7 +80,7 @@ export const UserProvider = ({ children }) => {
     }, [user, loading, navigate]);    
 
     return (
-        <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser, isArtist, logout }}>
+        <AuthContext.Provider value={{ user, loading, setUser, getCurrentUser, isArtist, logout, checkIsSigned }}>
             {children}
         </AuthContext.Provider>
     );

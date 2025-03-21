@@ -16,6 +16,7 @@ import Profile from "./pages/avata/Profile";
 
 import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
 import PlaylistDetailPage from "./pages/playlist/PlaylistDetailPage";
+import ContractPage from "./pages/contract/ContractPage";
 
 function App() {
   return (
@@ -31,8 +32,8 @@ function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/verify" element={<VerifyPage />} />
-
         <Route path="/my-musics" element= {<MyMusicsPage/>}/>
+        <Route path="/contract" element= {<ContractPage/>}/>
 
         <Route element={<MainLayout />}>
           <Route path="/" element= {<HomePage/>}/>

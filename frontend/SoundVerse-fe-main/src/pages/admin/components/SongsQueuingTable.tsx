@@ -2,13 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/providers/AuthContext";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { Calendar, Trash2 } from "lucide-react";
-import React from "react";
+import { Calendar, Check, X } from "lucide-react";
+import React, { useEffect } from "react";
 
 const SongsQueuingTable = () => {
-  const { songs, isLoading, mySongs, deleteSong } = useMusicStore();
-  const { isArtist } = useAuth();
-  const songsToDisplay = isArtist ? mySongs ?? [] : songs ?? [];
+  const { queuingSongs, fetchQueuingSongs, isLoading, acceptMusic, refuseMusic } = useMusicStore();
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -16,10 +14,24 @@ const SongsQueuingTable = () => {
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
   };
 
+  useEffect(() => {
+    fetchQueuingSongs();
+  }, [fetchQueuingSongs]);
+
+  const acceptSong = (songId) => {
+    acceptMusic(songId);
+    fetchQueuingSongs();
+  };
+
+  const refuseSong = (songId) => {
+    refuseMusic(songId);
+    fetchQueuingSongs();
+  };
+
   if (isLoading) {
     return (
       <div className='flex items-center justify-center py-8'>
-        <div className='text-zinc-400'>Loading songs...</div>
+        <div className='text-zinc-400'>Loading queuing songs...</div>
       </div>
     );
   }
@@ -39,7 +51,7 @@ const SongsQueuingTable = () => {
       </TableHeader>
 
       <TableBody className={undefined}>
-        {songsToDisplay.map((song) => (
+        {queuingSongs.map((song) => (
           <TableRow key={song.id} className='hover:bg-zinc-800/50'>
             <TableCell className={undefined}>
               <img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />
@@ -60,10 +72,18 @@ const SongsQueuingTable = () => {
                 <Button
                   variant={"ghost"}
                   size={"sm"}
-                  className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
-                  onClick={() => deleteSong(song.id)}
+                  className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
+                  onClick={() => acceptSong(song.id)}
                 >
-                  <Trash2 className='size-4' />
+                  <Check className='size-4' />
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  size={"sm"}
+                  className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
+                  onClick={() => refuseSong(song.id)}
+                >
+                  <X className='size-4' />
                 </Button>
               </div>
             </TableCell>

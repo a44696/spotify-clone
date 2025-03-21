@@ -9,7 +9,7 @@ import { Input } from './ui/Input';
 import { useAuth } from "@/providers/AuthContext";
 
 const Topbar = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, isArtist } = useAuth();
     const isAdmin = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
@@ -128,15 +128,27 @@ const Topbar = () => {
                                     >
                                         Playlist
                                     </Link>
-                                    <Link
-                                        to="/my-musics"
-                                        className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
-                                        onClick={() => {
-                                            setIsDropdownOpen(false);
-                                        }}
-                                    >
-                                        My Musics
-                                    </Link>
+                                    {isArtist || isAdmin && (
+                                        <>
+                                            <Link
+                                                to="/my-musics"
+                                                className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                                onClick={() => {
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                            >
+                                                My Musics
+                                            </Link>
+                                            <Link
+                                                to="/playlists"
+                                                className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                                onClick={() => {
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                            >
+                                                Playlist
+                                            </Link></>
+                                    )}
                                 </div>
                                 <button
                                     onClick={() => {
