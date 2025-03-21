@@ -122,17 +122,6 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 		try {
 			await axiosInstance.post(`/playlist/${playlist_id}/songs/${music_id}`);
-			set((state) => ({
-				playlists: state.playlists.map((playlist) => {
-					if (playlist.id === playlist_id) {
-						return {
-							...playlist,
-							songs: [...playlist.songs, state.songs.find((song) => song.id === music_id)]
-						};
-					}
-					return playlist;
-				})
-			}));
 			toast.success("Playlist deleted successfully");
 		} catch (error: any) {
 			toast.error("Failed to delete playlist: " + error.message);
@@ -145,17 +134,6 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 		try {
 			await axiosInstance.delete(`/playlist/${playlist_id}/songs/${music_id}`);
-			set((state) => ({
-				playlists: state.playlists.map((playlist) => {
-					if (playlist.id === playlist_id) {
-						return {
-							...playlist,
-							songs: playlist.songs.filter((song) => song.id !== music_id)
-						};
-					}
-					return playlist;
-				})
-			}));
 			toast.success("Playlist deleted successfully");
 		} catch (error: any) {
 			toast.error("Failed to delete playlist: " + error.message);

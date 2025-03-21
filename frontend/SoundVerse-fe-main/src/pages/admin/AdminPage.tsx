@@ -3,12 +3,13 @@ import React, { useEffect } from 'react'
 import Header from './components/Header';
 import DashboardStats from './components/DashboardStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
-import { Album, Music, User2 } from 'lucide-react';
+import { Album, ListTodo, Music, User2 } from 'lucide-react';
 import AlbumsTabContent from './components/AlbumsTabContent';
 import { useMusicStore } from '@/stores/useMusicStore';
 import SongsTabContent from './components/SongsTabContent';
 import { useAuth } from '@/providers/AuthContext';
 import UsersTabContent from './components/UsersTabContent';
+import QueuingTabContent from './components/QueuingTabContent';
 
 const AdminPage = () => {
 	const { isAdmin, isLoading } = useAuthStore();
@@ -37,12 +38,14 @@ const AdminPage = () => {
 						<Album className='mr-2 size-4' />
 						Albums
 					</TabsTrigger>
-					{!isArtist && (
-						<TabsTrigger value='users' className='data-[state=active]:bg-zinc-700 mx-3'>
-							<User2 className='mr-2 size-4 rounded-md ' />
-							Users
-						</TabsTrigger>
-					)}
+					<TabsTrigger value='users' className='data-[state=active]:bg-zinc-700 mx-3'>
+						<User2 className='mr-2 size-4 rounded-md ' />
+						Users
+					</TabsTrigger>
+					<TabsTrigger value='queuing' className='data-[state=active]:bg-zinc-700 mx-3'>
+						<ListTodo className='mr-2 size-4 rounded-md ' />
+						Queuing
+					</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value='songs'>
@@ -53,6 +56,9 @@ const AdminPage = () => {
 				</TabsContent>
 				<TabsContent value='users'>
 					<UsersTabContent />
+				</TabsContent>
+				<TabsContent value='queuing'>
+					<QueuingTabContent />
 				</TabsContent>
 			</Tabs>
 		</div>
