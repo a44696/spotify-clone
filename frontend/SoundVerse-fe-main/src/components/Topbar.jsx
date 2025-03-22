@@ -9,16 +9,14 @@ import { Input } from './ui/Input';
 import { useAuth } from "@/providers/AuthContext";
 
 const Topbar = () => {
-    const { user, logout } = useAuth();
-    const isAdmin = useAuthStore();
+    const { user, logout, isArtist } = useAuth();
+    const { isAdmin } = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
-    useEffect(() => {
-        console.log("User email:", user?.email); // Kiểm tra xem giá trị user có được cập nhật không
-    }, [user]);
+
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -130,15 +128,27 @@ const Topbar = () => {
                                     >
                                         Playlist
                                     </Link>
-                                    <Link
-                                        to="/my-musics"
-                                        className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
-                                        onClick={() => {
-                                            setIsDropdownOpen(false);
-                                        }}
-                                    >
-                                        My Musics
-                                    </Link>
+                                    {(isArtist || isAdmin) && (
+                                        <>
+                                            <Link
+                                                to="/my-musics"
+                                                className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                                onClick={() => {
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                            >
+                                                My Musics
+                                            </Link>
+                                            <Link
+                                                to="/my-contract"
+                                                className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
+                                                onClick={() => {
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                            >
+                                                My Contract
+                                            </Link></>
+                                    )}
                                 </div>
                                 <button
                                     onClick={() => {

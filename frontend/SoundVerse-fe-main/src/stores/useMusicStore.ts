@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
-import { Album, Genre, MyStats, Playlist, Song, Stats, Artist } from "@/types";
+import { Album, Genre, MyStats, Playlist, Song, Stats, Artist, Contract } from "@/types";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
@@ -18,6 +18,7 @@ interface MusicStore {
 	featuredSongs: Song[];
 	madeForYouSongs: Song[];
 	trendingSongs: Song[];
+	queuingSongs: Song[];
 	stats: Stats;
 	myStats: MyStats;
 	artists: Artist[];
@@ -25,6 +26,7 @@ interface MusicStore {
 	popularAlbums: Album[];
 	artistDetails: Artist | null;
 	isFavorite: boolean;
+	myContract: Contract;
 
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
@@ -50,6 +52,10 @@ interface MusicStore {
 	likeSong: (id: number) => void;
 	unlikeSong: (id: number) => void;
 	checkLikeSong: (id: number) => void;
+	fetchQueuingSongs: () => Promise<void>;
+	acceptMusic: (id: number) => void;
+	refuseMusic: (id: number) => void;
+	fetchMyContract: () => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -59,12 +65,14 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	genres: [],
 	isLoading: false,
 	error: null,
+	myContract: null,
 	currentAlbum: null,
 	currentPlaylist: null,
 	madeForYouSongs: [],
 	featuredSongs: [],
 	trendingSongs: [],
 	popularArtists: [],
+	queuingSongs: [],
 	popularAlbums: [],
 	isFavorite: false,
 	stats: {
@@ -392,6 +400,52 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		try {
 			const response = await axiosInstance.get(`/like/${id}`);
 			set({ isFavorite: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchQueuingSongs: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/admin/queuingSongs");
+			set({ queuingSongs: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	acceptMusic: async (id: number) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.post(`/music/${id}`);
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	refuseMusic: async (id: number) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.post(`/music/${id}`);
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchMyContract: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/contract");
+			set({ myContract: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

@@ -65,3 +65,12 @@ export interface Genre {
 	id: string;
 	title: string;
 }
+export interface Contract {
+	contractNumber: string;
+	contractDate: string;
+	username: string;
+	address: string;
+	phone: string;
+	email: string;
+	signature: string;
+}

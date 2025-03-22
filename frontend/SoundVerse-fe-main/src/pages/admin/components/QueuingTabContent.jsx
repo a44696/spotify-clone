@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { ListTodo, Music, Album } from "lucide-react";
+import SongsQueuingTable from "./SongsQueuingTable";
 
 const QueuingTabContent = () => {
   return (
@@ -17,27 +18,9 @@ const QueuingTabContent = () => {
         </div>
       </CardHeader>
 
-      <Tabs defaultValue='songs' className='space-y-6'>
-        <TabsList className='p-1 bg-zinc-800/50 '>
-          <TabsTrigger value='songs' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
-            <Music className='mr-2 size-4 rounded-md ' />
-            Songs
-          </TabsTrigger>
-          <TabsTrigger value='albums' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
-            <Album className='mr-2 size-4' />
-            Albums
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value='songs'>
-          {/* <SongsTabContent /> */}
-          <h1>khanh</h1>
-        </TabsContent>
-        <TabsContent value='albums'>
-          {/* <AlbumsTabContent /> */}
-          <h1>chi</h1>
-        </TabsContent>
-      </Tabs>
+      <CardContent>
+        <SongsQueuingTable />			
+      </CardContent>
     </Card>
   );
 };
