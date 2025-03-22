@@ -11,9 +11,21 @@ const AuthPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { getCurrentUser, checkIsSigned } = useAuth();
+  const { getCurrentUser, user } = useAuth();
   const { checkAdminStatus } = useAuthStore();
   const navigate = useNavigate();
+
+  const getUserRole = async () => {
+    const response = await fetch("http://localhost:8080/api/auth/me", {
+      method: "POST",
+      credentials: "include",
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data.role;
+    }
+    return null
+  }
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -33,7 +45,24 @@ const AuthPage = () => {
         toast.success(data.message);
         await getCurrentUser();
         await checkAdminStatus();
-        await checkIsSigned();
+
+        let role = await getUserRole();
+        console.log(role)
+        if (role == 'ARTIST') {
+          const response = await fetch("http://localhost:8080/api/artist/check-signed", {
+            method: "GET",
+            credentials: "include",
+          });
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data.data)
+            if (!data.data) {
+              console.log('contract')
+              navigate("/contract");
+              return;
+            }
+          }
+        }
         navigate("/");
       } else {
         toast.error(data.message);

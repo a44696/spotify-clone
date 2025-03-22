@@ -9,7 +9,7 @@ import { axiosInstance } from '@/lib/axios';
 
 const ContractPage = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, getCurrentUser } = useAuth();
 
     console.log(user)
 
@@ -38,6 +38,7 @@ const ContractPage = () => {
         contractNumber: generateContractNumber(1),
         contractDate: getCurrentDate(),
         signature: "",
+        email: user.email
     });
 
     const handleContentChange = (field) => (e) => {
@@ -52,7 +53,7 @@ const ContractPage = () => {
         }
 
         try {
-            const response = await axiosInstance.post('/artist/sign-contract', form);
+            const response = await axiosInstance.post('/contract/sign-contract', form);
 
             if (response.data.status == 'success') {
                 toast.success(response.data.message);
@@ -99,7 +100,7 @@ const ContractPage = () => {
                             {form.phone}
                         </p>
                     </p>
-                    <p>Email: {user?.email}</p>
+                    <p>Email: {form.email}</p>
                 </div>
 
                 <div className="distributor-info">

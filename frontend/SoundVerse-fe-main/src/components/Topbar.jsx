@@ -16,9 +16,7 @@ const Topbar = () => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
-    useEffect(() => {
-        console.log("User email:", user?.email); // Kiểm tra xem giá trị user có được cập nhật không
-    }, [user]);
+
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
