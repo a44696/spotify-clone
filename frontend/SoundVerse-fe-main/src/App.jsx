@@ -18,6 +18,7 @@ import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
 import PlaylistDetailPage from "./pages/playlist/PlaylistDetailPage";
 import ContractPage from "./pages/contract/ContractPage";
 import MyContractPage from "./pages/contract/MyContractPage";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/my-musics" element= {<MyMusicsPage/>}/>
         <Route path="/contract" element= {<ContractPage/>}/>
         <Route path='*' element={<NotFoundPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route element={<MainLayout />}>
           <Route path="/" element= {<HomePage/>}/>

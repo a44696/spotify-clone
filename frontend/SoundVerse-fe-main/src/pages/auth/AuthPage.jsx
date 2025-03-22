@@ -98,6 +98,10 @@ const AuthPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <p className="text-left text-emerald-400 hover:underline cursor-pointer">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </p>
+
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? 'Loading...' : 'Sign In'}
           </Button>
