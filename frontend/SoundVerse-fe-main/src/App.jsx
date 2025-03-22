@@ -16,6 +16,7 @@ import Profile from "./pages/avata/Profile";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
 import PlaylistDetailPage from "./pages/playlist/PlaylistDetailPage";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/verify" element={<VerifyPage />} />
         <Route path="/my-musics" element= {<MyMusicsPage/>}/>
         <Route path='*' element={<NotFoundPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route element={<MainLayout />}>
           <Route path="/" element= {<HomePage/>}/>

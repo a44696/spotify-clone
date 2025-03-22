@@ -1,44 +1,37 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/button';
-import { useAuth } from "@/providers/AuthContext";
-import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
 
-const AuthPage = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { getCurrentUser } = useAuth();
-  const { checkAdminStatus } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleAuth = async (e) => {
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch('http://localhost:8080/api/auth/forgot_password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, newPassword }),
         credentials: "include",
       });
       const data = await response.json();
-      if (data.status == 'success') {
+      if (data.status === 'success') {
         toast.success(data.message);
-        await getCurrentUser();
-        await checkAdminStatus();
-        navigate("/");
+        navigate("/auth");
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      alert('Error: ' + error.errors[0]?.message || 'Something went wrong');
+      toast.error('Something went wrong, please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -48,10 +41,10 @@ const AuthPage = () => {
     <div className="h-screen flex items-center justify-center bg-black">
       <div className="p-8 bg-zinc-900 rounded-lg shadow-md w-[90%] max-w-md">
         <h2 className="text-white text-xl font-bold mb-4 text-center">
-          Sign In
+          Reset Password
         </h2>
 
-        <form onSubmit={handleAuth} className="space-y-4">
+        <form onSubmit={handleResetPassword} className="space-y-4">
           <Input
             type="email"
             placeholder="Email"
@@ -62,33 +55,19 @@ const AuthPage = () => {
           />
           <Input
             type="password"
-            placeholder="Password"
+            placeholder="New Password"
             className="w-full bg-zinc-800 text-white"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             required
           />
-          <p className="text-left text-emerald-400 hover:underline cursor-pointer">
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </p>
-
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Sign In'}
+            {isLoading ? 'Processing...' : 'Reset Password'}
           </Button>
         </form>
-
-        <p className="text-zinc-400 text-center mt-4">
-          Don't have an account?
-          <Link
-            to="/signup"
-            className="text-emerald-400 hover:underline"
-          >
-            Sign Up
-          </Link>
-        </p>
       </div>
     </div>
   );
 };
 
-export default AuthPage;
+export default ForgotPassword;
