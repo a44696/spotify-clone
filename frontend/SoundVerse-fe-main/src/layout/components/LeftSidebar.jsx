@@ -6,13 +6,17 @@ import { buttonVariants } from '@/components/ui/button'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
 import PlaylistSkeleton from '@/components/skeletons/PlaylistSkeleton.jsx'
 import { useMusicStore } from '@/stores/useMusicStore'
-
+import { useAuth } from '@/providers/AuthContext'
 const LeftSidebar = () => {
   const { isLoading, playlists, fetchPlaylists } = useMusicStore();
-
+  const { role, isArtist, isAdmin } = useAuth();
   useEffect(() => {
     fetchPlaylists()
   }, [fetchPlaylists]);
+
+  console.log("User Role:", role);
+  console.log("isArtist:", isArtist);
+  console.log("isAdmin:", isAdmin);
 
   return (
     <div className='h-full flex flex-col gap-2'>
@@ -40,15 +44,16 @@ const LeftSidebar = () => {
             <span className='hidden md:inline'>My playlists</span>
           </Link>
 
-          <Link to={'/my-musics'}
-            className={cn(
-              buttonVariants({
-                variant: 'ghost', className: 'w-full justify-start text-white hover:bg-zinc-800'
-              }))}
-          >
-            <Music className='mr-2 size-5' />
-            <span className='hidden md:inline'>My musics</span>
-          </Link>
+          {(isArtist || isAdmin) && (
+            <Link to={'/my-musics'}
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost', className: 'w-full justify-start text-white hover:bg-zinc-800'
+                }))}>
+              <Music className='mr-2 size-5' />
+              <span className='hidden md:inline'>My musics</span>
+            </Link>
+          )}
         </div>
       </div>
       {/*Library section*/}
