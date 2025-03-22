@@ -17,6 +17,7 @@ import NotFoundPage from "./pages/404/NotFoundPage";
 import MyMusicsPage from "./pages/my-musics/MyMusicsPage";
 import PlaylistDetailPage from "./pages/playlist/PlaylistDetailPage";
 import ContractPage from "./pages/contract/ContractPage";
+import MyContractPage from "./pages/contract/MyContractPage";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/albums/:albumId" element= {<AlbumPage/>}/>
           <Route path="/playlists/:playlistId" element= {<PlaylistDetailPage/>}/>
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/my-contract" element={<MyContractPage/>} />
           <Route path="/artist/:artistId" element={<ArtistDetailPage />} />
         </Route>
       </Routes>

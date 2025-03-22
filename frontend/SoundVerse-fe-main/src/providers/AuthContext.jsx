@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
     const getCurrentUser = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/auth/me", {
-                method: "POST",
+                method: "GET",
                 credentials: "include",
             });
             if (response.ok) {
@@ -41,24 +41,6 @@ export const UserProvider = ({ children }) => {
             if (response.ok) {
                 setUser(null);
                 navigate("/auth");
-            }
-        } catch (error) {
-            console.error("Error logout:", error);
-            setUser(null);
-        }
-    };
-
-    const checkIsSigned = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/api/artist/check-signed", {
-                method: "GET",
-                credentials: "include",
-            });
-            if (response.ok) {
-                const data = await response.json();
-                if (!data) {
-                    navigate("/contract");
-                }
             }
         } catch (error) {
             console.error("Error logout:", error);

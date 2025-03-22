@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
-import { Album, Genre, MyStats, Playlist, Song, Stats, Artist } from "@/types";
+import { Album, Genre, MyStats, Playlist, Song, Stats, Artist, Contract } from "@/types";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 
@@ -26,6 +26,7 @@ interface MusicStore {
 	popularAlbums: Album[];
 	artistDetails: Artist | null;
 	isFavorite: boolean;
+	myContract: Contract;
 
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
@@ -54,6 +55,7 @@ interface MusicStore {
 	fetchQueuingSongs: () => Promise<void>;
 	acceptMusic: (id: number) => void;
 	refuseMusic: (id: number) => void;
+	fetchMyContract: () => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -63,6 +65,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	genres: [],
 	isLoading: false,
 	error: null,
+	myContract: null,
 	currentAlbum: null,
 	currentPlaylist: null,
 	madeForYouSongs: [],
@@ -431,6 +434,18 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 		try {
 			const response = await axiosInstance.post(`/music/${id}`);
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchMyContract: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/contract");
+			set({ myContract: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

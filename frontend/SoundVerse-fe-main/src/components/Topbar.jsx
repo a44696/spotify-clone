@@ -10,7 +10,7 @@ import { useAuth } from "@/providers/AuthContext";
 
 const Topbar = () => {
     const { user, logout, isArtist } = useAuth();
-    const isAdmin = useAuthStore();
+    const { isAdmin } = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
@@ -128,7 +128,7 @@ const Topbar = () => {
                                     >
                                         Playlist
                                     </Link>
-                                    {isArtist || isAdmin && (
+                                    {(isArtist || isAdmin) && (
                                         <>
                                             <Link
                                                 to="/my-musics"
@@ -140,13 +140,13 @@ const Topbar = () => {
                                                 My Musics
                                             </Link>
                                             <Link
-                                                to="/playlists"
+                                                to="/my-contract"
                                                 className="block text-sm text-gray-700 hover:bg-gray-200 p-2 rounded"
                                                 onClick={() => {
                                                     setIsDropdownOpen(false);
                                                 }}
                                             >
-                                                Playlist
+                                                My Contract
                                             </Link></>
                                     )}
                                 </div>
