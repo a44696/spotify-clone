@@ -65,7 +65,7 @@ const ArtistDetailPage = () => {
 
   return (
     <div className="p-6 text-white bg-gradient-to-b from-neutral-900 to-black min-h-screen">
-      <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto"
+      <ScrollArea className="h-[calc(100vh-250px)] overflow-y-auto"
         style={{
           scrollbarWidth: 'thin', /* Dùng cho Firefox */
           scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
@@ -143,7 +143,11 @@ const ArtistDetailPage = () => {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <img src={song.thumbnail || "/default_album.jpg"} alt={song.title} className="w-10 h-10" />
+                        <img src={song.thumbnail || "/default_album.jpg"} 
+                        alt={song.title} 
+                        className='w-full h-full object-cover transition-transform duration-300 
+									      group-hover:scale-105' 
+                        />
                         <div>
                           <div className="font-medium text-white">{song.title}</div>
                           <div>{song.artist}</div>
@@ -167,20 +171,27 @@ const ArtistDetailPage = () => {
           </div>
 
           {artist.albums && artist.albums.length > 0 ? (
-            <div className="flex gap-6 overflow-x-auto pb-2 hide-scrollbar">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4">
               {artist.albums.map((album: any) => (
-                <div key={album.id} className="min-w-[150px] group cursor-pointer"
+                <div key={album.id} 
+                className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer"
                 onClick={() => navigate(`/albums/${album.id}`)}
                 >
-                  <div className="w-full aspect-square overflow-hidden rounded-lg bg-neutral-800">
-                    <img
-                      src={album.thumbnail || "/default_album.jpg"}
-                      alt={album.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition"
-                    />
+                  <div className="relative mb-4">
+                    <div className="aspect-square overflow-hidden rounded-md">
+                      <img
+                        src={album.thumbnail}
+                        alt={album.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                   </div>
-                  <div className="mt-2 font-semibold truncate">{album.title}</div>
-                  <div className="text-sm text-gray-400 truncate">{album.createdAt}</div>
+                    {/* Tên album */}
+                    <h3 className="font-medium text-center mb-1">{album.title}</h3>
+
+                    {/* Nghệ sĩ */}
+                    <p className="text-sm text-gray-400 text-center">{album.artist}</p>
+                  
                 </div>
               ))}
             </div>
