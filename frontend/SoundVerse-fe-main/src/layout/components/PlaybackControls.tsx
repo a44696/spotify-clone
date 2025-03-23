@@ -34,9 +34,9 @@ export const PlaybackControls = () => {
   }, [currentSong]);
   useEffect(() => {
     fetchPlaylists();
-    // if (currentSong) {
-    //   checkLikeSong(currentSong.id);
-    // }
+    if (currentSong) {
+      checkLikeSong(currentSong.id);
+    }
 
     audioRef.current = document.querySelector("audio");
     const audio = audioRef.current;

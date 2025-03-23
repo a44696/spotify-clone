@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { axiosInstance } from "@/lib/axios";
+import { apiUrl } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
 import React, { useEffect } from "react";
@@ -158,7 +159,7 @@ const AddSongDialog = () => {
 
 	const handleUploadThumbnail = async (uploadThumbnailName) => {
 		try {
-			const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
+			const response = await fetch(`${apiUrl.baseURL}/generate-thumbnail-presigned-url`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -195,7 +196,7 @@ const AddSongDialog = () => {
 
 	const handleUploadAudio = async (uploadMusicName) => {
 		try {
-			const response = await fetch("http://localhost:8080/api/generate-single-presigned-url", {
+			const response = await fetch(`${apiUrl.baseURL}/generate-single-presigned-url`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

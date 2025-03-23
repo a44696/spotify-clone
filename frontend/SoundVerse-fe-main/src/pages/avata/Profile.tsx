@@ -5,6 +5,7 @@ import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useAuth } from "@/providers/AuthContext";
 import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/axios';
+import { apiUrl } from '@/lib/utils';
 
 const Profile = () => {
     const { user, loading, getCurrentUser } = useAuth();
@@ -136,7 +137,7 @@ const Profile = () => {
 
     const handleUploadImgProfile = async (uploadThumbnailName) => {
         try {
-            const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
+            const response = await fetch(`${apiUrl.baseURL}/generate-thumbnail-presigned-url`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

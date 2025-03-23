@@ -74,7 +74,7 @@ const ArtistDetailPage = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-center md:items-end gap-6 mb-8">
           <img
-            src={artist.avatar || "/default_avatar_user.jpg"}
+            src={artist.profilePicImage || "/default_avatar_user.jpg"}
             alt={artist.username}
             className="w-48 h-48 rounded-full object-cover shadow-lg"
           />
@@ -145,8 +145,7 @@ const ArtistDetailPage = () => {
                       <div className="flex items-center gap-3">
                         <img src={song.thumbnail || "/default_album.jpg"} 
                         alt={song.title} 
-                        className='w-full h-full object-cover transition-transform duration-300 
-									      group-hover:scale-105' 
+                        className='size-10 rounded object-cover' 
                         />
                         <div>
                           <div className="font-medium text-white">{song.title}</div>

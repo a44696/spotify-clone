@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/Input";
 import { axiosInstance } from "@/lib/axios";
+import { apiUrl } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
 import React from "react";
@@ -101,7 +102,7 @@ const AddAlbumDialog = () => {
 
 	const handleUploadThumbnail = async (uploadThumbnailName) => {
 		try {
-			const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
+			const response = await fetch(`${apiUrl.baseURL}/generate-thumbnail-presigned-url`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

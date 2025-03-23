@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from "@/providers/AuthContext";
 import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
+import { apiUrl } from "@/lib/utils";
 
 const AuthPage = () => {
   const [email, setEmail] = useState('');
@@ -15,8 +16,10 @@ const AuthPage = () => {
   const { checkAdminStatus } = useAuthStore();
   const navigate = useNavigate();
 
+  console.log(apiUrl)
+
   const getUserRole = async () => {
-    const response = await fetch("http://localhost:8080/api/auth/me", {
+    const response = await fetch(`${apiUrl.baseURL}/auth/me`, {
       method: "GET",
       credentials: "include",
     });
@@ -32,7 +35,7 @@ const AuthPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch(`${apiUrl.baseURL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +52,7 @@ const AuthPage = () => {
         let role = await getUserRole();
         console.log(role)
         if (role == 'ARTIST') {
-          const response = await fetch("http://localhost:8080/api/artist/check-signed", {
+          const response = await fetch(`${apiUrl.baseURL}/artist/check-signed`, {
             method: "GET",
             credentials: "include",
           });
