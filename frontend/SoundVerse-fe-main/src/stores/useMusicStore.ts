@@ -9,6 +9,7 @@ interface MusicStore {
 	albums: Album[];
 	mySongs: Song[];
 	myAlbums: Album[];
+	myQueuing: Song[];
 	genres: Genre[];
 	playlists: Playlist[];
 	isLoading: boolean;
@@ -56,6 +57,8 @@ interface MusicStore {
 	acceptMusic: (id: number) => void;
 	refuseMusic: (id: number) => void;
 	fetchMyContract: () => Promise<void>;
+	fetchMyQueuing: () => Promise<void>;
+	publishMusic: (id: number) => void;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -86,6 +89,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	artistDetails: null,
 	mySongs: [],
 	myAlbums: [],
+	myQueuing: [],
 	myStats: {
 		totalSongs: 0,
 		totalAlbums: 0,
@@ -362,7 +366,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchMyStats: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/my-stats");
+			const response = await axiosInstance.get("/artist/my-stats");
 			set({ myStats: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
@@ -410,7 +414,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchQueuingSongs: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/admin/queuingSongs");
+			const response = await axiosInstance.get("/music/pending");
 			set({ queuingSongs: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
@@ -422,7 +426,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	acceptMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.post(`/music/${id}`);
+			const response = await axiosInstance.post(`/music/approve/${id}`);
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {
@@ -433,7 +437,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	refuseMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.post(`/music/${id}`);
+			const response = await axiosInstance.post(`/music/refuse/${id}`);
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {
@@ -446,6 +450,29 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		try {
 			const response = await axiosInstance.get("/contract");
 			set({ myContract: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchMyQueuing: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/music/pending");
+			set({ myQueuing: response.data.data });
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	publishMusic: async (id: number) => {
+		set({ isLoading: true, error: null });
+		try {
+			await axiosInstance.post(`/music/publish/${id}`);
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

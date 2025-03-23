@@ -143,7 +143,7 @@ const ArtistDetailPage = () => {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <img src={song.cover || "/default_album.jpg"} alt={song.title} className="w-10 h-10" />
+                        <img src={song.thumbnail || "/default_album.jpg"} alt={song.title} className="w-10 h-10" />
                         <div>
                           <div className="font-medium text-white">{song.title}</div>
                           <div>{song.artist}</div>
@@ -174,13 +174,13 @@ const ArtistDetailPage = () => {
                 >
                   <div className="w-full aspect-square overflow-hidden rounded-lg bg-neutral-800">
                     <img
-                      src={album.cover || "/default_album.jpg"}
+                      src={album.thumbnail || "/default_album.jpg"}
                       alt={album.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition"
                     />
                   </div>
                   <div className="mt-2 font-semibold truncate">{album.title}</div>
-                  <div className="text-sm text-gray-400 truncate">{album.releaseYear} • {album.type || "Single"}</div>
+                  <div className="text-sm text-gray-400 truncate">{album.createdAt}</div>
                 </div>
               ))}
             </div>

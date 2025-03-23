@@ -20,7 +20,7 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const countries = [
     { code: "vn", name: "Việt Nam" },
-    { code: "us", name: "" },
+    { code: "us", name: "USA" },
     { code: "uk", name: "Anh" },
     { code: "fr", name: "Pháp" },
   ];
@@ -32,7 +32,7 @@ const SignUpForm = () => {
 
   const formatDate = (inputDate) => {
     const [year, month, day] = inputDate.split("-");
-    return `${day}/${month}/${year}`;
+    return `${day}-${month}-${year}`;
 }
 
   const handleSubmit = async (e) => {

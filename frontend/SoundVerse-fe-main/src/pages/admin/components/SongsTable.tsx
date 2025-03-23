@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useAuth } from "@/providers/AuthContext";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Trash2 } from "lucide-react";
 import React from "react";
 
 const SongsTable = () => {
-	const { songs, isLoading, mySongs, deleteSong } = useMusicStore();
-	const { isArtist } = useAuth();
-	const songsToDisplay = isArtist ? mySongs ?? [] : songs ?? [];
+	const { songs, isLoading, deleteSong } = useMusicStore();
+	const songsToDisplay = songs ?? [];
 
 	const formatTime = (seconds) => {
 		const minutes = Math.floor(seconds / 60);

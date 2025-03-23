@@ -1,24 +1,25 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import React, { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
-import { Album, Music } from 'lucide-react';
+import { Album, ListTodo, Music } from 'lucide-react';
 import { useMusicStore } from '@/stores/useMusicStore';
 import Header from '../admin/components/Header';
-import SongsTabContent from '../admin/components/SongsTabContent';
 import AlbumsTabContent from '../admin/components/AlbumsTabContent';
 import { useAuth } from '@/providers/AuthContext';
 import DashboardArtist from './DashboardArtist';
+import MySongsTabContent from './MySongsTabContent';
+import MyQueuingTabContent from './MyQueuingTabContent';
 
 const MyMusicsPage = () => {
     const { loading, isArtist } = useAuth();
     const { isAdmin } = useAuthStore();
-    const { fetchAlbums, fetchSongs, fetchStats } = useMusicStore();
+    const { fetchMyAlbums, fetchMySongs, fetchMyStats } = useMusicStore();
 
     useEffect(() => {
-        fetchAlbums();
-        fetchSongs();
-        fetchStats();
-    }, [fetchAlbums, fetchSongs, fetchStats]);
+        fetchMyAlbums();
+        fetchMySongs();
+        fetchMyStats();
+    }, [fetchMyAlbums, fetchMySongs, fetchMyStats]);
 
     if (!isArtist && !loading && !isAdmin) return <div>Unauthorized - you must be an artist</div>
 
@@ -39,14 +40,21 @@ const MyMusicsPage = () => {
                         <Album className='mr-2 size-4' />
                         Albums
                     </TabsTrigger>
+                    <TabsTrigger value='queuing' className='data-[state=active]:bg-zinc-700 mx-3 border border-zinc-600 rounded-lg px-4 py-2'>
+						<ListTodo className='mr-2 size-4 rounded-md ' />
+						Queuing
+					</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value='songs'>
-                    <SongsTabContent />
+                    <MySongsTabContent />
                 </TabsContent>
                 <TabsContent value='albums'>
                     <AlbumsTabContent />
                 </TabsContent>
+                <TabsContent value='queuing'>
+					<MyQueuingTabContent />
+				</TabsContent>
             </Tabs>
         </div>
     )
