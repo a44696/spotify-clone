@@ -17,7 +17,7 @@ const AuthPage = () => {
 
   const getUserRole = async () => {
     const response = await fetch("http://localhost:8080/api/auth/me", {
-      method: "POST",
+      method: "GET",
       credentials: "include",
     });
     if (response.ok) {

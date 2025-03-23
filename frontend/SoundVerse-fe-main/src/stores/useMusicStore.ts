@@ -460,7 +460,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchMyQueuing: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/music/pending");
+			const response = await axiosInstance.get("/music/my-pending");
 			set({ myQueuing: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });

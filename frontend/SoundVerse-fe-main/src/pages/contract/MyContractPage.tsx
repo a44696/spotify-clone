@@ -2,6 +2,10 @@ import React, { useEffect } from 'react';
 import './css/ContractPage.css';
 import { useMusicStore } from '@/stores/useMusicStore';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import toast from 'react-hot-toast';
+import { axiosInstance } from '@/lib/axios';
 
 const MyContractPage = () => {
   const { myContract, fetchMyContract } = useMusicStore();
@@ -11,6 +15,29 @@ const MyContractPage = () => {
     fetchMyContract();
   }, [fetchMyContract])
 
+  const exportContract = async () => {
+    try {
+      const response = await axiosInstance.get('/contract/export-contract');
+
+      if (response.data.status === 'success') {
+        const downloadUrl = response.data.data;
+
+        if (downloadUrl) {
+          window.open(downloadUrl, '_blank');
+
+          toast.success("File downloading...");
+        } else {
+          toast.error("Không nhận được URL tải về!");
+        }
+      } else {
+        toast.error(response.data.message || "Unknown Error!");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Unknown Error!");
+    }
+  };
+
+
   return (
     <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
       style={{
@@ -18,8 +45,19 @@ const MyContractPage = () => {
         scrollbarColor: '#0f0f0f transparent', /* Màu thanh cuộn */
         paddingBottom: '50px'
       }}>
+      <div className='container text-right'>
+        <Button
+          variant={"ghost"}
+          size={"lg"}
+          className='text-green-400 hover:text-green-300 hover:bg-green-400/10 cursor'
+          onClick={exportContract}
+        >
+          <Download className='size-4' />
+          DOWNLOAD
+        </Button>
+      </div>
       <div className="container">
-        <div style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
+        <div style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
           <img src="/spotify.png" alt="Sound Verse Logo" className="logo" />
 
           <h1>Music Distribution Contract</h1>
@@ -32,7 +70,7 @@ const MyContractPage = () => {
           <p>Contract Term: <span id="contractTerm">1 year</span></p>
         </div>
 
-        <div className="artist-info" style={{marginTop: '12px'}}>
+        <div className="artist-info" style={{ marginTop: '12px' }}>
           <h2>Artist</h2>
           <p>Artist Name: {myContract ? myContract.username : "Loading..."}</p>
           <p>Address: {myContract ? myContract.address : "Loading..."}</p>

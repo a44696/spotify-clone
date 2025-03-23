@@ -7,18 +7,18 @@ import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/axios';
 
 const Profile = () => {
-    const { user, loading } = useAuth();
+    const { user, loading, getCurrentUser } = useAuth();
     const [image, setImage] = useState<string | null>(null); // Lưu trữ ảnh tải lên
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [form, setForm] = useState({
         username: "",
-        password: "",
-        confirmPassword: "",
-        currentPassword: "",
+        password: null,
+        confirmPassword: null,
+        currentPassword: null,
         gender: "",
         country: "",
         fullName: "",
-        profilePicImage: "",
+        profilePicImage: null,
         dob: "",
     })
 
@@ -27,9 +27,9 @@ const Profile = () => {
         setImage(user.profilePicImage)
         setForm({
             username: user.username,
-            password: "",
-            confirmPassword: "",
-            currentPassword: "",
+            password: null,
+            confirmPassword: null,
+            currentPassword: null,
             gender: user.gender,
             country: user.country,
             fullName: user.fullName,
@@ -68,7 +68,7 @@ const Profile = () => {
 
     const formatDate = (inputDate) => {
         const [year, month, day] = inputDate.split("-");
-        return `${day}-${month}-${year}`;
+        return `${day}/${month}/${year}`;
     }
 
     const handleSubmit = async (e) => {
@@ -79,28 +79,41 @@ const Profile = () => {
             toast.error("Mật khẩu không khớp!");
             return;
         }
-
+        
+        
         try {
-
-            let data = {
+            let data: any = {
                 username: form.username,
                 password: form.password,
+                currentPassword: form.currentPassword,
                 gender: form.gender,
                 country: form.country,
                 fullName: form.fullName,
-                dob: formatDate(form.dob),
-            }
+                dob: form.dob ? formatDate(form.dob) : null,
+            };
 
             if (imageFile) {
                 const imgProfile = generateFileName(imageFile.name);
 
                 await handleUploadImgProfile(imgProfile);
+
+                data.profilePicImage = imgProfile;
             }
 
-            const res = await axiosInstance.post("/users/update", data);
+            if (!data.password && !data.currentPassword) {
+                delete data.currentPassword;
+                delete data.password;
+            }
+
+            if (!data.dob) {
+                delete data.dob;
+            }
+
+            const res = await axiosInstance.put("/users/update", data);
 
             if (res.data.status == 'success') {
                 toast.success(res.data.message);
+                getCurrentUser();
             }
         } catch (err) {
             toast.error(err.response?.data?.message || "Lỗi khi đăng ký!");
@@ -162,7 +175,8 @@ const Profile = () => {
         <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
             style={{
                 scrollbarWidth: 'thin', /* Dùng cho Firefox */
-                scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
+                scrollbarColor: '#0f0f0f transparent', /* Màu thanh cuộn */
+                paddingBottom: '50px'
             }}>
             <div className="max-w-2xl mx-auto p-6 bg-black shadow-md rounded-md">
                 {/* Ảnh đại diện + Thông tin */}
@@ -211,40 +225,49 @@ const Profile = () => {
                             placeholder="fullName"
                             value={form.fullName}
                             onChange={handleChange}
-                            required className={undefined}                        />
-                        <Input placeholder="Full Name" value={form.fullName || ""} disabled className={undefined} type={undefined} />
-                        <Input placeholder="Username" value={form.username || ""} disabled className={undefined} type={undefined} />
-                        <select
-                            name="gender"
-                            value={form.gender}
+                            className={undefined}
+                        />
+                        <Input
+                            type="text"
+                            name="username"
+                            placeholder="username"
+                            value={form.username}
                             onChange={handleChange}
-                            className="p-2 rounded bg-zinc-800 text-white w-full"
-                            required
-                        >
-                            <option value="">Chọn giới tính</option>
-                            <option value="male">Nam</option>
-                            <option value="female">Nữ</option>
-                            <option value="other">Khác</option>
-                        </select>
-                        <select
-                            name="country"
-                            value={form.country}
-                            onChange={handleChange}
-                            className="p-2 rounded bg-zinc-800 text-white w-full"
-                            required
-                        >
-                            <option value="">Chọn quốc gia</option>
-                            {countries.map((country) => (
-                                <option key={country.code} value={country.name}>
-                                    {country.name}
-                                </option>
-                            ))}
-                        </select>
+                            className={undefined}
+                        />
+                        <div className="grid grid-cols-2 gap-4">
+                            <select
+                                name="gender"
+                                value={form.gender}
+                                onChange={handleChange}
+                                className="p-2 rounded bg-zinc-800 text-white w-full"
+                                required
+                            >
+                                <option value="">Chọn giới tính</option>
+                                <option value="male">Nam</option>
+                                <option value="female">Nữ</option>
+                                <option value="other">Khác</option>
+                            </select>
+                            <select
+                                name="country"
+                                value={form.country}
+                                onChange={handleChange}
+                                className="p-2 rounded bg-zinc-800 text-white w-full"
+                                required
+                            >
+                                <option value="">Chọn quốc gia</option>
+                                {countries.map((country) => (
+                                    <option key={country.code} value={country.name}>
+                                        {country.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <Input
                             type="date"
                             name="dob"
                             value={form.dob}
-                            onChange={handleChange} className={undefined}                        />
+                            onChange={handleChange} className={undefined} />
                     </div>
                 </div>
 
@@ -252,36 +275,33 @@ const Profile = () => {
                 <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-2">Change Password</h3>
                     <div className="space-y-4">
-                        <Input type="password" placeholder="Current Password" className={undefined} />
-                        <Input type="password" placeholder="New Password" className={undefined} />
-                        <Input type="password" placeholder="Confirm Password" className={undefined} />
                         <Input
                             type="password"
-                            name="password"
+                            name="currentPassword"
                             placeholder="Current Password"
                             value={form.currentPassword}
                             onChange={handleChange}
-                            required className={undefined}                        />
+                            required className={undefined} />
                         <Input
                             type="password"
                             name="password"
                             placeholder="New Password"
                             value={form.password}
                             onChange={handleChange}
-                            required className={undefined}                        />
+                            required className={undefined} />
                         <Input
                             type="password"
                             name="confirmPassword"
                             placeholder="Confirm Password"
                             value={form.confirmPassword}
                             onChange={handleChange}
-                            required className={undefined}                        />
+                            required className={undefined} />
                     </div>
                 </div>
 
                 {/* Nút lưu thay đổi */}
                 <div className="mt-6">
-                    <Button className="w-full bg-emerald-500" style={{ width: "112px" }}>Save Changes</Button>
+                    <Button className="w-full bg-emerald-500" style={{ width: "112px" }} onClick={(e) => handleSubmit(e)}>Save Changes</Button>
                 </div>
             </div>
         </ScrollArea>

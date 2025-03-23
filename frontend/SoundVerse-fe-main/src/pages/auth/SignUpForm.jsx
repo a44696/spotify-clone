@@ -32,7 +32,7 @@ const SignUpForm = () => {
 
   const formatDate = (inputDate) => {
     const [year, month, day] = inputDate.split("-");
-    return `${day}-${month}-${year}`;
+    return `${day}/${month}/${year}`;
 }
 
   const handleSubmit = async (e) => {
