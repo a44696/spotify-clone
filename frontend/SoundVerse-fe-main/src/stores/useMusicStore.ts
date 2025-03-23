@@ -10,6 +10,7 @@ interface MusicStore {
 	mySongs: Song[];
 	myAlbums: Album[];
 	myQueuing: Song[];
+	myUnpublish: Song[];
 	genres: Genre[];
 	playlists: Playlist[];
 	isLoading: boolean;
@@ -58,6 +59,7 @@ interface MusicStore {
 	refuseMusic: (id: number) => void;
 	fetchMyContract: () => Promise<void>;
 	fetchMyQueuing: () => Promise<void>;
+	fetchMyUnpublish: () => Promise<void>;
 	publishMusic: (id: number) => void;
 }
 
@@ -90,6 +92,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	mySongs: [],
 	myAlbums: [],
 	myQueuing: [],
+	myUnpublish: [],
 	myStats: {
 		totalSongs: 0,
 		totalAlbums: 0,
@@ -426,7 +429,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	acceptMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.post(`/music/approve/${id}`);
+			const response = await axiosInstance.put(`/music/approve/${id}`);
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {
@@ -437,7 +440,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	refuseMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.post(`/music/refuse/${id}`);
+			const response = await axiosInstance.put(`/music/refuse/${id}`);
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {
@@ -472,7 +475,19 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	publishMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			await axiosInstance.post(`/music/publish/${id}`);
+			await axiosInstance.put(`/music/publish/${id}`);
+		} catch (error: any) {
+			set({ error: error.message });
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	fetchMyUnpublish: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axiosInstance.get("/music/my-unpublish");
+			set({ myUnpublish: response.data.data });
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

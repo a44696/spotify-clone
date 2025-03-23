@@ -5,7 +5,7 @@ import { Calendar, Check, Globe, X } from "lucide-react";
 import React, { useEffect } from "react";
 
 const MyQueuingTable = () => {
-  const { myQueuing, fetchMyQueuing, isLoading, publishMusic } = useMusicStore();
+  const { myQueuing, fetchMyQueuing, isLoading } = useMusicStore();
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -17,10 +17,6 @@ const MyQueuingTable = () => {
     fetchMyQueuing();
   }, [fetchMyQueuing]);
 
-  const publishSong = (songId) => {
-    publishMusic(songId);
-    fetchMyQueuing();
-  };
   if (isLoading) {
     return (
       <div className='flex items-center justify-center py-8'>
@@ -39,7 +35,6 @@ const MyQueuingTable = () => {
           <TableHead className={undefined}>Genre</TableHead>
           <TableHead className={undefined}>Duration</TableHead>
           <TableHead className={undefined}>Release Date</TableHead>
-          <TableHead className='text-right'>Actions</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -58,19 +53,6 @@ const MyQueuingTable = () => {
                 <Calendar className='h-4 w-4' />
                 {song.createdAt.split("T")[0]}
               </span>
-            </TableCell>
-
-            <TableCell className='text-right'>
-              <div className='flex gap-2 justify-end'>
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
-                  onClick={() => publishSong(song.id)}
-                >
-                  <Globe className='size-4' />
-                </Button>
-              </div>
             </TableCell>
           </TableRow>
         ))}

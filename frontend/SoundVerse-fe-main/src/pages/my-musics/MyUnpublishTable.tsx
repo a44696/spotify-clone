@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, Globe } from "lucide-react";
 import React, { useEffect } from "react";
 
-const MySongsTable = () => {
-  const { mySongs, isLoading, deleteSong, fetchMySongs } = useMusicStore();
-  const songsToDisplay = mySongs ?? [];
+const MyUnpublishTable = () => {
+  const { myUnpublish, fetchMyUnpublish, isLoading, publishMusic } = useMusicStore();
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -15,13 +14,17 @@ const MySongsTable = () => {
   };
 
   useEffect(() => {
-    fetchMySongs();
-  }, [fetchMySongs]);
+    fetchMyUnpublish();
+  }, [fetchMyUnpublish]);
 
+  const publishSong = (songId) => {
+    publishMusic(songId);
+    fetchMyUnpublish();
+  };
   if (isLoading) {
     return (
       <div className='flex items-center justify-center py-8'>
-        <div className='text-zinc-400'>Loading songs...</div>
+        <div className='text-zinc-400'>Loading queuing songs...</div>
       </div>
     );
   }
@@ -41,7 +44,7 @@ const MySongsTable = () => {
       </TableHeader>
 
       <TableBody className={undefined}>
-        {songsToDisplay.map((song) => (
+        {myUnpublish.map((song) => (
           <TableRow key={song.id} className='hover:bg-zinc-800/50'>
             <TableCell className={undefined}>
               <img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />
@@ -62,10 +65,10 @@ const MySongsTable = () => {
                 <Button
                   variant={"ghost"}
                   size={"sm"}
-                  className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
-                  onClick={() => deleteSong(song.id)}
+                  className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
+                  onClick={() => publishSong(song.id)}
                 >
-                  <Trash2 className='size-4' />
+                  <Globe className='size-4' />
                 </Button>
               </div>
             </TableCell>
@@ -75,4 +78,4 @@ const MySongsTable = () => {
     </Table>
   );
 };
-export default MySongsTable;
+export default MyUnpublishTable;
