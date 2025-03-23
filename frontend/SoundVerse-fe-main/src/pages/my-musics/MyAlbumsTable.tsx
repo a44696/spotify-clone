@@ -6,13 +6,13 @@ import React from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const AlbumsTable = () => {
-	const { albums, deleteAlbum, fetchAlbums } = useMusicStore();
-	const albumsToDisplay = albums ?? [];
+const MyAlbumsTable = () => {
+	const { myAlbums, deleteAlbum, fetchMyAlbums } = useMusicStore();
+	const albumsToDisplay = myAlbums ?? [];
 
 	useEffect(() => {
-		fetchAlbums();
-	}, [fetchAlbums]);
+		fetchMyAlbums();
+	}, [fetchMyAlbums]);
 
 	return (
 		<Table className={undefined}>
@@ -68,4 +68,4 @@ const AlbumsTable = () => {
 		</Table>
 	);
 };
-export default AlbumsTable;
+export default MyAlbumsTable;

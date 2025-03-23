@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { Calendar, Check, X } from "lucide-react";
+import { Calendar, Globe } from "lucide-react";
 import React, { useEffect } from "react";
 
-const SongsQueuingTable = () => {
-  const { queuingSongs, fetchQueuingSongs, isLoading, acceptMusic, refuseMusic } = useMusicStore();
+const MyUnpublishTable = () => {
+  const { myUnpublish, fetchMyUnpublish, isLoading, publishMusic } = useMusicStore();
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -14,19 +14,13 @@ const SongsQueuingTable = () => {
   };
 
   useEffect(() => {
-    fetchQueuingSongs();
-  }, [fetchQueuingSongs]);
+    fetchMyUnpublish();
+  }, [fetchMyUnpublish]);
 
-  const acceptSong = (songId) => {
-    acceptMusic(songId);
-    fetchQueuingSongs();
+  const publishSong = (songId) => {
+    publishMusic(songId);
+    fetchMyUnpublish();
   };
-
-  const refuseSong = (songId) => {
-    refuseMusic(songId);
-    fetchQueuingSongs();
-  };
-
   if (isLoading) {
     return (
       <div className='flex items-center justify-center py-8'>
@@ -50,7 +44,7 @@ const SongsQueuingTable = () => {
       </TableHeader>
 
       <TableBody className={undefined}>
-        {queuingSongs.map((song) => (
+        {myUnpublish.map((song) => (
           <TableRow key={song.id} className='hover:bg-zinc-800/50'>
             <TableCell className={undefined}>
               <img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />
@@ -72,17 +66,9 @@ const SongsQueuingTable = () => {
                   variant={"ghost"}
                   size={"sm"}
                   className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
-                  onClick={() => acceptSong(song.id)}
+                  onClick={() => publishSong(song.id)}
                 >
-                  <Check className='size-4' />
-                </Button>
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
-                  onClick={() => refuseSong(song.id)}
-                >
-                  <X className='size-4' />
+                  <Globe className='size-4' />
                 </Button>
               </div>
             </TableCell>
@@ -92,4 +78,4 @@ const SongsQueuingTable = () => {
     </Table>
   );
 };
-export default SongsQueuingTable;
+export default MyUnpublishTable;

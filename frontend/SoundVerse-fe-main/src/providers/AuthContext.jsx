@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "@/lib/utils";
 
 const AuthContext = createContext();
 
@@ -13,7 +14,7 @@ export const UserProvider = ({ children }) => {
     
     const getCurrentUser = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/auth/me", {
+            const response = await fetch(`${apiUrl.baseURL}/auth/me`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -46,7 +47,7 @@ export const UserProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/auth/logout", {
+            const response = await fetch(`${apiUrl.baseURL}/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             });

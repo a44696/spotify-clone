@@ -20,7 +20,7 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const countries = [
     { code: "vn", name: "Việt Nam" },
-    { code: "us", name: "" },
+    { code: "us", name: "USA" },
     { code: "uk", name: "Anh" },
     { code: "fr", name: "Pháp" },
   ];
