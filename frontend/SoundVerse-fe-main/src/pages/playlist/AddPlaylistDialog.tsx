@@ -9,6 +9,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/Input";
+import { apiUrl } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
 import React from "react";
@@ -44,7 +45,7 @@ const AddPlaylistDialog = () => {
 
                 await handleUploadThumbnail(uploadThumbnailName);
 
-                const response = await fetch('http://localhost:8080/api/playlist', {
+                const response = await fetch(`${apiUrl.baseURL}/playlist`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -93,7 +94,7 @@ const AddPlaylistDialog = () => {
 
     const handleUploadThumbnail = async (uploadThumbnailName) => {
         try {
-            const response = await fetch("http://localhost:8080/api/generate-thumbnail-presigned-url", {
+            const response = await fetch(`${apiUrl.baseURL}/generate-thumbnail-presigned-url`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

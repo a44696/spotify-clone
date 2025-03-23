@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
+import { apiUrl } from "@/lib/utils";
 
 const VerifyPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -46,7 +47,7 @@ const VerifyPage = () => {
     setIsLoading(true);
     try {
       const code = otp.join("");
-      const response = await fetch("http://localhost:8080/api/auth/verify", {
+      const response = await fetch(`${apiUrl.baseURL}/auth/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

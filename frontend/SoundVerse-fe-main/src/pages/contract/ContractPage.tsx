@@ -4,12 +4,13 @@ import { useAuth } from '@/providers/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
-import { Signature } from 'lucide-react';
+import { Loader, Signature } from 'lucide-react';
 import { axiosInstance } from '@/lib/axios';
 
 const ContractPage = () => {
     const navigate = useNavigate();
     const { user, getCurrentUser } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
 
     console.log(user)
 
@@ -46,12 +47,13 @@ const ContractPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
         if (form.signature === "") {
             toast.error("Please sign the contract before submitting!");
             return;
         }
-
+        
         try {
             const response = await axiosInstance.post('/contract/sign-contract', form);
 
@@ -62,12 +64,13 @@ const ContractPage = () => {
         } catch (err) {
             toast.error(err.response?.data?.message || "Unknown Error!");
         }
+        setIsLoading(false);
     };
 
     return (
         <div className='wrapper-container'>
             <div className="container">
-                <img src="/spotify.png" alt="Melody Wave Logo" className="logo" />
+                <img src="/logo.png" alt="Melody Wave Logo" className="logo" />
 
                 <h1>Music Distribution Contract</h1>
 
@@ -219,10 +222,11 @@ const ContractPage = () => {
                 <Button
                     variant={"ghost"}
                     size={"lg"}
-                    className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
+                    className='text-green-400 hover:text-green-300 hover:bg-green-400/10 cursor'
                     onClick={(e) => handleSubmit(e)}
+                    disabled={isLoading}
                 >
-                    <Signature className='size-4' />
+                    {isLoading ? <Loader className="animate-spin size-4 text-green-500" /> : <Signature className='size-4' />}
                     SAVE
                 </Button>
             </div>

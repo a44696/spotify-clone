@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/button';
 import toast from "react-hot-toast";
+import { apiUrl } from '@/lib/utils';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/forgot_password', {
+      const response = await fetch(`${apiUrl.baseURL}/auth/forgot_password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
