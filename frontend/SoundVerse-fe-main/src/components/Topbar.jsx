@@ -43,7 +43,7 @@ const Topbar = () => {
             {/* Logo */}
             <Link to={'/'}>
                 <div className='flex gap-2 items-center'>
-                    <img src="/spotify.png" alt="spotify logo" className="size-8" />
+                    <img src="/logo.png" alt="spotify logo" className="size-20" />
                     <span className="text-white font-semibold text-lg">Sound Verse</span>
                 </div>
             </Link>

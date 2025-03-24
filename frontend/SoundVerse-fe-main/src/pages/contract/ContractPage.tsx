@@ -70,7 +70,7 @@ const ContractPage = () => {
     return (
         <div className='wrapper-container'>
             <div className="container">
-                <img src="/spotify.png" alt="Melody Wave Logo" className="logo" />
+                <img src="/logo.png" alt="Melody Wave Logo" className="logo" />
 
                 <h1>Music Distribution Contract</h1>
 

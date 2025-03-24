@@ -58,7 +58,7 @@ const MyContractPage = () => {
       </div>
       <div className="container">
         <div style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
-          <img src="/spotify.png" alt="Sound Verse Logo" className="logo" />
+          <img src="/logo.png" alt="Sound Verse Logo" className="logo" />
 
           <h1>Music Distribution Contract</h1>
         </div>
