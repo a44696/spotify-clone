@@ -111,7 +111,7 @@ const AuthPage = () => {
         </form>
 
         <p className="text-zinc-400 text-center mt-4">
-          Don't have an account?
+          Don't have an account? &nbsp;
           <Link
             to="/signup"
             className="text-emerald-400 hover:underline"

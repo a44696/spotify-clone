@@ -184,7 +184,7 @@ const SignUpForm = () => {
           </Button>
         </form>
         <p className="text-zinc-400 text-center mt-4">
-          Already have an account?
+          Already have an account? &nbsp;
           <Link
             to="/auth"
             className="text-emerald-400 hover:underline"
