@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useUserStore } from "@/stores/useUserStore";
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, Edit, Trash2 } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
 
 const UsersTable = () => {
-	const { users, fetchedUsers } = useUserStore();
+	const { users, fetchedUsers, deleteUser } = useUserStore();
 
 	useEffect(() => {
 		fetchedUsers();
@@ -45,10 +45,18 @@ const UsersTable = () => {
 						</TableCell>
 						<TableCell className='text-right'>
 							<div className='flex gap-2 justify-end'>
+							<Button
+									variant='ghost'
+									size='sm'
+									// onClick={() => deleteUser(user.id)}
+									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
+								>
+									<Edit className='h-4 w-4' />
+								</Button>
 								<Button
 									variant='ghost'
 									size='sm'
-									// onClick={() => deleteuser(user.id)}
+									onClick={() => deleteUser(user.id)}
 									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
 								>
 									<Trash2 className='h-4 w-4' />

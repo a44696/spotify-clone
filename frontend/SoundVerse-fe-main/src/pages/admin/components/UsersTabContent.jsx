@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Library, User2 } from "lucide-react";
+import { User2 } from "lucide-react";
 import UsersTable from "./UsersTable";
 
 const UsersTabContent = () => {
@@ -14,7 +14,6 @@ const UsersTabContent = () => {
 						</CardTitle>
 						<CardDescription>Manage users in system</CardDescription>
 					</div>
-					{/* <AddAlbumDialog /> */}
 				</div>
 			</CardHeader>
 
