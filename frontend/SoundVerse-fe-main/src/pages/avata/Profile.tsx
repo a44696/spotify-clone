@@ -11,6 +11,7 @@ const Profile = () => {
     const { user, loading, getCurrentUser } = useAuth();
     const [image, setImage] = useState<string | null>(null); // Lưu trữ ảnh tải lên
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState({
         username: "",
         password: null,
@@ -27,15 +28,15 @@ const Profile = () => {
     useEffect(() => {
         setImage(user.profilePicImage)
         setForm({
-            username: user.username,
+            username: user?.username,
             password: null,
             confirmPassword: null,
             currentPassword: null,
-            gender: user.gender,
-            country: user.country,
-            fullName: user.fullName,
-            profilePicImage: user.profilePicImage,
-            dob: user.dob
+            gender: user?.gender,
+            country: user?.country,
+            fullName: user?.fullName,
+            profilePicImage: user?.profilePicImage,
+            dob: user?.dob
         })
     }, [user])
 
@@ -68,11 +69,17 @@ const Profile = () => {
     const [error, setError] = useState(null);
 
     const formatDate = (inputDate) => {
+        console.log(inputDate);
+        
+        if (inputDate.includes('/')) {
+            return inputDate
+        }
         const [year, month, day] = inputDate.split("-");
         return `${day}/${month}/${year}`;
     }
 
     const handleSubmit = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
         setError(null);
 
@@ -117,7 +124,10 @@ const Profile = () => {
                 getCurrentUser();
             }
         } catch (err) {
+            console.log(err)
             toast.error(err.response?.data?.message || "Lỗi khi đăng ký!");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -267,7 +277,7 @@ const Profile = () => {
                         <Input
                             type="date"
                             name="dob"
-                            value={form.dob}
+                            value={form.dob ? form.dob.split("/").reverse().join("-") : ""}
                             onChange={handleChange} className={undefined} />
                     </div>
                 </div>
@@ -302,7 +312,9 @@ const Profile = () => {
 
                 {/* Nút lưu thay đổi */}
                 <div className="mt-6">
-                    <Button className="w-full bg-emerald-500" style={{ width: "112px" }} onClick={(e) => handleSubmit(e)}>Save Changes</Button>
+                    <Button className="w-full bg-emerald-500" style={{ width: "112px" }} onClick={(e) => handleSubmit(e)} disabled={isLoading}>
+                        {isLoading ? 'Loading...' : 'Save Changes'}
+                    </Button>
                 </div>
             </div>
         </ScrollArea>

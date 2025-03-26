@@ -4,7 +4,7 @@ import { usePlayerStore } from '@/stores/usePlayerStore';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Clock, Pause, Play } from 'lucide-react';
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const AlbumPage = () => {
   const { albumId } = useParams();
@@ -66,7 +66,11 @@ const AlbumPage = () => {
 								<p className='text-sm font-medium'>Album</p>
 								<h1 className='text-7xl font-bold my-4'>{currentAlbum?.title}</h1>
 								<div className='flex items-center gap-2 text-sm text-zinc-100'>
-									<span className='font-medium text-white'>{currentAlbum?.artist}</span>
+									<span className='font-medium text-white'>
+                    <Link to={`/artist/${currentAlbum.artistId}`}>
+                      {currentAlbum?.artist}
+                    </Link>
+                  </span>
 									<span>• {currentAlbum?.songs.length} songs</span>
 									<span>• {currentAlbum?.createdAt}</span>
 								</div>

@@ -18,6 +18,7 @@ const SignUpForm = () => {
     isArtist: false
   });
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const countries = [
     { code: "vn", name: "Việt Nam" },
     { code: "us", name: "USA" },
@@ -28,7 +29,6 @@ const SignUpForm = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const [error, setError] = useState(null);
 
   const formatDate = (inputDate) => {
     const [year, month, day] = inputDate.split("-");
@@ -36,8 +36,8 @@ const SignUpForm = () => {
 }
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
-    setError(null);
 
     if (form.password !== form.confirmPassword) {
       setError("Mật khẩu không khớp!");
@@ -67,6 +67,8 @@ const SignUpForm = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Lỗi khi đăng ký!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -179,8 +181,8 @@ const SignUpForm = () => {
               <span>No</span>
             </label>
           </div>
-          <Button type="submit" className="w-full bg-emerald-500" style={{ width: "112px" }}>
-            Đăng Ký
+          <Button type="submit" className="w-full bg-emerald-500" style={{ width: "112px" }} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Sign up'}
           </Button>
         </form>
         <p className="text-zinc-400 text-center mt-4">

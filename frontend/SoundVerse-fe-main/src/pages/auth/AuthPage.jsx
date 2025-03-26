@@ -10,13 +10,10 @@ import { apiUrl } from "@/lib/utils";
 const AuthPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { getCurrentUser, user } = useAuth();
   const { checkAdminStatus } = useAuthStore();
   const navigate = useNavigate();
-
-  console.log(apiUrl)
 
   const getUserRole = async () => {
     const response = await fetch(`${apiUrl.baseURL}/auth/me`, {
@@ -31,8 +28,8 @@ const AuthPage = () => {
   }
 
   const handleAuth = async (e) => {
-    e.preventDefault();
     setIsLoading(true);
+    e.preventDefault();
 
     try {
       const response = await fetch(`${apiUrl.baseURL}/auth/login`, {
@@ -58,7 +55,6 @@ const AuthPage = () => {
           });
           if (response.ok) {
             const data = await response.json();
-            console.log(data.data)
             if (!data.data) {
               console.log('contract')
               navigate("/contract");
