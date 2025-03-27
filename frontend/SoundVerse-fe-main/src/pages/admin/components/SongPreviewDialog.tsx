@@ -17,12 +17,6 @@ const SongPreviewDialog = ({ song, onClose }) => {
     }));
   };
 
-  const handleSaveChanges = () => {
-    // Your logic to save the changes
-    console.log("Song details saved:", songDetails);
-    onClose(); // Close the dialog after saving
-  };
-
   return (
     <Dialog open={!!song} onOpenChange={onClose}>
       <DialogContent className="bg-zinc-900 border-zinc-700">
@@ -52,6 +46,7 @@ const SongPreviewDialog = ({ song, onClose }) => {
               value={songDetails.title}
               onChange={handleInputChange}
               name="title"
+              disabled
               className="bg-zinc-800 border-zinc-700"
               placeholder="Enter song title"
             />
@@ -63,6 +58,7 @@ const SongPreviewDialog = ({ song, onClose }) => {
               value={songDetails.description}
               onChange={handleInputChange}
               name="description"
+              disabled
               className="bg-zinc-800 border-zinc-700"
               placeholder="Enter song description"
             />
@@ -72,13 +68,6 @@ const SongPreviewDialog = ({ song, onClose }) => {
         {/* Dialog Footer with Save and Close buttons */}
         <div className="flex justify-end space-x-2">
           <Button variant="outline" onClick={onClose}>Close</Button>
-          <Button
-            className="bg-green-500"
-            onClick={handleSaveChanges}
-            disabled={!songDetails.title || !songDetails.description} // Disable Save if no title or description
-          >
-            Save Changes
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
