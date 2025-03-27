@@ -21,39 +21,63 @@ const UsersTable = () => {
     setOpen(true);
   };
 
-  const handleSaveChanges = async () => {
-	try {
-	  // Kiểm tra các trường bắt buộc
-	  if (!currentUser.username || !currentUser.email || !currentUser.role || !currentUser.status) {
-		toast.error("Username, email, role, and status are required.");
-		return;
-	  }
-  
-	  // Kiểm tra và thay thế các giá trị null hoặc undefined nếu cần
-	  const updatedUser = {
-		...currentUser,
-		country: currentUser.country || "Not Provided", // Thay thế nếu country là null
-		dob: currentUser.dob || "Not Provided", // Thay thế nếu dob là null
-	  };
-	  
-  
-	  // Gửi yêu cầu PUT đến API /admin/update-user
-	  const response = await axiosInstance.put(`/admin/update-user`, updatedUser);
-  
-	  // Kiểm tra kết quả từ API
-	  if (response.data.status === "success") {
-		toast.success("User updated successfully");
-		setOpen(false);
-		fetchedUsers();  // Tải lại danh sách người dùng nếu cần thiết
-	  } else {
-		toast.error("Failed to update user");
-	  }
-	} catch (error) {
-	  console.error("Error updating user:", error.response ? error.response.data : error.message);
-	  toast.error("Error updating user");
-	}
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentUser((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
   };
-  
+
+  const formatDate = (inputDate) => {
+    console.log(inputDate);
+
+    if (inputDate.includes('/')) {
+      return inputDate
+    }
+    const [year, month, day] = inputDate.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  const countries = [
+    { code: "vn", name: "Việt Nam" },
+    { code: "us", name: "USA" },
+    { code: "uk", name: "Anh" },
+    { code: "fr", name: "Pháp" },
+  ];
+
+  const handleSaveChanges = async () => {
+    try {
+      if (!currentUser.username || !currentUser.email || !currentUser.role || !currentUser.status) {
+        toast.error("Username, email, role, and status are required.");
+        return;
+      }
+
+      const updatedUser = {
+        username: currentUser.username,
+        gender: currentUser.gender,
+        fullName: currentUser.fullName,
+        country: currentUser.country,
+        dob: currentUser.dob ? formatDate(currentUser.dob) : null,
+        status: currentUser.status,
+        role: currentUser.role,
+      };
+
+      const response = await axiosInstance.put(`/admin/update_user/${currentUser.id}`, updatedUser);
+
+      if (response.data.status === "success") {
+        toast.success("User updated successfully");
+        setOpen(false);
+        fetchedUsers();
+      } else {
+        toast.error("Failed to update user");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error.response ? error.response.data : error.message);
+      toast.error("Error updating user");
+    }
+  };
+
 
   return (
     <>
@@ -97,7 +121,7 @@ const UsersTable = () => {
                     variant='ghost'
                     size='sm'
                     onClick={() => handleEditClick(user)}
-                    className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
+                    className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
                   >
                     <Edit className='h-4 w-4' />
                   </Button>
@@ -125,36 +149,91 @@ const UsersTable = () => {
             </DialogDescription>
           </DialogHeader>
           <div className='flex flex-col gap-4'>
-            <Input
-              type='text'
-              placeholder='Username'
-              value={currentUser?.username || ''}
-              onChange={(e) => setCurrentUser({ ...currentUser, username: e.target.value })}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={currentUser?.username || ''}
+                onChange={handleInputChange}
+                required
+              />
+              <Input
+                type="text"
+                name="fullName"
+                placeholder="Full Name"
+                value={currentUser?.fullName || ''}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
             <Input
               type='email'
-              placeholder='Email'
+              placeholder='email'
+              disabled
               value={currentUser?.email || ''}
-              onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })}
+              onChange={handleInputChange}
             />
+            <div className="grid grid-cols-2 gap-4">
+              <select
+                name="gender"
+                value={currentUser?.gender}
+                onChange={handleInputChange}
+                className="p-2 rounded bg-zinc-800 text-white w-full"
+                required
+              >
+                <option value="">Chọn giới tính</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+              <select
+                name="country"
+                value={currentUser?.country || ''}
+                onChange={handleInputChange}
+                className="p-2 rounded bg-zinc-800 text-white w-full"
+                required
+              >
+                <option value="">Chọn quốc gia</option>
+                {countries.map((country) => (
+                  <option key={country.code} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <select
+                name="role"
+                value={currentUser?.role || ''}
+                onChange={handleInputChange}
+                className="p-2 rounded bg-zinc-800 text-white w-full"
+                required
+              >
+                <option value="">Chọn Role</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
+                <option value="ARTIST">Artist</option>
+              </select>
+              <select
+                name="status"
+                value={currentUser?.status || ''}
+                onChange={handleInputChange}
+                className="p-2 rounded bg-zinc-800 text-white w-full"
+                required
+              >
+                <option value="">Chọn Status</option>
+                <option value="ACTIVE">Active</option>
+                <option value="DELETED">Deleted</option>
+                <option value="DISABLED">Disabled</option>
+                <option value="PENDING">Pending</option>
+              </select>
+            </div>
             <Input
-              type='text'
-              placeholder='Gender'
-              value={currentUser?.gender || ''}
-              onChange={(e) => setCurrentUser({ ...currentUser, gender: e.target.value })}
-            />
-            <Input
-              type='text'
-              placeholder='Role'
-              value={currentUser?.role || ''}
-              onChange={(e) => setCurrentUser({ ...currentUser, role: e.target.value })}
-            />
-            <Input
-              type='text'
-              placeholder='Status'
-              value={currentUser?.status || ''}
-              onChange={(e) => setCurrentUser({ ...currentUser, status: e.target.value })}
-            />
+              type="date"
+              name="dob"
+              value={currentUser?.dob ? currentUser.dob.split("/").reverse().join("-") : ""}
+              onChange={handleInputChange} className={undefined} />
           </div>
           <DialogFooter>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
