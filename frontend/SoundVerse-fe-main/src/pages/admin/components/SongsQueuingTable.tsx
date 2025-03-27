@@ -4,7 +4,7 @@ import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Check, X } from "lucide-react";
 import React, { useEffect } from "react";
 
-const SongsQueuingTable = () => {
+const SongsQueuingTable = ({ onSelectSong }) => {
   const { queuingSongs, fetchQueuingSongs, isLoading, acceptMusic, refuseMusic } = useMusicStore();
 
   const formatTime = (seconds) => {
@@ -51,7 +51,7 @@ const SongsQueuingTable = () => {
 
       <TableBody className={undefined}>
         {queuingSongs.map((song) => (
-          <TableRow key={song.id} className='hover:bg-zinc-800/50'>
+          <TableRow key={song.id} className='hover:bg-zinc-800/50' onClick={() => onSelectSong(song)}>
             <TableCell className={undefined}>
               <img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />
             </TableCell>
