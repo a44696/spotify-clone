@@ -32,9 +32,10 @@ const LikePage = () => {
         <h1 className="text-5xl font-bold mb-6">Liked Songs</h1>
 
         <div className="bg-black/20 backdrop-blur-sm">
-          <div className="grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-10 py-2 text-sm text-zinc-400 border-b border-white/5">
+          <div className="grid grid-cols-[16px_4fr_2fr_1fr_1fr] gap-4 px-10 py-2 text-sm text-zinc-400 border-b border-white/5">
             <div>#</div>
             <div>Title</div>
+            <div>Genre</div>
             <div>Artist</div>
             <div><Clock className="h-4 w-4" /></div>
           </div>
@@ -47,7 +48,7 @@ const LikePage = () => {
                     <div
                       key={song.id}
                       onClick={() => handlePlayPause(song)}
-                      className="grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer"
+                      className="grid grid-cols-[16px_4fr_2fr_1fr_1fr] gap-4 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer"
                     >
                       <div className="flex items-center justify-center">
                         {isCurrentSong && isPlaying ? (
@@ -62,6 +63,7 @@ const LikePage = () => {
                           <div className="font-medium text-white">{song.title}</div>
                         </div>
                       </div>
+                      <div className="flex items-center">{song.genre}</div>
                       <div className="flex items-center">{song.artist}</div>
                       <div className="flex items-center">{formatDuration(song.length)}</div>
                     </div>

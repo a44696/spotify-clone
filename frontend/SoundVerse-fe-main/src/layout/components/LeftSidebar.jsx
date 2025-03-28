@@ -1,4 +1,4 @@
-import { HomeIcon, Library, ListVideo, Music } from 'lucide-react'
+import { Heart, HomeIcon, Library, ListVideo, Music } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -59,8 +59,8 @@ const LeftSidebar = () => {
                 buttonVariants({
                   variant: 'ghost', className: 'w-full justify-start text-white hover:bg-zinc-800'
                 }))}>
-              <Music className='mr-2 size-5' />
-              <span className='hidden md:inline'>Like</span>
+              <Heart className='mr-2 size-5' />
+              <span className='hidden md:inline'>My favorites</span>
             </Link>
         </div>
       </div>

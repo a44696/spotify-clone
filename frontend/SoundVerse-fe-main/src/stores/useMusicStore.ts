@@ -107,8 +107,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	fetchLikedSongs: async () => {
 		set({ isLoading: true, error: null });
 		try {
-		  const response = await axiosInstance.get("/liked-songs"); // Update with the actual endpoint
-		  set({ likedSongs: response.data }); // Save the liked songs into the store
+		  const response = await axiosInstance.get("/music/favorites"); // Update with the actual endpoint
+		  set({ likedSongs: response.data.data }); // Save the liked songs into the store
 		} catch (error: any) {
 		  set({ error: error.message });
 		  toast.error("Failed to fetch liked songs");
