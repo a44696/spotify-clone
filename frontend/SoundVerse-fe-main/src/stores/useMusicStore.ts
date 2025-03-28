@@ -29,7 +29,10 @@ interface MusicStore {
 	artistDetails: Artist | null;
 	isFavorite: boolean;
 	myContract: Contract;
+	likedSongs: Song[];
 
+
+	fetchLikedSongs: () => Promise<void>;
 	fetchGenres: () => Promise<void>;
 	fetchPlaylists: () => Promise<void>;
 	fetchPlaylistById: (id: number) => Promise<void>;
@@ -99,6 +102,20 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		totalFollowers: 0
 	},
 	artists: [],
+	likedSongs: [],
+
+	fetchLikedSongs: async () => {
+		set({ isLoading: true, error: null });
+		try {
+		  const response = await axiosInstance.get("/liked-songs"); // Update with the actual endpoint
+		  set({ likedSongs: response.data }); // Save the liked songs into the store
+		} catch (error: any) {
+		  set({ error: error.message });
+		  toast.error("Failed to fetch liked songs");
+		} finally {
+		  set({ isLoading: false });
+		}
+	  },
 
 	deleteAlbum: async (id) => {
 		set({ isLoading: true, error: null });
@@ -117,6 +134,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
+	
+	
 
 	deletePlaylist: async (id) => {
 		set({ isLoading: true, error: null });

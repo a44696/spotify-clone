@@ -54,6 +54,14 @@ const LeftSidebar = () => {
               <span className='hidden md:inline'>My musics</span>
             </Link>
           )}
+            <Link to={'/likes'}
+              className={cn(
+                buttonVariants({
+                  variant: 'ghost', className: 'w-full justify-start text-white hover:bg-zinc-800'
+                }))}>
+              <Music className='mr-2 size-5' />
+              <span className='hidden md:inline'>Like</span>
+            </Link>
         </div>
       </div>
       {/*Library section*/}

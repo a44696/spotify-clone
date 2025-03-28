@@ -24,7 +24,7 @@ const UsersTable = () => {
   const handleSaveChanges = async () => {
 	try {
 	  // Kiểm tra các trường bắt buộc
-	  if (!currentUser.username || !currentUser.email || !currentUser.role || !currentUser.status) {
+	  if (!currentUser.fullname ||!currentUser.username || !currentUser.email || !currentUser.role || !currentUser.status) {
 		toast.error("Username, email, role, and status are required.");
 		return;
 	  }
@@ -80,6 +80,7 @@ const UsersTable = () => {
                   className='size-10 rounded object-cover'
                 />
               </TableCell>
+              <TableCell className='font-medium'>{user.fullName}</TableCell>
               <TableCell className='font-medium'>{user.username}</TableCell>
               <TableCell className={undefined}>{user.email}</TableCell>
               <TableCell className={undefined}>{user.gender}</TableCell>
@@ -125,6 +126,12 @@ const UsersTable = () => {
             </DialogDescription>
           </DialogHeader>
           <div className='flex flex-col gap-4'>
+          <Input
+              type='text'
+              placeholder='Fullname'
+              value={currentUser?.fullname || ''}
+              onChange={(e) => setCurrentUser({ ...currentUser, fullname: e.target.value })}
+            />
             <Input
               type='text'
               placeholder='Username'
