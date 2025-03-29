@@ -67,7 +67,7 @@ const AlbumPage = () => {
 								<h1 className='text-7xl font-bold my-4'>{currentAlbum?.title}</h1>
 								<div className='flex items-center gap-2 text-sm text-zinc-100'>
 									<span className='font-medium text-white'>
-                    <Link to={`/artist/${currentAlbum.artistId}`}>
+                    <Link to={`/artist/${currentAlbum?.artistId}`}>
                       {currentAlbum?.artist}
                     </Link>
                   </span>
