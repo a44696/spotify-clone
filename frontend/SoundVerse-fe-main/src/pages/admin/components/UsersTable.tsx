@@ -21,12 +21,14 @@ const UsersTable = () => {
     setOpen(true);
   };
 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentUser((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
+
   };
 
   const formatDate = (inputDate) => {
@@ -104,6 +106,7 @@ const UsersTable = () => {
                   className='size-10 rounded object-cover'
                 />
               </TableCell>
+              <TableCell className='font-medium'>{user.fullName}</TableCell>
               <TableCell className='font-medium'>{user.username}</TableCell>
               <TableCell className={undefined}>{user.email}</TableCell>
               <TableCell className={undefined}>{user.gender}</TableCell>
@@ -149,6 +152,7 @@ const UsersTable = () => {
             </DialogDescription>
           </DialogHeader>
           <div className='flex flex-col gap-4'>
+
             <div className="grid grid-cols-2 gap-4">
               <Input
                 type="text"
@@ -167,6 +171,7 @@ const UsersTable = () => {
                 required
               />
             </div>
+
             <Input
               type='email'
               placeholder='email'
