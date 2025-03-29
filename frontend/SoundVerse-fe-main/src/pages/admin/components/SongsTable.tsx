@@ -1,12 +1,31 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { DialogContent } from "@radix-ui/react-dialog";
 import { Calendar, Trash2 } from "lucide-react";
-import React from "react";
+import React, {  useEffect, useState } from "react";
 
 const SongsTable = () => {
-	const { songs, isLoading, deleteSong } = useMusicStore();
+	const { songs, isLoading, deleteSong,fetchSongs } = useMusicStore();
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [songToDelete, setSongToDelete] = useState(null);
 	const songsToDisplay = songs ?? [];
+
+	useEffect(() => {
+		fetchSongs();
+	}, [fetchSongs]);
+	
+	const handleDeleteClick = (album) => {
+		setSongToDelete(album);
+		setIsDialogOpen(true);
+	};
+	const confirmDelete = () => {
+		if (songToDelete) {
+			deleteSong(songToDelete.id);
+			}
+		setIsDialogOpen(false);
+	};
 
 	const formatTime = (seconds) => {
 		const minutes = Math.floor(seconds / 60);
@@ -23,6 +42,7 @@ const SongsTable = () => {
 	}
 
 	return (
+		<>
 		<Table className={undefined}>
 			<TableHeader className={undefined}>
 				<TableRow className='hover:bg-zinc-800/50'>
@@ -69,6 +89,20 @@ const SongsTable = () => {
 				))}
 			</TableBody>
 		</Table>
+
+		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Confirm Deletion</DialogTitle>
+				</DialogHeader>
+				<p>Are you sure you want to delete the song "{songToDelete?.title}"?</p>
+				<DialogFooter>
+					<Button onClick={() => setIsDialogOpen(false)} variant='secondary'>Cancel</Button>
+					<Button onClick={confirmDelete} variant='destructive'>Delete</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	</>
 	);
 };
 export default SongsTable;

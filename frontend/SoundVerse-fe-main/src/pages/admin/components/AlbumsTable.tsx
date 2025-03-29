@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Music, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -10,11 +11,26 @@ const AlbumsTable = () => {
 	const { albums, deleteAlbum, fetchAlbums } = useMusicStore();
 	const albumsToDisplay = albums ?? [];
 
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [albumToDelete, setAlbumToDelete] = useState(null);
+	
 	useEffect(() => {
 		fetchAlbums();
 	}, [fetchAlbums]);
 
+	const handleDeleteClick = (album) => {
+        setAlbumToDelete(album);
+        setIsDialogOpen(true);
+    };
+	const confirmDelete = () => {
+        if (albumToDelete) {
+            deleteAlbum(albumToDelete.id);
+        }
+        setIsDialogOpen(false);
+    };
+
 	return (
+		<>
 		<Table className={undefined}>
 			<TableHeader className={undefined}>
 				<TableRow className='hover:bg-zinc-800/50'>
@@ -55,7 +71,7 @@ const AlbumsTable = () => {
 								<Button
 									variant='ghost'
 									size='sm'
-									onClick={() => deleteAlbum(album.id)}
+									onClick={() => handleDeleteClick(album)}
 									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
 								>
 									<Trash2 className='h-4 w-4' />
@@ -66,6 +82,20 @@ const AlbumsTable = () => {
 				))}
 			</TableBody>
 		</Table>
+
+		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Confirm Deletion</DialogTitle>
+				</DialogHeader>
+				<p>Are you sure you want to delete the album "{albumToDelete?.title}"?</p>
+				<DialogFooter>
+					<Button onClick={() => setIsDialogOpen(false)} variant='secondary'>Cancel</Button>
+					<Button onClick={confirmDelete} variant='destructive'>Delete</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	</>
 	);
 };
 export default AlbumsTable;

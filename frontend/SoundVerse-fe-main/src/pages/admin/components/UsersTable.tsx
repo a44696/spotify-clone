@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 const UsersTable = () => {
   const { users, fetchedUsers, deleteUser, updateUser } = useUserStore();
   const [open, setOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -21,6 +22,22 @@ const UsersTable = () => {
     setOpen(true);
   };
 
+  const handleDeleteClick = (user) => {
+    setCurrentUser(user);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteUser = async () => {
+    try {
+      await deleteUser(currentUser.id);
+      toast.success("User deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete user");
+    }
+    setDeleteDialogOpen(false);
+  };
+
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +47,8 @@ const UsersTable = () => {
     }));
 
   };
+
+
 
   const formatDate = (inputDate) => {
     console.log(inputDate);
@@ -131,7 +150,7 @@ const UsersTable = () => {
                   <Button
                     variant='ghost'
                     size='sm'
-                    onClick={() => deleteUser(user.id)}
+                    onClick={() => handleDeleteClick(user)}
                     className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
                   >
                     <Trash2 className='h-4 w-4' />
@@ -247,6 +266,21 @@ const UsersTable = () => {
               className='bg-blue-500 hover:bg-blue-600 text-white'
             >
               Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogDescription>Are you sure you want to delete this user? This action cannot be undone.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button onClick={confirmDeleteUser} className='bg-red-500 hover:bg-red-600 text-white'>
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>
