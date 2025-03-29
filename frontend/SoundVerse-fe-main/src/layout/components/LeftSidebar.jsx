@@ -14,10 +14,6 @@ const LeftSidebar = () => {
     fetchPlaylists()
   }, [fetchPlaylists]);
 
-  console.log("User Role:", role);
-  console.log("isArtist:", isArtist);
-  console.log("isAdmin:", isAdmin);
-
   return (
     <div className='h-full flex flex-col gap-2'>
       {/*Navigation  menu*/}
