@@ -8,6 +8,7 @@ const VerifyPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [email, setEmail] = useState(""); // Thêm state để lưu email
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); // Nhận dữ liệu từ trang đăng ký
 
@@ -71,6 +72,35 @@ const VerifyPage = () => {
     }
   };
 
+  const handleResendOtp = async () => {
+    if (!email) {
+      alert("Không tìm thấy email! Vui lòng đăng ký lại.");
+      return;
+    }
+
+    setIsResending(true);
+    try {
+      const response = await fetch(`${apiUrl.baseURL}/auth/resend-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+
+      if (data.status === "success") {
+        alert("Mã OTP đã được gửi lại!");
+      } else {
+        alert("Không thể gửi lại mã OTP. Vui lòng thử lại sau!");
+      }
+    } catch (error) {
+      alert("Lỗi khi gửi lại OTP: " + error.message);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <div className="h-screen flex items-center justify-center bg-black">
       <div className="p-8 bg-zinc-900 rounded-lg shadow-md w-[90%] max-w-md">
@@ -96,6 +126,15 @@ const VerifyPage = () => {
           ))}
         </div>
 
+        <div className="mt-4 text-center">
+          <p
+            onClick={handleResendOtp}
+            className="text-green-500 hover:underline cursor-pointer text-left ml-6 my-3  "
+          >
+            {isResending ? "Đang gửi lại..." : "Gửi lại OTP"}
+          </p>
+        </div>
+
         <Button
           onClick={handleVerify}
           className="w-full bg-emerald-500 hover:bg-emerald-600"
@@ -103,6 +142,8 @@ const VerifyPage = () => {
         >
           {isLoading ? "Đang xác minh..." : "Xác nhận"}
         </Button>
+
+        
       </div>
     </div>
   );
