@@ -90,7 +90,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
 		try {
 			await axiosInstance.delete(`/users/${id}`);
 			set((state) => ({
-				users: state.users.filter((user) => user.id !== id),
+				users: state.users.map((user) =>
+						user.id === id ? { ...user, status: "DELETED" } : user
+				),
 			}));
 		} catch (error: any) {
 			set({ error: error.response.data.message });

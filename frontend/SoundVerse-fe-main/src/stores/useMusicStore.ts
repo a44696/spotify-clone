@@ -126,6 +126,10 @@ export const useMusicStore = create<MusicStore>((set) => ({
 				songs: state.songs.map((song) =>
 					song.albumId === state.albums.find((a) => a.id === id)?.title ? { ...song, album: null } : song
 				),
+				myAlbums: state.myAlbums.filter((album) => album.id !== id),
+				mySongs: state.mySongs.map((song) =>
+					song.albumId === state.albums.find((a) => a.id === id)?.title ? { ...song, album: null } : song
+				),
 			}));
 			toast.success("Album deleted successfully");
 		} catch (error: any) {
@@ -180,9 +184,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 		try {
 			await axiosInstance.delete(`/music/${id}`);
-
 			set((state) => ({
 				songs: state.songs.filter((song) => song.id !== id),
+				mySongs: state.mySongs.filter((song) => song.id !== id),
 			}));
 			toast.success("Song deleted successfully");
 		} catch (error: any) {
@@ -192,6 +196,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set({ isLoading: false });
 		}
 	},
+
 	fetchSongs: async () => {
 		set({ isLoading: true, error: null });
 		try {
@@ -448,7 +453,12 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	acceptMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.put(`/music/approve/${id}`);
+			await axiosInstance.put(`/music/approve/${id}`);
+			set((state) => ({
+				queuingSongs: state.queuingSongs.filter((song) => song.id !== id)
+			}));
+			console.log("accept");
+			
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {
@@ -459,7 +469,10 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	refuseMusic: async (id: number) => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.put(`/music/refuse/${id}`);
+			await axiosInstance.put(`/music/refuse/${id}`);
+			set((state) => ({
+				queuingSongs: state.queuingSongs.filter((song) => song.id !== id)
+			}));
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {
@@ -495,6 +508,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 		try {
 			await axiosInstance.put(`/music/publish/${id}`);
+			set((state) => ({
+				myUnpublish: state.myUnpublish.filter((song) => song.id !== id)
+			}));
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

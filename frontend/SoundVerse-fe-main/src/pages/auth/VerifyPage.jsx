@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 import { apiUrl } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const VerifyPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -74,28 +75,27 @@ const VerifyPage = () => {
 
   const handleResendOtp = async () => {
     if (!email) {
-      alert("Không tìm thấy email! Vui lòng đăng ký lại.");
+      toast.success("Không tìm thấy email! Vui lòng đăng ký lại.");
       return;
     }
 
     setIsResending(true);
     try {
-      const response = await fetch(`${apiUrl.baseURL}/auth/resend-otp`, {
+      const response = await fetch(`${apiUrl.baseURL}/auth/resend?email=${email}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
       });
       const data = await response.json();
 
       if (data.status === "success") {
-        alert("Mã OTP đã được gửi lại!");
+        toast.success("Mã OTP đã được gửi lại!");
       } else {
-        alert("Không thể gửi lại mã OTP. Vui lòng thử lại sau!");
+        toast.error("Không thể gửi lại mã OTP. Vui lòng thử lại sau!");
       }
     } catch (error) {
-      alert("Lỗi khi gửi lại OTP: " + error.message);
+      toast.error("Lỗi khi gửi lại OTP: " + error.message);
     } finally {
       setIsResending(false);
     }

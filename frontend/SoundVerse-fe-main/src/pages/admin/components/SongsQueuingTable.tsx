@@ -27,13 +27,13 @@ const SongsQueuingTable = ({ onSelectSong }) => {
     fetchQueuingSongs();
   };
 
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center py-8'>
-        <div className='text-zinc-400'>Loading queuing songs...</div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className='flex items-center justify-center py-8'>
+  //       <div className='text-zinc-400'>Loading queuing songs...</div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <Table className={undefined}>
@@ -51,11 +51,11 @@ const SongsQueuingTable = ({ onSelectSong }) => {
 
       <TableBody className={undefined}>
         {queuingSongs.map((song) => (
-          <TableRow key={song.id} className='hover:bg-zinc-800/50' onClick={() => onSelectSong(song)}>
-            <TableCell className={undefined}>
+          <TableRow key={song.id} className='hover:bg-zinc-800/50'>
+            <TableCell className={undefined} onClick={() => onSelectSong(song)}>
               <img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />
             </TableCell>
-            <TableCell className='font-medium'>{song.title}</TableCell>
+            <TableCell className='font-medium' onClick={() => onSelectSong(song)}>{song.title}</TableCell>
             <TableCell className={undefined}>{song.artist}</TableCell>
             <TableCell className={undefined}>{song.genre}</TableCell>
             <TableCell className={undefined}>{formatTime(song.length)}</TableCell>

@@ -4,12 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { Album, ListTodo, LockKeyholeIcon, Music } from 'lucide-react';
 import { useMusicStore } from '@/stores/useMusicStore';
 import Header from '../admin/components/Header';
-import AlbumsTabContent from '../admin/components/AlbumsTabContent';
 import { useAuth } from '@/providers/AuthContext';
 import DashboardArtist from './DashboardArtist';
 import MySongsTabContent from './MySongsTabContent';
 import MyQueuingTabContent from './MyQueuingTabContent';
 import MyUnpublishTabContent from './MyUnpublishTabContent';
+import MyAlbumsTabContent from './MyAlbumsTabContent';
 
 const MyMusicsPage = () => {
     const { loading, isArtist } = useAuth();
@@ -55,7 +55,7 @@ const MyMusicsPage = () => {
                     <MySongsTabContent />
                 </TabsContent>
                 <TabsContent value='albums'>
-                    <AlbumsTabContent />
+                    <MyAlbumsTabContent />
                 </TabsContent>
                 <TabsContent value='unpublished'>
 					<MyUnpublishTabContent />

@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import { axiosInstance } from "@/lib/axios";  // Import axios instance
 import toast from "react-hot-toast";
 const UsersTable = () => {
-  const { users, fetchedUsers, deleteUser, updateUser } = useUserStore();
+  const { users, fetchedUsers, deleteUser } = useUserStore();
   const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -37,22 +37,15 @@ const UsersTable = () => {
     setDeleteDialogOpen(false);
   };
 
-
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentUser((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
-
   };
 
-
-
   const formatDate = (inputDate) => {
-    console.log(inputDate);
-
     if (inputDate.includes('/')) {
       return inputDate
     }
@@ -107,6 +100,7 @@ const UsersTable = () => {
           <TableRow className='hover:bg-zinc-800/50'>
             <TableHead className='w-[50px]'></TableHead>
             <TableHead className={undefined}>Username</TableHead>
+            <TableHead className={undefined}>Fullname</TableHead>
             <TableHead className={undefined}>Email</TableHead>
             <TableHead className={undefined}>Gender</TableHead>
             <TableHead className={undefined}>Role</TableHead>
@@ -125,8 +119,8 @@ const UsersTable = () => {
                   className='size-10 rounded object-cover'
                 />
               </TableCell>
-              <TableCell className='font-medium'>{user.fullName}</TableCell>
               <TableCell className='font-medium'>{user.username}</TableCell>
+              <TableCell className='font-medium'>{user.fullName}</TableCell>
               <TableCell className={undefined}>{user.email}</TableCell>
               <TableCell className={undefined}>{user.gender}</TableCell>
               <TableCell className={undefined}>{user.role}</TableCell>

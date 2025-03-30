@@ -6,7 +6,6 @@ import React, { useEffect } from "react";
 
 const MySongsTable = () => {
   const { mySongs, isLoading, deleteSong, fetchMySongs } = useMusicStore();
-  const songsToDisplay = mySongs ?? [];
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -41,7 +40,7 @@ const MySongsTable = () => {
       </TableHeader>
 
       <TableBody className={undefined}>
-        {songsToDisplay.map((song) => (
+        {mySongs.map((song) => (
           <TableRow key={song.id} className='hover:bg-zinc-800/50'>
             <TableCell className={undefined}>
               <img src={song.thumbnail} alt={song.title} className='size-10 rounded object-cover' />
