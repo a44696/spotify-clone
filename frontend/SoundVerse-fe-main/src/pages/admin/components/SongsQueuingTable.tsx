@@ -28,11 +28,11 @@ const SongsQueuingTable = ({ onSelectSong }) => {
   };
 
   const confirmAction = () => {
-    if (onSelectSong) {
+    if (selectedSong) {
       if (actionType === "accept") {
-        acceptMusic(onSelectSong.id);
+        acceptMusic(selectedSong.id);
       } else if (actionType === "refuse") {
-        refuseMusic(onSelectSong.id);
+        refuseMusic(selectedSong.id);
       }
       fetchQueuingSongs();
     }
@@ -115,7 +115,7 @@ const SongsQueuingTable = ({ onSelectSong }) => {
         </p>
         <DialogFooter>
           <Button onClick={() => setIsDialogOpen(false)} variant='secondary'>Cancel</Button>
-          <Button onClick={confirmAction} variant={actionType === "accept" ? "success" : "destructive"}>
+          <Button onClick={confirmAction} variant={actionType == "accept" ? "default" : "destructive"}>
             {actionType === "accept" ? "Approve" : "Reject"}
           </Button>
         </DialogFooter>

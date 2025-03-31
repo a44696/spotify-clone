@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/AuthContext";
 import toast from 'react-hot-toast';
 import { axiosInstance } from '@/lib/axios';
 import { apiUrl } from '@/lib/utils';
+import { v4 as uuidv4 } from 'uuid';
 
 const Profile = () => {
     const { user, loading, getCurrentUser } = useAuth();
@@ -140,7 +141,7 @@ const Profile = () => {
         const baseName = extension ? name.replace(extension, "") : name;
 
         const timeStamp = Date.now();
-        const uniqueID = crypto.randomUUID();
+        const uniqueID = uuidv4();
 
         return `${baseName}-${timeStamp}-${uniqueID}${extension}`;
     };

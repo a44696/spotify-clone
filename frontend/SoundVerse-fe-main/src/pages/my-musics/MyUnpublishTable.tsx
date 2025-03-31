@@ -5,7 +5,6 @@ import { Calendar, Globe } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogFooter, DialogHeader, DialogTitle, DialogContent } from "@/components/ui/dialog";
 
-
 const MyUnpublishTable = () => {
   const { myUnpublish, fetchMyUnpublish, isLoading, publishMusic } = useMusicStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -20,10 +19,6 @@ const MyUnpublishTable = () => {
     fetchMyUnpublish();
   }, [fetchMyUnpublish]);
 
-  const publishSong = (songId) => {
-    publishMusic(songId);
-    fetchMyUnpublish();
-  };
   const openDeleteDialog = (song) => {
     setSelectedSong(song);
     setIsDialogOpen(true);
@@ -31,18 +26,19 @@ const MyUnpublishTable = () => {
 
   const confirmDelete = () => {
     if (selectedSong) {
-      deleteMusic(selectedSong.id);
+      publishMusic(selectedSong.id);
       fetchMyUnpublish();
     }
     setIsDialogOpen(false);
   };
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center py-8'>
-        <div className='text-zinc-400'>Loading queuing songs...</div>
-      </div>
-    );
-  }
+
+  // if (isLoading) {
+  //   return (
+  //     <div className='flex items-center justify-center py-8'>
+  //       <div className='text-zinc-400'>Loading queuing songs...</div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -82,7 +78,7 @@ const MyUnpublishTable = () => {
                     variant={"ghost"}
                     size={"sm"}
                     className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
-                    onClick={() => publishSong(song.id)}
+                    onClick={() => openDeleteDialog(song)}
                   >
                     <Globe className='size-4' />
                   </Button>
@@ -98,11 +94,11 @@ const MyUnpublishTable = () => {
           <DialogTitle>Confirm Deletion</DialogTitle>
         </DialogHeader>
         <p>
-          Are you sure you want to delete the song "{selectedSong?.title}"?
+          Are you sure you want to publish the song "{selectedSong?.title}"?
         </p>
         <DialogFooter>
           <Button onClick={() => setIsDialogOpen(false)} variant='secondary'>Cancel</Button>
-          <Button onClick={confirmDelete} variant='destructive'>Delete</Button>
+          <Button onClick={confirmDelete} variant='default'>Publish</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

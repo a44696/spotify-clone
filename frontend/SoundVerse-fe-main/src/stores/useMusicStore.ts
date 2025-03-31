@@ -457,8 +457,6 @@ export const useMusicStore = create<MusicStore>((set) => ({
 			set((state) => ({
 				queuingSongs: state.queuingSongs.filter((song) => song.id !== id)
 			}));
-			console.log("accept");
-			
 		} catch (error: any) {
 			set({ error: error.message });
 		} finally {

@@ -15,6 +15,7 @@ import { Plus, Upload } from "lucide-react";
 import React from "react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { v4 as uuidv4 } from 'uuid';
 
 const AddPlaylistDialog = () => {
     const { fetchPlaylists, playlists } = useMusicStore();
@@ -87,7 +88,7 @@ const AddPlaylistDialog = () => {
         const baseName = extension ? name.replace(extension, "") : name;
 
         const timeStamp = Date.now();
-        const uniqueID = crypto.randomUUID();
+        const uniqueID = uuidv4();
 
         return `${baseName}-${timeStamp}-${uniqueID}${extension}`;
     };
