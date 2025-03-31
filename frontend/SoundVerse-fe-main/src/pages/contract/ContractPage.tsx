@@ -36,7 +36,7 @@ const ContractPage = () => {
         username: user.username,
         phone: "",
         address: "",
-        contractNumber: generateContractNumber(1),
+        contractNumber: generateContractNumber(user.id),
         contractDate: getCurrentDate(),
         signature: "",
         email: user.email
