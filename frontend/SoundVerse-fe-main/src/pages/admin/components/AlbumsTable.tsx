@@ -81,19 +81,20 @@ const AlbumsTable = () => {
 					))}
 				</TableBody>
 			</Table>
-
-			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Confirm Deletion</DialogTitle>
-					</DialogHeader>
-					<p>Are you sure you want to delete the album "{albumToDelete?.title}"?</p>
-					<DialogFooter>
-						<Button onClick={() => setIsDialogOpen(false)} variant='secondary'>Cancel</Button>
-						<Button onClick={confirmDelete} variant='destructive'>Delete</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
+			<div>	
+				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Confirm Deletion</DialogTitle>
+						</DialogHeader>
+						<p>Are you sure you want to delete the album "{albumToDelete?.title}"?</p>
+						<DialogFooter>
+							<Button onClick={() => setIsDialogOpen(false)} variant='secondary'>Cancel</Button>
+							<Button onClick={confirmDelete} variant='destructive'>Delete</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			</div>
 		</>
 	);
 };

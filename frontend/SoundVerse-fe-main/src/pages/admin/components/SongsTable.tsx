@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogFooter, DialogHeader, DialogTitle,DialogContent } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
-import { DialogContent } from "@radix-ui/react-dialog";
+
 import { Calendar, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -89,7 +89,7 @@ const SongsTable = () => {
 					))}
 				</TableBody>
 			</Table>
-
+		<div>
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 				<DialogContent>
 					<DialogHeader>
@@ -102,6 +102,7 @@ const SongsTable = () => {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
+		</div>
 		</>
 	);
 };
