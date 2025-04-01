@@ -76,7 +76,7 @@ const ContractPage = () => {
 
                 <div className="contract-info">
                     <h2>Contract Information</h2>
-                    <p>Contract Number: <span id="contractNumber">SVTUE000001</span></p>
+                    <p>Contract Number: <span id="contractNumber">{form.contractNumber}</span></p>
                     <p>Contract Date: <span id="contractDate">{getCurrentDate()}</span></p>
                     <p>Contract Term: <span id="contractTerm">1 year</span></p>
                 </div>
