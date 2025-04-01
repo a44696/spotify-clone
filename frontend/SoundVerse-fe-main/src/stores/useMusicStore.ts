@@ -160,7 +160,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 		set({ isLoading: true, error: null });
 		try {
 			await axiosInstance.post(`/playlist/${playlist_id}/songs/${music_id}`);
-			toast.success("Playlist deleted successfully");
+			toast.success("Playlist add successfully");
 		} catch (error: any) {
 			toast.error("Failed to delete playlist: " + error.message);
 		} finally {

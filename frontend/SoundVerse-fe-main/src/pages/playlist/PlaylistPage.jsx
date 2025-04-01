@@ -10,8 +10,13 @@ const PlaylistPage = () => {
   return (
     <div>
       
-      <div className="my-7">
-        <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto">
+      <div className="">
+        <ScrollArea className="h-[calc(100vh-180px)] overflow-y-auto"
+          style={{
+            scrollbarWidth: 'thin', /* Dùng cho Firefox */
+            scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
+          }}
+        >
 
           <Card className='bg-zinc-800/50 border-zinc-700/50'>
             <CardHeader>

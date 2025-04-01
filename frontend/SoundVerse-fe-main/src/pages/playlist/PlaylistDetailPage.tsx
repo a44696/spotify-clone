@@ -58,8 +58,12 @@ const PlaylistDetailPage = () => {
   };
 
   return (
-    <div className='h-full'>
-      <ScrollArea className='h-full rounded-md'>
+    <div className=''>
+      <ScrollArea className="h-[calc(100vh-200px)] overflow-y-auto"
+                  style={{
+                    scrollbarWidth: 'thin', /* Dùng cho Firefox */
+                    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
+                  }}>
         {/*Main Content*/}
         <div className='relative min-h-full'>
           {/*bg gradient*/}
