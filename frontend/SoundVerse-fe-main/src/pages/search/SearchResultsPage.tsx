@@ -3,10 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Play, Pause, Clock } from "lucide-react";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import React from "react";
-
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { axiosInstance } from "@/lib/axios";
-import PlayButton from "../home/components/PlayButton";
 import toast from "react-hot-toast";
 
 const SearchResultsPage = () => {
@@ -20,10 +18,10 @@ const SearchResultsPage = () => {
     const navigate = useNavigate();
 
     const formatTime = (seconds) => {
-		const minutes = Math.floor(seconds / 60);
-		const secs = Math.floor(seconds % 60);
-		return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
-	};
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`; // mm:ss
+    };
 
     useEffect(() => {
         const fetchSongs = async () => {
@@ -39,6 +37,7 @@ const SearchResultsPage = () => {
                     setAlbums([]);
                     setArtists([]);
                 }
+            
             } catch (error) {
                 console.error("Error fetching search results:", error);
             }
@@ -47,15 +46,17 @@ const SearchResultsPage = () => {
     }, [query]);
 
     const handlePlaySong = (song) => {
-		if (isCurrentSong) togglePlay();
-		else setCurrentSong(song);
-	};
+        if (isCurrentSong) togglePlay();
+        else setCurrentSong(song);
+    };
 
     return (
         <div>
-            <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto' 
-  		        style={{scrollbarWidth: 'thin', /* Dùng cho Firefox */
-			    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */}}>
+            <ScrollArea className='h-[calc(100vh-180px)] overflow-y-auto'
+                style={{
+                    scrollbarWidth: 'thin', /* Dùng cho Firefox */
+                    scrollbarColor: '#0f0f0f transparent' /* Màu thanh cuộn */
+                }}>
 
                 <h1 className="text-2xl font-bold mb-4 my-5">Search Results for "{query}"</h1>
                 <div className="bg-black/20 backdrop-blur-sm p-4 rounded-md">
@@ -96,61 +97,60 @@ const SearchResultsPage = () => {
                             );
                         })}
                     </div>
-                    
+
                     <div>
                         <h2 className="text-2xl font-bold mb-4 my-5">Albums:</h2>
                     </div>
                     {/* Album List */}
                     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
-                        
-                            {albums.map((album) => (
-                                <div
-                                    key={album.id}
-                                    className='flex items-center bg-zinc-800/50 rounded-md overflow-hidden
-                        hover:bg-zinc-700/50 transition-colors group cursor-pointer relative'
-                                    onClick={() => navigate(`/album/${album.id}`)}
-                                >
-                                    <img
-                                        src={album.thumbnail}
-                                        alt={album.title}
-                                        className='w-16 sm:w-20 h-16 sm:h-20 object-cover flex-shrink-0'
-                                    />
-                                    <div className='flex-1 p-4'>
-                                        <p className='font-medium truncate'>{album.title}</p>
-                                        <p className='text-sm text-zinc-400 truncate'>{album.artist}</p>
-                                    </div>
-                                    <PlayButton song={album.songs[0]} />
-                                </div>
 
-                            ))}
-                        </div>
-                        <div>
-                        <h2 className="text-2xl font-bold mb-4 my-5">Artists:</h2>
-                        </div>
-                        {/* Artist List */}
-                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
-                            
-                            {artists.map((artist) => (
-                                <div
-                                    key={artist.id}
-                                    className='flex items-center bg-zinc-800/50 rounded-md overflow-hidden
+                        {albums.map((album) => (
+                            <div
+                                key={album.id}
+                                className='flex items-center bg-zinc-800/50 rounded-md overflow-hidden
                         hover:bg-zinc-700/50 transition-colors group cursor-pointer relative'
-                                    onClick={() => navigate(`/artist/${artist.id}`)}
-                                >
-                                    <img
-                                        src={artist.profilePicImage}
-                                        alt={artist.username}
-                                        className='w-16 sm:w-20 h-16 sm:h-20 object-cover flex-shrink-0'
-                                    />
-                                    <div className='flex-1 p-4'>
-                                        <p className='font-medium truncate'>{artist.username}</p>
-                                        <p className='text-sm text-zinc-400 truncate'>Artist</p>
-                                    </div>
+                                onClick={() => navigate(`/albums/${album.id}`)}
+                            >
+                                <img
+                                    src={album.thumbnail}
+                                    alt={album.title}
+                                    className='w-16 sm:w-20 h-16 sm:h-20 object-cover flex-shrink-0'
+                                />
+                                <div className='flex-1 p-4'>
+                                    <p className='font-medium truncate'>{album.title}</p>
+                                    <p className='text-sm text-zinc-400 truncate'>{album.artist}</p>
                                 </div>
+                            </div>
 
-                            ))}
-                        </div>
+                        ))}
                     </div>
+                    <div>
+                        <h2 className="text-2xl font-bold mb-4 my-5">Artists:</h2>
+                    </div>
+                    {/* Artist List */}
+                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
+
+                        {artists.map((artist) => (
+                            <div
+                                key={artist.id}
+                                className='flex items-center bg-zinc-800/50 rounded-md overflow-hidden
+                        hover:bg-zinc-700/50 transition-colors group cursor-pointer relative'
+                                onClick={() => navigate(`/artist/${artist.id}`)}
+                            >
+                                <img
+                                    src={artist.profilePicImage}
+                                    alt={artist.username}
+                                    className='w-16 sm:w-20 h-16 sm:h-20 object-cover flex-shrink-0'
+                                />
+                                <div className='flex-1 p-4'>
+                                    <p className='font-medium truncate'>{artist.username}</p>
+                                    <p className='text-sm text-zinc-400 truncate'>Artist</p>
+                                </div>
+                            </div>
+
+                        ))}
+                    </div>
+                </div>
             </ScrollArea >
         </div >
     );

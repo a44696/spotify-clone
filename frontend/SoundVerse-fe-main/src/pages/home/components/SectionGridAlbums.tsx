@@ -17,9 +17,6 @@ const SectionGridAlbums = () => {
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl sm:text-2xl font-bold">Popular Albums</h2>
-        <Button variant="link" className="text-sm hover:text-white">
-          Show All
-        </Button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4">
